@@ -1,82 +1,62 @@
 # Blackline Security Operations Theme
 
-A custom WordPress theme developed for Blackline Security Operations by My Biz Niche.
+Custom WordPress theme for My Biz Niche.
 
-## Description
+## Theme Details
 
-This is a custom WordPress theme designed specifically for the Blackline Security Operations website. It provides a tailored experience with modern design and functionality tailored to security operations needs.
-
-**Version:** 1.0.0  
-**Author:** My Biz Niche  
-**Author URI:** https://www.mybizniche.com/  
-**License:** GPL2  
-**License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
-**Text Domain:** blacklinesecurityops-theme
-
-## Installation
-
-1. Download the theme zip file or clone the repository
-2. Upload the theme folder to `/wp-content/themes/` directory
-3. Activate the theme through the WordPress admin dashboard under **Appearance > Themes**
-4. Configure theme options as needed
+- Theme Name: `Blackline Security Operations Theme`
+- Description: `Custom Theme for MBN`
+- Version: `1.0.0`
+- Author: `My Biz Niche`
+- Theme URI: [https://github.com/MBNDEV/blacklinesecurityops-theme](https://github.com/MBNDEV/blacklinesecurityops-theme)
+- Author URI: [https://www.mybizniche.com/](https://www.mybizniche.com/)
+- License: `GPL2`
+- License URI: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
+- Text Domain: `blacklinesecurityops-theme`
 
 ## Requirements
 
-- WordPress 5.0 or higher
-- PHP 7.4 or higher
-- Composer (for development dependencies)
+- WordPress (current supported version)
+- PHP compatible with WordPress requirements
+- Composer (for development tooling)
 
-## Features
+## Installation
 
-- Custom design tailored for Blackline Security Operations
-- Responsive layout
-- Modern CSS framework integration
-- Optimized performance
-- Accessibility compliant
+1. Copy or clone this theme into `wp-content/themes/blacklinesecurityops-theme`.
+2. Install dependencies:
+   - `composer install`
+3. In WordPress Admin, go to **Appearance > Themes** and activate **Blackline Security Operations Theme**.
 
 ## Development
 
-This theme uses Composer for dependency management and includes development tools for code quality.
+This theme uses Composer autoloading for vendor packages.
 
-### Dependencies
+- Primary package in use:
+  - `yahnis-elsts/plugin-update-checker`
+- Autoload is conditionally loaded in `functions.php` to avoid duplicate class loading.
 
-The theme uses the following vendor packages:
+## Update Checker
 
-- **yahnis-elsts/plugin-update-checker** – Handles update checks from GitHub repository
+The theme includes GitHub-based update checks through Plugin Update Checker.
 
-### Development Dependencies
+- Repository configured in code:
+  - [https://github.com/MBNDEV/blacklinesecurityops-theme](https://github.com/MBNDEV/blacklinesecurityops-theme)
+- Slug configured in code:
+  - `blacklinesecurityops-theme`
 
-- **wp-coding-standards/wpcs** – WordPress PHP coding standards
-- **dealerdirect/phpcodesniffer-composer-installer** – PHPCS installer
+## Linting
 
-### Adding or Changing Vendor Packages
+Run WordPress coding standards checks before committing:
 
-1. Run `composer require <package>` or edit `composer.json` and run `composer update`
-2. For packages that might be loaded by other plugins/themes (e.g. PUC), keep the `class_exists()` guard before `require_once ... vendor/autoload.php` so only one autoload runs
+- `composer run lint`
+- `composer run lint:fix`
+- `composer run lint:security`
+- `composer run lint:run`
 
-### Linting (WordPress PHP Standards)
+## Security
 
-- Run linting: `composer run lint` or `./vendor/bin/phpcs`
-- Auto-fix issues: `composer run lint:fix` or `./vendor/bin/phpcbf`
-- Security scan: `composer run lint:security`
-- All-in-one check: `composer run lint:run`
+Please review `SECURITY.md` for:
 
-To block merges when linting fails, enable branch protection and require the **Lint** status check. See [.github/BRANCH_PROTECTION.md](.github/BRANCH_PROTECTION.md) for details.
-
-## Changelog
-
-### 1.0.0
-- Initial release
-
-## License
-
-This theme is licensed under the GPL2 License. See [License URI](https://www.gnu.org/licenses/gpl-2.0.html) for details.
-
-## Credits
-
-- **Developer:** My Biz Niche
-- **Theme URI:** https://github.com/MBNDEV/blacklinesecurityops-theme
-
-## Support
-
-For support or questions, please contact My Biz Niche at https://www.mybizniche.com/
+- supported versions
+- vulnerability reporting process
+- enforced secure coding standards

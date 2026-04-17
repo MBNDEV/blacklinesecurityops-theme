@@ -24,28 +24,28 @@ require_once get_theme_file_path( 'template-parts/button.php' );
  * Theme setup
  */
 function blacklineguardianfund_theme_setup() {
-  // Add support for block styles
+  // Add support for block styles.
   add_theme_support( 'wp-block-styles' );
 
-  // Add support for full and wide align images
+  // Add support for full and wide align images.
   add_theme_support( 'align-wide' );
 
-  // Add support for editor styles
+  // Add support for editor styles.
   add_theme_support( 'editor-styles' );
 
-  // Add support for responsive embedded content
+  // Add support for responsive embedded content.
   add_theme_support( 'responsive-embeds' );
 
-  // Add support for custom line height
+  // Add support for custom line height.
   add_theme_support( 'custom-line-height' );
 
-  // Add support for custom spacing
+  // Add support for custom spacing.
   add_theme_support( 'custom-spacing' );
 
-  // Add support for custom units
+  // Add support for custom units.
   add_theme_support( 'custom-units' );
 
-  // Register navigation menus
+  // Register navigation menus.
   register_nav_menus(
     array(
 		'primary-menu'  => __( 'Primary Menu', 'blacklineguardianfund-theme' ),

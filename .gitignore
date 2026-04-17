@@ -3,6 +3,7 @@ node_modules/
 .cursor/
 .vscode/
 build/
+html_tailwind/
 *.hot-update.js
 *.hot-update.json
 .DS_Store

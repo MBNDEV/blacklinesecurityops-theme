@@ -82,12 +82,12 @@ blocks/
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "blacklineguardianfund-theme/hero-section",
+  "name": "blacklinesecurityops-theme/hero-section",
   "title": "Hero Section",
   "category": "mbn-blocks",
   "icon": "cover-image",
   "description": "Hero section with background and CTA",
-  "textdomain": "blacklineguardianfund-theme",
+  "textdomain": "blacklinesecurityops-theme",
   "editorScript": "file:./index.js",
   "style": "file:./style.css",
   "attributes": {
@@ -141,31 +141,31 @@ export default function Edit({ attributes, setAttributes }) {
   return (
     <>
       <InspectorControls>
-        <PanelBody title={__('Background', 'blacklineguardianfund-theme')}>
+        <PanelBody title={__('Background', 'blacklinesecurityops-theme')}>
           <MediaUpload
             onSelect={(media) => setAttributes({ backgroundImageUrl: media.url, backgroundImageId: media.id })}
             allowedTypes={['image']}
             value={backgroundImageId}
             render={({ open }) => (
               <Button onClick={open} variant="primary">
-                {backgroundImageUrl ? __('Replace Image', 'blacklineguardianfund-theme') : __('Select Image', 'blacklineguardianfund-theme')}
+                {backgroundImageUrl ? __('Replace Image', 'blacklinesecurityops-theme') : __('Select Image', 'blacklinesecurityops-theme')}
               </Button>
             )}
           />
         </PanelBody>
-        <PanelBody title={__('Button', 'blacklineguardianfund-theme')}>
+        <PanelBody title={__('Button', 'blacklinesecurityops-theme')}>
           <TextControl
-            label={__('Button Text', 'blacklineguardianfund-theme')}
+            label={__('Button Text', 'blacklinesecurityops-theme')}
             value={buttonText} 
             onChange={(value) => setAttributes({ buttonText: value })}
           />
           <TextControl
-            label={__('Button URL', 'blacklineguardianfund-theme')}
+            label={__('Button URL', 'blacklinesecurityops-theme')}
             value={buttonUrl}
             onChange={(value) => setAttributes({ buttonUrl: value })}
           />
           <SelectControl
-            label={__('Style', 'blacklineguardianfund-theme')}
+            label={__('Style', 'blacklinesecurityops-theme')}
             value={buttonStyle}
             options={[
               { label: 'Primary', value: 'primary' },
@@ -183,14 +183,14 @@ export default function Edit({ attributes, setAttributes }) {
             tagName="h1"
             value={heading}
             onChange={(value) => setAttributes({ heading: value })}
-            placeholder={__('Enter heading...', 'blacklineguardianfund-theme')}
+            placeholder={__('Enter heading...', 'blacklinesecurityops-theme')}
             className="text-5xl font-bold text-white mb-4"
           />
           <RichText
             tagName="p"
             value={subheading}
             onChange={(value) => setAttributes({ subheading: value })}
-            placeholder={__('Enter subheading...', 'blacklineguardianfund-theme')}
+            placeholder={__('Enter subheading...', 'blacklinesecurityops-theme')}
             className="text-xl text-white mb-8"
           />
           {buttonText && (
@@ -244,14 +244,14 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl } from '@wordpress/components';
 
 <InspectorControls>
-  <PanelBody title={__('Settings', 'blacklineguardianfund-theme')}>
+  <PanelBody title={__('Settings', 'blacklinesecurityops-theme')}>
     <TextControl
-      label={__('Text', 'blacklineguardianfund-theme')}
+      label={__('Text', 'blacklinesecurityops-theme')}
       value={attributes.text}
       onChange={(value) => setAttributes({ text: value })}
     />
     <SelectControl
-      label={__('Style', 'blacklineguardianfund-theme')}
+      label={__('Style', 'blacklinesecurityops-theme')}
       value={attributes.style}
       options={[
         { label: 'Option 1', value: 'option1' },
@@ -260,12 +260,12 @@ import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl } fr
       onChange={(value) => setAttributes({ style: value })}
     />
     <ToggleControl
-      label={__('Enable', 'blacklineguardianfund-theme')}
+      label={__('Enable', 'blacklinesecurityops-theme')}
       checked={attributes.enabled}
       onChange={(value) => setAttributes({ enabled: value })}
     />
     <RangeControl
-      label={__('Columns', 'blacklineguardianfund-theme')}
+      label={__('Columns', 'blacklinesecurityops-theme')}
       value={attributes.columns}
       onChange={(value) => setAttributes({ columns: value })}
       min={1}
@@ -285,7 +285,7 @@ import { RichText } from '@wordpress/block-editor';
   tagName="h2"
   value={attributes.heading}
   onChange={(value) => setAttributes({ heading: value })}
-  placeholder={__('Enter heading...', 'blacklineguardianfund-theme')}
+  placeholder={__('Enter heading...', 'blacklinesecurityops-theme')}
   className="text-3xl font-bold"
   allowedFormats={['core/bold', 'core/italic']}
 />
@@ -315,7 +315,7 @@ import { Button } from '@wordpress/components';
     render={({ open }) => (
       <>
         <Button onClick={open} variant="primary">
-          {attributes.imageUrl ? __('Replace', 'blacklineguardianfund-theme') : __('Select Image', 'blacklineguardianfund-theme')}
+          {attributes.imageUrl ? __('Replace', 'blacklinesecurityops-theme') : __('Select Image', 'blacklinesecurityops-theme')}
         </Button>
         {attributes.imageUrl && (
           <img src={attributes.imageUrl} alt="" className="mt-4" />
@@ -344,7 +344,7 @@ import { BlockControls, AlignmentToolbar } from '@wordpress/block-editor';
 ### Auto-Discovery in functions.php
 
 ```php
-function blacklineguardianfund_register_blocks() {
+function blacklinesecurityops_register_blocks() {
   $blocks_dir = __DIR__ . '/blocks';
   $block_folders = glob( $blocks_dir . '/*', GLOB_ONLYDIR );
   
@@ -354,23 +354,23 @@ function blacklineguardianfund_register_blocks() {
     }
   }
 }
-add_action( 'init', 'blacklineguardianfund_register_blocks' );
+add_action( 'init', 'blacklinesecurityops_register_blocks' );
 ```
 
 ### Custom Block Category
 
 ```php
-function blacklineguardianfund_register_block_category( $categories ) {
+function blacklinesecurityops_register_block_category( $categories ) {
   return array_merge(
     [[
       'slug'  => 'mbn-blocks',
-      'title' => __( 'MBN Blocks', 'blacklineguardianfund-theme' ),
+      'title' => __( 'MBN Blocks', 'blacklinesecurityops-theme' ),
       'icon'  => 'wordpress',
     ]],
     $categories
   );
 }
-add_filter( 'block_categories_all', 'blacklineguardianfund_register_block_category' );
+add_filter( 'block_categories_all', 'blacklinesecurityops_register_block_category' );
 ```
 
 ## Build & Development
@@ -499,7 +499,7 @@ When creating a block, provide:
 9. **Explanation**: Design decisions and rationale
 
 Remember: Native Gutenberg blocks provide the best editor experience and are the WordPress-recommended approach for block development!
-  "textdomain": "blacklineguardianfund-theme",
+  "textdomain": "blacklinesecurityops-theme",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./editor.css",
   "style": "file:./style.css",
@@ -540,14 +540,14 @@ export default function Edit({ attributes, setAttributes }) {
   return (
     <>
       <InspectorControls>
-        <PanelBody title={__('Author Image', 'blacklineguardianfund-theme')}>
+        <PanelBody title={__('Author Image', 'blacklinesecurityops-theme')}>
           <MediaUpload
             onSelect={(media) => setAttributes({ imageUrl: media.url, imageId: media.id })}
             allowedTypes={['image']}
             value={imageId}
             render={({ open }) => (
               <Button onClick={open} variant="primary">
-                {imageUrl ? __('Replace Image', 'blacklineguardianfund-theme') : __('Select Image', 'blacklineguardianfund-theme')}
+                {imageUrl ? __('Replace Image', 'blacklinesecurityops-theme') : __('Select Image', 'blacklinesecurityops-theme')}
               </Button>
             )}
           />
@@ -559,7 +559,7 @@ export default function Edit({ attributes, setAttributes }) {
           tagName="blockquote"
           value={quote}
           onChange={(value) => setAttributes({ quote: value })}
-          placeholder={__('Enter testimonial quote...', 'blacklineguardianfund-theme')}
+          placeholder={__('Enter testimonial quote...', 'blacklinesecurityops-theme')}
           className="text-lg italic text-gray-700 mb-6"
         />
         <div className="flex items-center gap-4">
@@ -571,14 +571,14 @@ export default function Edit({ attributes, setAttributes }) {
               tagName="p"
               value={authorName}
               onChange={(value) => setAttributes({ authorName: value })}
-              placeholder={__('Author name...', 'blacklineguardianfund-theme')}
+              placeholder={__('Author name...', 'blacklinesecurityops-theme')}
               className="font-bold text-gray-900"
             />
             <RichText
               tagName="p"
               value={authorTitle}
               onChange={(value) => setAttributes({ authorTitle: value })}
-              placeholder={__('Author title...', 'blacklineguardianfund-theme')}
+              placeholder={__('Author title...', 'blacklinesecurityops-theme')}
               className="text-sm text-gray-600"
             />
           </div>

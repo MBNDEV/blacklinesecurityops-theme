@@ -44,6 +44,9 @@ function blacklinesecurityops_theme_setup() {
   // Add support for editor styles
   add_theme_support( 'editor-styles' );
 
+  // Enqueue editor styles
+  add_editor_style('editor.css');
+
   // Add support for responsive embedded content
   add_theme_support( 'responsive-embeds' );
 
@@ -70,6 +73,41 @@ function blacklinesecurityops_theme_setup() {
 }
 
 add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
+
+/**
+ * Enqueue Slick Slider for Logo List block
+ */
+function blacklinesecurityops_enqueue_slick_slider() {
+  // Only load on frontend
+  if ( is_admin() ) {
+    return;
+  }
+
+  // Slick CSS
+  wp_enqueue_style(
+    'slick-slider',
+    'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
+    array(),
+    '1.8.1'
+  );
+
+  wp_enqueue_style(
+    'slick-theme',
+    'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css',
+    array(),
+    '1.8.1'
+  );
+
+  // Slick JS (requires jQuery)
+  wp_enqueue_script(
+    'slick-slider',
+    'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+    array( 'jquery' ),
+    '1.8.1',
+    true
+  );
+}
+add_action( 'wp_enqueue_scripts', 'blacklinesecurityops_enqueue_slick_slider' );
 
 // Load theme components
 require_once get_theme_file_path( 'block-registry.php' );

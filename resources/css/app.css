@@ -7,3 +7,81 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+/* Custom render styles */
+body {
+    @apply bg-black text-white font-[18px] leading-[1.6];
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @apply leading-tight;
+}
+h1 {
+    @apply text-[75px];
+}
+h2 {
+    @apply text-[40px];
+}
+h3 {
+    @apply text-[34px];
+}
+h4 {
+    @apply text-[24px];
+}
+h5 {
+    @apply text-[20px];
+}
+h6 {
+    @apply text-[16px];
+}
+
+p {
+    @apply mb-6;
+}
+
+.wp-block-group__inner-container,
+.div-wrap-content {
+    @apply w-full max-w-[1180px] mx-auto px-[30px];
+}
+
+.wp-block-group__inner-container .div-wrap-content,
+.div-wrap-content .wp-block-group__inner-container,
+.wp-block-group__inner-container .wp-block-group__inner-container {
+    @apply p-0;
+}
+
+.alignfull,
+.alignfull > .div-wrap-content,
+.alignfull > .wp-block-group__inner-container {
+    @apply p-0 max-w-none;
+}
+
+.wp-block-columns.no-gap {
+    @apply gap-0;
+}
+
+.imgfull, .imgfull > img {
+    @apply w-full max-w-full;
+}
+
+a.wp-block-button__link {
+    @apply bg-[linear-gradient(92deg,#5C5C5C_11.4%,#FFF4E0_110.47%)] shadow-[inset_0_-5px_13px_0_#2C2C2C] rounded-[0] font-bold text-[18px] leading-[1] px-[35px] py-[15px] text-[#000];
+}
+
+
+
+.sec_hero {
+    @apply border-2 border-gray-300 border-solid rounded-lg p-6 mb-6;
+}
+
+.sec_hero h1 {
+    @apply leading-[1] mb-2;
+}
+.sec_hero .wp-block-cover {
+    @apply justify-start;
+}
+.sec_hero .wp-block-cover__inner-container {
+    @apply max-w-[768px] m-0
+}

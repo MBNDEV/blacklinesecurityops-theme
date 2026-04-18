@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return void
  */
-function blacklineguardianfund_register_blocks() {
+function blacklinesecurityops_register_blocks() {
 	$blocks_dir = get_theme_file_path( 'build/blocks' );
 
 	// Check if blocks directory exists.
@@ -65,13 +65,13 @@ function blacklineguardianfund_register_blocks() {
     }
   }
 }
-add_action( 'init', 'blacklineguardianfund_register_blocks' );
+add_action( 'init', 'blacklinesecurityops_register_blocks' );
 
 /**
  * Show admin notice with registered blocks (for debugging).
  * Remove this after confirming blocks are working.
  */
-function blacklineguardianfund_show_blocks_notice() {
+function blacklinesecurityops_show_blocks_notice() {
   if ( ! current_user_can( 'manage_options' ) ) {
       return;
   }
@@ -80,7 +80,7 @@ function blacklineguardianfund_show_blocks_notice() {
 	$theme_blocks      = array_filter(
       array_keys( $registered_blocks ),
       function ( $block_name ) {
-		return strpos( $block_name, 'blacklineguardianfund-theme/' ) === 0;
+		return strpos( $block_name, 'mbn-theme/' ) === 0;
       }
     );
 
@@ -99,7 +99,7 @@ function blacklineguardianfund_show_blocks_notice() {
       echo '</div>';
   }
 }
-add_action( 'admin_notices', 'blacklineguardianfund_show_blocks_notice' );
+add_action( 'admin_notices', 'blacklinesecurityops_show_blocks_notice' );
 
 /**
  * Register custom block category for theme blocks.
@@ -107,7 +107,7 @@ add_action( 'admin_notices', 'blacklineguardianfund_show_blocks_notice' );
  * @param array $categories Array of block categories.
  * @return array Modified array of block categories.
  */
-function blacklineguardianfund_register_block_category( $categories ) {
+function blacklinesecurityops_register_block_category( $categories ) {
 	// Check if category already exists.
   foreach ( $categories as $category ) {
     if ( 'mbn-blocks' === $category['slug'] ) {
@@ -120,32 +120,32 @@ function blacklineguardianfund_register_block_category( $categories ) {
       array(
 		  array(
 			  'slug'  => 'mbn-blocks',
-			  'title' => __( 'MBN Blocks', 'blacklineguardianfund-theme' ),
+			  'title' => __( 'MBN Blocks', 'mbn-theme' ),
 			  'icon'  => 'wordpress',
 		  ),
 	  ),
       $categories
 	);
 }
-add_filter( 'block_categories_all', 'blacklineguardianfund_register_block_category' );
+add_filter( 'block_categories_all', 'blacklinesecurityops_register_block_category' );
 
 /**
  * Enqueue block editor assets.
  *
  * @return void
  */
-function blacklineguardianfund_enqueue_block_editor_assets() {
+function blacklinesecurityops_enqueue_block_editor_assets() {
 	// Enqueue editor styles if needed.
 	// This is where you can add global editor styles that apply to all blocks.
 	$editor_css = get_theme_file_uri( 'assets/css/editor.css' );
 
   if ( file_exists( get_theme_file_path( 'assets/css/editor.css' ) ) ) {
       wp_enqueue_style(
-        'blacklineguardianfund-editor-styles',
+        'blacklinesecurityops-editor-styles',
         $editor_css,
         array(),
         wp_get_theme()->get( 'Version' )
       );
   }
 }
-add_action( 'enqueue_block_editor_assets', 'blacklineguardianfund_enqueue_block_editor_assets' );
+add_action( 'enqueue_block_editor_assets', 'blacklinesecurityops_enqueue_block_editor_assets' );

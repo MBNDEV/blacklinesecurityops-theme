@@ -9,6 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
+// Define theme constants
+if ( ! defined( 'CUSTOM_THEME_TEXT_DOMAIN' ) ) {
+	define( 'CUSTOM_THEME_TEXT_DOMAIN', 'mbn-theme' );
+}
+if ( ! defined( 'CUSTOM_THEME_SECTION_BG_TABLET_IMAGE_SIZE' ) ) {
+	define( 'CUSTOM_THEME_SECTION_BG_TABLET_IMAGE_SIZE', 'section-bg-tablet' );
+}
+if ( ! defined( 'CUSTOM_THEME_SECTION_BG_MOBILE_IMAGE_SIZE' ) ) {
+	define( 'CUSTOM_THEME_SECTION_BG_MOBILE_IMAGE_SIZE', 'section-bg-mobile' );
+}
+
 if ( ! class_exists( 'YahnisElsts\PluginUpdateChecker\v5\PucFactory' ) ) {
   require_once get_theme_file_path( 'vendor/autoload.php' );
 }
@@ -23,7 +34,7 @@ require_once get_theme_file_path( 'template-parts/button.php' );
 /**
  * Theme setup
  */
-function blacklineguardianfund_theme_setup() {
+function blacklinesecurityops_theme_setup() {
   // Add support for block styles
   add_theme_support( 'wp-block-styles' );
 
@@ -48,24 +59,38 @@ function blacklineguardianfund_theme_setup() {
   // Register navigation menus
   register_nav_menus(
     array(
-		'primary-menu'  => __( 'Primary Menu', 'blacklineguardianfund-theme' ),
-		'footer-menu'   => __( 'Footer Menu', 'blacklineguardianfund-theme' ),
-		'footer-menu-1' => __( 'Footer Menu Column 1', 'blacklineguardianfund-theme' ),
-		'footer-menu-2' => __( 'Footer Menu Column 2', 'blacklineguardianfund-theme' ),
-		'footer-legal'  => __( 'Footer Legal Links', 'blacklineguardianfund-theme' ),
-		'mobile-menu'   => __( 'Mobile Menu', 'blacklineguardianfund-theme' ),
+		'primary-menu'  => __( 'Primary Menu', 'mbn-theme' ),
+		'footer-menu'   => __( 'Footer Menu', 'mbn-theme' ),
+		'footer-menu-1' => __( 'Footer Menu Column 1', 'mbn-theme' ),
+		'footer-menu-2' => __( 'Footer Menu Column 2', 'mbn-theme' ),
+		'footer-legal'  => __( 'Footer Legal Links', 'mbn-theme' ),
+		'mobile-menu'   => __( 'Mobile Menu', 'mbn-theme' ),
 	)
   );
 }
 
-add_action( 'after_setup_theme', 'blacklineguardianfund_theme_setup' );
+add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
 
-PucFactory::buildUpdateChecker(
-  'https://github.com/MBNDEV/blacklineguardianfund-theme',
-  get_theme_file_path( 'style.css' ),
-  'blacklineguardianfund-theme'
-);
-
+// Load theme components
 require_once get_theme_file_path( 'block-registry.php' );
 require_once get_theme_file_path( 'tailwind-loader.php' );
 require_once get_theme_file_path( 'optimize.php' );
+
+// Load integrated inc/ files
+require_once get_theme_file_path( 'inc/includes-theme-options.php' );          // Native theme options page
+require_once get_theme_file_path( 'inc/includes-post-meta.php' );              // Native post meta boxes
+require_once get_theme_file_path( 'inc/includes-theme-preset-options-render.php' ); // Font presets & CSS variables
+require_once get_theme_file_path( 'inc/includes-html-injection.php' );         // Custom HTML injection
+require_once get_theme_file_path( 'inc/includes-widget-loader.php' );          // Widget area auto-loader
+require_once get_theme_file_path( 'inc/includes-template-carbon-cpt.php' );    // Block Template custom post type
+require_once get_theme_file_path( 'inc/includes-template-page-sync.php' );     // Page template sync
+require_once get_theme_file_path( 'inc/includes-theme-block-section.php' );    // Section background utilities
+require_once get_theme_file_path( 'inc/includes-block-patterns.php' );         // Reusable block patterns
+require_once get_theme_file_path( 'inc/includes-template-sync-tools.php' );    // Template import/export tools
+require_once get_theme_file_path( 'inc/includes-page-sync.php' );              // Page content sync (optional)
+
+PucFactory::buildUpdateChecker(
+  'https://github.com/MBNDEV/mbn-theme',
+  get_theme_file_path( 'style.css' ),
+  'mbn-theme'
+);

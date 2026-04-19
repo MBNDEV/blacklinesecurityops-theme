@@ -25,6 +25,110 @@ function custom_theme_add_template_tools_page() {
 add_action( 'admin_menu', 'custom_theme_add_template_tools_page' );
 
 /**
+ * Import all templates from files (header/footer from template-parts/, page templates from page-templates/).
+ *
+ * @throws Exception If import fails.
+ */
+function custom_theme_import_all_templates_from_files() {
+	$imported = 0;
+	$errors   = array();
+
+	// Import header/footer using existing function
+	try {
+		custom_theme_maybe_seed_default_block_templates( true );
+		$imported += 2; // Header + Footer
+	} catch ( Exception $e ) {
+		$errors[] = 'System templates: ' . $e->getMessage();
+	}
+
+	// Import page templates from page-templates/
+	$page_template_slugs = custom_theme_get_layout_template_file_slugs();
+	foreach ( $page_template_slugs as $slug ) {
+		try {
+			$file_path = get_theme_file_path( 'page-templates/' . $slug . '.php' );
+			if ( ! file_exists( $file_path ) ) {
+				continue;
+			}
+
+			// Load content from file
+			ob_start();
+			include $file_path;
+			$content = ob_get_clean();
+
+			if ( false === $content ) {
+				throw new Exception( sprintf( 'Failed to read file: %s', $file_path ) );
+			}
+
+			// Extract block markup (remove PHP)
+			$content = preg_replace( '/<\\?php.*?\\?>/s', '', $content );
+			$content = trim( $content );
+
+			// Get or create Block Template post
+			$post_id = custom_theme_get_block_template_id_by_slug( $slug );
+
+			if ( 0 === $post_id ) {
+				// Create new post
+				$title      = custom_theme_layout_template_title_from_slug( $slug );
+				$created_id = wp_insert_post(
+					array(
+						'post_type'    => 'mbn_block_template',
+						'post_title'   => $title,
+						'post_name'    => $slug,
+						'post_status'  => 'publish',
+						'post_content' => $content,
+					),
+					true
+				);
+
+				if ( is_wp_error( $created_id ) ) {
+					throw new Exception( $created_id->get_error_message() );
+				}
+
+				++$imported;
+			} else {
+				// Update existing post
+				$updated = wp_update_post(
+					array(
+						'ID'           => $post_id,
+						'post_content' => $content,
+					)
+				);
+
+				if ( is_wp_error( $updated ) ) {
+					throw new Exception( $updated->get_error_message() );
+				}
+
+				++$imported;
+			}
+		} catch ( Exception $e ) {
+			$errors[] = sprintf( '%s: %s', $slug, $e->getMessage() );
+		}
+	}
+
+	// Report results
+	if ( ! empty( $errors ) && 0 === $imported ) {
+		throw new Exception( implode( ' | ', $errors ) );
+	}
+
+	$message = sprintf(
+		// translators: %d is the number of templates imported.
+		__( '%d template(s) imported successfully!', CUSTOM_THEME_TEXT_DOMAIN ),
+		$imported
+	);
+
+	if ( ! empty( $errors ) ) {
+		$message .= ' ' . __( 'Warnings:', CUSTOM_THEME_TEXT_DOMAIN ) . ' ' . implode( '; ', $errors );
+	}
+
+	add_settings_error(
+		'custom_theme_sync',
+		'import_success',
+		$message,
+		empty( $errors ) ? 'success' : 'warning'
+	);
+}
+
+/**
  * Handle sync actions.
  */
 function custom_theme_handle_template_sync_actions() {
@@ -40,29 +144,23 @@ function custom_theme_handle_template_sync_actions() {
 
 	$action = sanitize_text_field( $_POST['custom_theme_sync_action'] );
 
-  if ( 'import_from_files' === $action ) {
-    try {
-        // Import template-parts/*.php files into Block Template posts
-        custom_theme_maybe_seed_default_block_templates( true );
-        add_settings_error(
-          'custom_theme_sync',
-          'sync_success',
-          __( 'Templates imported from files successfully!', CUSTOM_THEME_TEXT_DOMAIN ),
-          'success'
-        );
-    } catch ( Exception $e ) {
-        add_settings_error(
-          'custom_theme_sync',
-          'import_error',
-          sprintf(
-                // translators: %s is the error message.
-            __( 'Import failed: %s', CUSTOM_THEME_TEXT_DOMAIN ),
-            $e->getMessage()
-          ),
-          'error'
-        );
-    }
-  } elseif ( 'export_to_files' === $action ) {
+	if ( 'import_from_files' === $action ) {
+		try {
+			// Import all templates from files
+			custom_theme_import_all_templates_from_files();
+		} catch ( Exception $e ) {
+			add_settings_error(
+				'custom_theme_sync',
+				'import_error',
+				sprintf(
+					// translators: %s is the error message.
+					__( 'Import failed: %s', CUSTOM_THEME_TEXT_DOMAIN ),
+					$e->getMessage()
+				),
+				'error'
+			);
+		}
+	} elseif ( 'export_to_files' === $action ) {
     try {
         // Export Block Template posts to template-parts/*.php files
         custom_theme_export_templates_to_files();
@@ -83,84 +181,117 @@ function custom_theme_handle_template_sync_actions() {
 add_action( 'admin_init', 'custom_theme_handle_template_sync_actions' );
 
 /**
- * Export Block Template posts to template-parts PHP files.
+ * Export Block Template posts to PHP files (header/footer to template-parts/, page template blocks to template-parts/layouts/).
  *
  * @throws Exception If export fails.
  */
 function custom_theme_export_templates_to_files() {
-	$templates = array(
-		custom_theme_header_template_slug() => 'header-template',
-		custom_theme_footer_template_slug() => 'footer-template',
-	);
-
 	$exported = 0;
 	$errors   = array();
 
-	// Check if template-parts directory exists and is writable
-	$template_dir = get_theme_file_path( 'template-parts' );
-	if ( ! is_dir( $template_dir ) ) {
-		throw new Exception( sprintf( 'Template directory does not exist: %s', $template_dir ) );
+	// Export header/footer to template-parts/
+	$system_templates = array(
+		custom_theme_header_template_slug() => array(
+			'filename' => 'header-template',
+			'dir'      => 'template-parts',
+		),
+		custom_theme_footer_template_slug() => array(
+			'filename' => 'footer-template',
+			'dir'      => 'template-parts',
+		),
+	);
+
+	// Export page template BLOCK CONTENT to template-parts/layouts/
+	// Note: page-templates/*.php stay as traditional WordPress templates
+	$page_template_slugs = custom_theme_get_layout_template_file_slugs();
+	$page_templates      = array();
+	foreach ( $page_template_slugs as $slug ) {
+		// Extract basename from template-* slug (e.g., template-blank → blank)
+		$layout_name                 = preg_replace( '/^template-/', '', $slug );
+		$page_templates[ $slug ] = array(
+			'filename' => $layout_name,
+			'dir'      => 'template-parts/layouts',
+		);
 	}
 
-	if ( ! is_writable( $template_dir ) ) {
-		throw new Exception( sprintf( 'Template directory is not writable: %s. Check file permissions.', $template_dir ) );
+	$all_templates = array_merge( $system_templates, $page_templates );
+
+	// Check directories
+	$dirs = array( 'template-parts', 'template-parts/layouts' );
+	foreach ( $dirs as $dir_name ) {
+		$dir_path = get_theme_file_path( $dir_name );
+		if ( ! is_dir( $dir_path ) ) {
+			throw new Exception( sprintf( 'Directory does not exist: %s', $dir_path ) );
+		}
+		if ( ! is_writable( $dir_path ) ) {
+			throw new Exception( sprintf( 'Directory is not writable: %s. Check file permissions.', $dir_path ) );
+		}
 	}
 
-	foreach ( $templates as $slug => $filename ) {
-      try {
-          $post_id = custom_theme_get_block_template_id_by_slug( $slug );
-        if ( $post_id <= 0 ) {
-            $errors[] = sprintf( 'Template post not found for slug: %s', $slug );
-            continue;
-        }
+	foreach ( $all_templates as $slug => $config ) {
+		try {
+			$post_id = custom_theme_get_block_template_id_by_slug( $slug );
+			if ( $post_id <= 0 ) {
+				$errors[] = sprintf( 'Template post not found for slug: %s', $slug );
+				continue;
+			}
 
-          $post = get_post( $post_id );
-        if ( ! $post instanceof \WP_Post ) {
-            $errors[] = sprintf( 'Invalid post object for ID: %d', $post_id );
-            continue;
-        }
+			$post = get_post( $post_id );
+			if ( ! $post instanceof \WP_Post ) {
+				$errors[] = sprintf( 'Invalid post object for ID: %d', $post_id );
+				continue;
+			}
 
-          $content = $post->post_content;
+			$content = $post->post_content;
 
-          // Create file content with PHP header
-          $file_content  = "<?php\n";
-          $file_content .= "/**\n";
-          $file_content .= ' * Default ' . $post->post_title . " content.\n";
-          $file_content .= " * \n";
-          $file_content .= ' * This file syncs to the "' . $post->post_title . "\" Block Template post on theme activation.\n";
-          $file_content .= " * Edit the Block Template post in WordPress admin, then export back to this file\n";
-          $file_content .= " * using the export button in the admin.\n";
-          $file_content .= " * \n";
-          $file_content .= " * @package CustomTheme\n";
-          $file_content .= " */\n\n";
-          $file_content .= "if ( ! defined( 'ABSPATH' ) ) {\n";
-          $file_content .= "\texit;\n";
-          $file_content .= "}\n";
-          $file_content .= "?>\n";
-          $file_content .= $content;
+			// Create file content with PHP header
+			$file_content  = "<?php\n";
+			$file_content .= "/**\n";
+			$file_content .= ' * ' . $post->post_title . " Block Template.\n";
+			$file_content .= " * \n";
+			$file_content .= ' * Syncs with "' . $post->post_title . "\" Block Template post.\n";
+			$file_content .= " * Edit in WordPress admin, then export using Block Templates → Sync Tools.\n";
+			$file_content .= " * \n";
+			$file_content .= " * @package CustomTheme\n";
+			$file_content .= " */\n\n";
+			$file_content .= "if ( ! defined( 'ABSPATH' ) ) {\n";
+			$file_content .= "\texit;\n";
+			$file_content .= "}\n";
+			$file_content .= "?>\n";
+			$file_content .= $content;
 
-          $file_path = get_theme_file_path( 'template-parts/' . $filename . '.php' );
+			$file_path = get_theme_file_path( $config['dir'] . '/' . $config['filename'] . '.php' );
+		// Debug: Log the actual file path being written
+		MBN_Logger::info(
+			'Exporting Block Template',
+			array(
+				'slug'      => $slug,
+				'title'     => $post->post_title,
+				'file_path' => $file_path,
+				'dir'       => $config['dir'],
+				'filename'  => $config['filename'],
+			)
+		);
+			// Write file
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			$written = file_put_contents( $file_path, $file_content );
 
-          // Write file
-          // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-          $written = file_put_contents( $file_path, $file_content );
+			if ( false === $written ) {
+				throw new Exception( sprintf( 'Failed to write file: %s. Check file permissions.', $file_path ) );
+			}
 
-        if ( false === $written ) {
-            throw new Exception( sprintf( 'Failed to write file: %s. Check file permissions.', $file_path ) );
-        }
-
-          ++$exported;
-      } catch ( Exception $e ) {
-          $errors[] = sprintf( '%s: %s', $filename, $e->getMessage() );
-      }
+			++$exported;
+		} catch ( Exception $e ) {
+			$errors[] = sprintf( '%s: %s', $config['filename'], $e->getMessage() );
+		}
 	}
 
 	// Report results
 	if ( $exported > 0 ) {
 		$message = sprintf(
 			// translators: %d is the number of templates exported.
-          __( '%d template(s) exported to template-parts/ folder successfully!', CUSTOM_THEME_TEXT_DOMAIN ),
-          $exported
+			__( '%d template(s) exported successfully!', CUSTOM_THEME_TEXT_DOMAIN ),
+			$exported
 		);
 
       if ( ! empty( $errors ) ) {
@@ -176,11 +307,11 @@ function custom_theme_export_templates_to_files() {
 	} else {
 		$error_message = __( 'No templates were exported.', CUSTOM_THEME_TEXT_DOMAIN );
 
-      if ( ! empty( $errors ) ) {
-          $error_message .= ' ' . __( 'Errors:', CUSTOM_THEME_TEXT_DOMAIN ) . ' ' . implode( '; ', $errors );
-      } else {
-          $error_message .= ' ' . __( 'Make sure Header Template and Footer Template posts exist.', CUSTOM_THEME_TEXT_DOMAIN );
-      }
+		if ( ! empty( $errors ) ) {
+			$error_message .= ' ' . __( 'Errors:', CUSTOM_THEME_TEXT_DOMAIN ) . ' ' . implode( '; ', $errors );
+		} else {
+			$error_message .= ' ' . __( 'Make sure Block Template posts exist.', CUSTOM_THEME_TEXT_DOMAIN );
+		}
 
 		throw new Exception( $error_message );
 	}
@@ -196,16 +327,61 @@ function custom_theme_render_template_tools_page() {
 		
 		<?php settings_errors( 'custom_theme_sync' ); ?>
 
+		<!-- Diagnostic: Show Export Destinations -->
+		<div class="card" style="max-width: 800px; background: #fff3cd; border-left: 4px solid #ffc107;">
+			<h2>🔍 Export Destinations (Debug Info)</h2>
+			<table class="widefat striped" style="margin-top: 10px;">
+				<thead>
+					<tr>
+						<th>Block Template</th>
+						<th>Export Location</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><strong>Header Template</strong> (<?php echo esc_html( custom_theme_header_template_slug() ); ?>)</td>
+						<td><code>template-parts/header-template.php</code></td>
+					</tr>
+					<tr>
+						<td><strong>Footer Template</strong> (<?php echo esc_html( custom_theme_footer_template_slug() ); ?>)</td>
+						<td><code>template-parts/footer-template.php</code></td>
+					</tr>
+					<?php
+					$page_slugs = custom_theme_get_layout_template_file_slugs();
+					foreach ( $page_slugs as $slug ) {
+						$layout_name = preg_replace( '/^template-/', '', $slug );
+						$title       = custom_theme_layout_template_title_from_slug( $slug );
+						?>
+						<tr>
+							<td><strong><?php echo esc_html( $title ); ?></strong> (<?php echo esc_html( $slug ); ?>)</td>
+							<td><code>template-parts/layouts/<?php echo esc_html( $layout_name ); ?>.php</code></td>
+						</tr>
+						<?php
+					}
+					?>
+				</tbody>
+			</table>
+			<p style="margin-top: 10px;">
+				<em>This table shows where each Block Template will be exported when you click the Export button.</em>
+			</p>
+		</div>
+
 		<div class="card" style="max-width: 800px;">
 			<h2>📥 Import Templates from Files</h2>
 			<p>
 				<strong>Use this to deploy to staging/production:</strong><br>
-				Loads header/footer templates from <code>template-parts/header-template.php</code> and 
-				<code>template-parts/footer-template.php</code> into the Block Template posts.
+				Imports all Block Templates from PHP files:
+			</p>
+			<ul>
+				<li>Header/Footer from <code>template-parts/</code></li>
+				<li>Page Template Blocks from <code>template-parts/layouts/</code></li>
+			</ul>
+			<p>
+				<strong>Note:</strong> Traditional WordPress template files in <code>page-templates/</code> 
+				are Git-tracked separately and don't need syncing.
 			</p>
 			<p>
-				This will <strong>overwrite</strong> your current Header Template and Footer Template posts 
-				with the content from the PHP files.
+				This will <strong>overwrite</strong> existing Block Template posts with content from PHP files.
 			</p>
 			<form method="post" style="margin-top: 20px;">
 				<?php wp_nonce_field( 'custom_theme_sync_templates', 'custom_theme_sync_nonce' ); ?>
@@ -220,11 +396,18 @@ function custom_theme_render_template_tools_page() {
 			<h2>📤 Export Templates to Files</h2>
 			<p>
 				<strong>Use this after editing in WordPress admin:</strong><br>
-				Exports the current Header Template and Footer Template posts to 
-				<code>template-parts/header-template.php</code> and <code>template-parts/footer-template.php</code>.
+				Exports all Block Template posts to PHP files:
+			</p>
+			<ul>
+				<li>Header/Footer → <code>template-parts/</code></li>
+				<li>Page Template Blocks → <code>template-parts/layouts/</code></li>
+			</ul>
+			<p>
+				<strong>Note:</strong> This exports <em>block content</em> only. Traditional WordPress 
+				templates in <code>page-templates/</code> are edited directly in PHP.
 			</p>
 			<p>
-				This allows you to version control your templates and ship them via Git to other environments.
+				Allows you to version control templates and deploy via Git.
 			</p>
 			<form method="post" style="margin-top: 20px;">
 				<?php wp_nonce_field( 'custom_theme_sync_templates', 'custom_theme_sync_nonce' ); ?>
@@ -239,9 +422,14 @@ function custom_theme_render_template_tools_page() {
 			<h2>ℹ️ Development Workflow</h2>
 			<h3>Local Development:</h3>
 			<ol>
-				<li>Edit Header/Footer Templates in WordPress admin (Block Templates menu)</li>
+				<li>Edit Block Templates in WordPress admin (Block Templates menu)</li>
 				<li>Click <strong>"📤 Export to Files"</strong> button above</li>
-				<li>Commit <code>template-parts/*.php</code> files to Git</li>
+				<li>Commit updated files to Git:
+					<ul>
+						<li><code>template-parts/*.php</code> (header/footer)</li>
+						<li><code>template-parts/layouts/*.php</code> (page template blocks)</li>
+					</ul>
+				</li>
 				<li>Push to GitHub</li>
 			</ol>
 

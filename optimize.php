@@ -44,7 +44,7 @@ function custom_theme_needs_block_assets(): bool {
 
 /**
  * Remove core block library CSS, `enqueue_block_assets` chain, global styles, and classic theme styles on the front end only.
- * 
+ *
  * NOTE: Currently disabled because Header/Footer Block Templates need block assets.
  * If you want to re-enable optimization, modify custom_theme_needs_block_assets() to be more selective.
  *

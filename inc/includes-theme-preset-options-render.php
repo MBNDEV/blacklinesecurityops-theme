@@ -191,7 +191,7 @@ function custom_theme_get_font_css_rules( string $heading_slug, string $body_slu
   $heading_stack = $presets[ $heading_slug ]['stack'] ?? $presets['system_sans']['stack'];
   $body_stack    = $presets[ $body_slug ]['stack'] ?? $presets['system_sans']['stack'];
 
-  $raw_primary = get_option( 'blgf_primary_accent_color', '#2563EB' );
+  $raw_primary      = get_option( 'blgf_primary_accent_color', '#2563EB' );
   $primary_accent   = custom_theme_sanitize_hex_color_or_default( $raw_primary, '#2563EB' );
   $secondary_accent = custom_theme_sanitize_hex_color_or_default( get_option( 'blgf_secondary_accent_color', '#64748B' ), '#64748B' );
 

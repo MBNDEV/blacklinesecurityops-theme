@@ -71,6 +71,9 @@ function blacklinesecurityops_theme_setup() {
 
 add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
 
+// Load logging utility first (so other components can use it)
+require_once get_theme_file_path( 'inc/includes-logger.php' );
+
 // Load theme components
 require_once get_theme_file_path( 'block-registry.php' );
 require_once get_theme_file_path( 'tailwind-loader.php' );
@@ -82,7 +85,7 @@ require_once get_theme_file_path( 'inc/includes-post-meta.php' );              /
 require_once get_theme_file_path( 'inc/includes-theme-preset-options-render.php' ); // Font presets & CSS variables
 require_once get_theme_file_path( 'inc/includes-html-injection.php' );         // Custom HTML injection
 require_once get_theme_file_path( 'inc/includes-widget-loader.php' );          // Widget area auto-loader
-require_once get_theme_file_path( 'inc/includes-template-carbon-cpt.php' );    // Block Template custom post type
+require_once get_theme_file_path( 'inc/includes-block-templates.php' );        // Block Templates (Header/Footer) system
 require_once get_theme_file_path( 'inc/includes-template-page-sync.php' );     // Page template sync
 require_once get_theme_file_path( 'inc/includes-theme-block-section.php' );    // Section background utilities
 require_once get_theme_file_path( 'inc/includes-block-patterns.php' );         // Reusable block patterns

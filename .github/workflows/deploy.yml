@@ -176,7 +176,7 @@ jobs:
             # Verify critical files exist
             echo "Verifying theme files..."
             MISSING_FILES=""
-            for file in "style.css" "functions.php" "header.php" "footer.php" "build/blocks" "assets/build/tailwind.css" "vendor/autoload.php"; do
+            for file in "style.css" "functions.php" "header.php" "footer.php" "assets/build/tailwind.css" "vendor/autoload.php"; do
               if [ ! -e "$file" ]; then
                 MISSING_FILES="$MISSING_FILES $file"
               fi
@@ -193,8 +193,12 @@ jobs:
             # Check build directory
             echo ""
             echo "Checking built assets..."
-            BLOCK_COUNT=$(find build/blocks -maxdepth 1 -type d | tail -n +2 | wc -l)
-            echo "  - Blocks built: $BLOCK_COUNT"
+            if [ -d "build/blocks" ]; then
+              BLOCK_COUNT=$(find build/blocks -maxdepth 1 -type d | tail -n +2 | wc -l)
+              echo "  - Blocks built: $BLOCK_COUNT"
+            else
+              echo "  - No blocks built (blocks/ directory is empty)"
+            fi
             
             if [ -f "assets/build/tailwind.css" ]; then
               CSS_SIZE=$(du -h assets/build/tailwind.css | cut -f1)

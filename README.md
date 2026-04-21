@@ -147,6 +147,50 @@ The sync tools provide bi-directional sync between:
 - **Files** (Git-tracked, version controlled)
 - **Database** (Block Template posts, editable in WordPress)
 
+## Deployment
+
+This theme uses **GitHub Actions** for automated deployment to Staging and Production environments.
+
+### Quick Start
+
+```bash
+# Deploy to Staging
+git push origin develop
+
+# Deploy to Production
+git push origin master
+```
+
+### What Gets Deployed
+
+Each deployment automatically:
+- ✅ Builds Gutenberg blocks (`npm run build`)
+- ✅ Compiles Tailwind CSS
+- ✅ Installs production dependencies
+- ✅ Syncs files via rsync
+- ✅ Excludes dev files and dependencies
+
+### Documentation
+
+- **Setup Guide**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- **Setup Checklist**: [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md)
+- **Workflow File**: [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
+
+### Required Secrets
+
+Configure in **Repository → Settings → Secrets**:
+
+| Secret | Description |
+|--------|-------------|
+| `DO_HOST` | Server hostname or IP |
+| `DO_SSH_USER` | SSH username |
+| `DO_SSH_KEY` | SSH private key |
+| `DO_SSH_PORT` | SSH port (default: 22) |
+| `WP_STG_THEME_DIR` | Staging theme path |
+| `WP_PROD_THEME_DIR` | Production theme path |
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed setup instructions.
+
 ## Security
 
 Please review `SECURITY.md` for:

@@ -174,15 +174,11 @@ function custom_theme_load_template_content_from_file( string $template_slug ): 
     throw new Exception( sprintf( 'Template file is not readable: %s. Check file permissions.', esc_html( $file_path ) ) );
   }
 
-  // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-  $content = file_get_contents( $file_path );
-
-  if ( false === $content ) {
-    throw new Exception( sprintf( 'Failed to read template file: %s', esc_html( $file_path ) ) );
-  }
-
-  // Extract only the block markup (remove PHP opening tags and comments)
-  $content = preg_replace( '/<\?php.*?\?>/s', '', $content );
+  // Extract rendered content using output buffering.
+  ob_start();
+  // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_include
+  include $file_path;
+  $content = ob_get_clean();
   $content = trim( $content );
 
   return $content;

@@ -161,8 +161,9 @@ jobs:
             fi
 
             if [ ! -d "$REMOTE_THEME_DIR" ]; then
-              echo "❌ Theme directory does not exist: $REMOTE_THEME_DIR" >&2
-              exit 1
+              echo "📁 Theme directory does not exist, creating: $REMOTE_THEME_DIR"
+              mkdir -p "$REMOTE_THEME_DIR"
+              echo "✅ Directory created"
             fi
 
             echo "Extracting theme archive..."

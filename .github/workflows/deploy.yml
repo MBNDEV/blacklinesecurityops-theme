@@ -90,6 +90,10 @@ jobs:
             --exclude='references' \
             ./ deploy-package/
 
+      - name: Create deployment tarball
+        if: ${{ matrix.branch == github.ref_name }}
+        run: tar -czf theme-deploy.tar.gz -C deploy-package .
+
       - name: Set environment variables
         if: ${{ matrix.branch == github.ref_name }}
         id: set-env
@@ -99,19 +103,33 @@ jobs:
           echo "GITHUB_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
           echo "TIMESTAMP=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
 
-      - name: Deploy theme files via rsync
+      - name: Test SSH connection
         if: ${{ matrix.branch == github.ref_name }}
-        uses: burnett01/rsync-deployments@7.0.1
+        uses: appleboy/ssh-action@v1.2.0
         with:
-          switches: -avzr --delete --exclude='*.log' --exclude='.DS_Store'
-          path: deploy-package/
-          remote_path: ${{ vars[matrix.theme_dir_var] }}
-          remote_host: ${{ vars.DO_HOST }}
-          remote_user: ${{ vars.DO_SSH_USER }}
-          remote_key: ${{ secrets.DO_SSH_KEY }}
-          remote_port: ${{ vars.DO_SSH_PORT }}
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_SSH_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          port: ${{ vars.DO_SSH_PORT }}
+          script_stop: true
+          script: |
+            echo "✅ SSH connection successful"
+            echo "  Host: $(hostname)"
+            echo "  User: $(whoami)"
+            echo "  Shell: $SHELL"
 
-      - name: Clear WordPress cache and verify deployment
+      - name: Upload theme tarball to server
+        if: ${{ matrix.branch == github.ref_name }}
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_SSH_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          port: ${{ vars.DO_SSH_PORT }}
+          source: theme-deploy.tar.gz
+          target: /tmp/
+
+      - name: Extract and verify deployment via SSH
         if: ${{ matrix.branch == github.ref_name }}
         uses: appleboy/ssh-action@v1.2.0
         env:
@@ -129,9 +147,9 @@ jobs:
           script: |
             #!/bin/bash
             set -eo pipefail
-            
+
             echo "==================================="
-            echo "Theme Deployment Verification"
+            echo "Theme Deployment"
             echo "==================================="
             echo "Branch: $BRANCH"
             echo "Commit: $GITHUB_SHA"
@@ -140,7 +158,7 @@ jobs:
             echo ""
 
             if [ -z "$REMOTE_THEME_DIR" ]; then
-              echo "❌ Remote theme directory secret is not configured" >&2
+              echo "❌ Remote theme directory variable is not configured" >&2
               exit 1
             fi
 
@@ -148,6 +166,11 @@ jobs:
               echo "❌ Theme directory does not exist: $REMOTE_THEME_DIR" >&2
               exit 1
             fi
+
+            echo "Extracting theme archive..."
+            tar -xzf /tmp/theme-deploy.tar.gz -C "$REMOTE_THEME_DIR"
+            rm -f /tmp/theme-deploy.tar.gz
+            echo "✅ Archive extracted"
 
             cd "$REMOTE_THEME_DIR"
 

@@ -28,25 +28,20 @@ add_action( 'admin_menu', 'custom_theme_add_template_tools_page' );
  * Import a single template file.
  *
  * @param string $slug Template slug.
- * @param object $wp_filesystem WP_Filesystem instance.
  * @return bool True if imported successfully, false otherwise.
  * @throws Exception If import fails.
  */
-function custom_theme_import_single_template_file( $slug, $wp_filesystem ) {
+function custom_theme_import_single_template_file( $slug ) {
 	$file_path = get_theme_file_path( 'page-templates/' . $slug . '.php' );
   if ( ! file_exists( $file_path ) ) {
       return false;
   }
 
-	// Load content from file using WP_Filesystem.
-	$content = $wp_filesystem->get_contents( $file_path );
-
-  if ( false === $content ) {
-      throw new Exception( esc_html( sprintf( 'Failed to read file: %s', $file_path ) ) );
-  }
-
-	// Extract block markup (remove PHP)
-	$content = preg_replace( '/<\\?php.*?\\?>/s', '', $content );
+	// Extract rendered content using output buffering.
+	ob_start();
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_include
+	include $file_path;
+	$content = ob_get_clean();
 	$content = trim( $content );
 
 	// Get or create Block Template post
@@ -106,16 +101,9 @@ function custom_theme_import_all_templates_from_files() {
 	// Import page templates from page-templates/
 	$page_template_slugs = custom_theme_get_layout_template_file_slugs();
 
-	// Initialize WP_Filesystem.
-	global $wp_filesystem;
-  if ( empty( $wp_filesystem ) ) {
-      require_once ABSPATH . 'wp-admin/includes/file.php';
-      WP_Filesystem();
-  }
-
   foreach ( $page_template_slugs as $slug ) {
     try {
-        $imported_file = custom_theme_import_single_template_file( $slug, $wp_filesystem );
+        $imported_file = custom_theme_import_single_template_file( $slug );
       if ( $imported_file ) {
         ++$imported;
       }
@@ -208,6 +196,9 @@ add_action( 'admin_init', 'custom_theme_handle_template_sync_actions' );
 function custom_theme_validate_export_directories( $dirs ) {
   foreach ( $dirs as $dir_name ) {
       $dir_path = get_theme_file_path( $dir_name );
+	if ( ! is_dir( $dir_path ) ) {
+        wp_mkdir_p( $dir_path );
+    }
     if ( ! is_dir( $dir_path ) ) {
         throw new Exception( esc_html( sprintf( 'Directory does not exist: %s', $dir_path ) ) );
     }

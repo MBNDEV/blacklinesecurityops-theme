@@ -141,14 +141,19 @@ function custom_theme_export_page_to_pattern( $page_id ) {
 	// Get filtered custom fields
 	$custom_fields = custom_theme_get_filtered_custom_fields( $page_id );
 
+	// Initialize WP_Filesystem.
+	global $wp_filesystem;
+  if ( empty( $wp_filesystem ) ) {
+      require_once ABSPATH . 'wp-admin/includes/file.php';
+      WP_Filesystem();
+  }
+
 	// Create pattern file
 	$pattern_dir = get_theme_file_path( 'template-parts/page-patterns' );
 
 	// Create directory if it doesn't exist
-  if ( ! is_dir( $pattern_dir ) ) {
-      // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
-      $created = mkdir( $pattern_dir, 0755, true );
-    if ( ! $created ) {
+  if ( ! $wp_filesystem->is_dir( $pattern_dir ) ) {
+    if ( ! $wp_filesystem->mkdir( $pattern_dir, FS_CHMOD_DIR ) ) {
         throw new Exception( sprintf( 'Failed to create directory: %s. Check file permissions.', esc_html( $pattern_dir ) ) );
     }
   }
@@ -190,8 +195,8 @@ function custom_theme_export_page_to_pattern( $page_id ) {
 
 	$file_path = $pattern_dir . '/' . $slug . '.php';
 
-	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-	$written = file_put_contents( $file_path, $file_content );
+	// Write file using WP_Filesystem.
+	$written = $wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE );
 
   if ( false === $written ) {
       throw new Exception( sprintf( 'Failed to write file: %s. Check file permissions.', esc_html( $file_path ) ) );

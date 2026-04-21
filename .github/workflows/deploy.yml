@@ -33,6 +33,20 @@ jobs:
       - name: Checkout code
         if: ${{ matrix.branch == github.ref_name }}
         uses: actions/checkout@v4
+      - name: Test SSH connection
+        if: ${{ matrix.branch == github.ref_name }}
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_SSH_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          port: ${{ vars.DO_SSH_PORT }}
+          script_stop: true
+          script: |
+            echo "✅ SSH connection successful"
+            echo "  Host: $(hostname)"
+            echo "  User: $(whoami)"
+            echo "  Shell: $SHELL"
 
       - name: Set up Node.js
         if: ${{ matrix.branch == github.ref_name }}
@@ -102,22 +116,6 @@ jobs:
           echo "BRANCH=${{ matrix.branch }}" >> $GITHUB_OUTPUT
           echo "GITHUB_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
           echo "TIMESTAMP=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
-
-      - name: Test SSH connection
-        if: ${{ matrix.branch == github.ref_name }}
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.DO_HOST }}
-          username: ${{ vars.DO_SSH_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
-          port: ${{ vars.DO_SSH_PORT }}
-          script_stop: true
-          script: |
-            echo "✅ SSH connection successful"
-            echo "  Host: $(hostname)"
-            echo "  User: $(whoami)"
-            echo "  Shell: $SHELL"
-
       - name: Upload theme tarball to server
         if: ${{ matrix.branch == github.ref_name }}
         uses: appleboy/scp-action@v0.1.7

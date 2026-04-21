@@ -1,4 +1,4 @@
-name: Build & Deploy Theme
+name: Build & Deploy MBN Theme
 
 on:
   push:

@@ -22,10 +22,10 @@ jobs:
         include:
           - branch: develop
             environment_name: Staging
-            theme_dir_secret: WP_STG_THEME_DIR
+            theme_dir_var: WP_STG_THEME_DIR
           - branch: master
             environment_name: Production
-            theme_dir_secret: WP_PROD_THEME_DIR
+            theme_dir_var: WP_PROD_THEME_DIR
     environment:
       name: ${{ matrix.environment_name }}
 
@@ -94,7 +94,7 @@ jobs:
         if: ${{ matrix.branch == github.ref_name }}
         id: set-env
         run: |
-          echo "REMOTE_THEME_DIR=${{ secrets[matrix.theme_dir_secret] }}" >> $GITHUB_OUTPUT
+          echo "REMOTE_THEME_DIR=${{ vars[matrix.theme_dir_var] }}" >> $GITHUB_OUTPUT
           echo "BRANCH=${{ matrix.branch }}" >> $GITHUB_OUTPUT
           echo "GITHUB_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
           echo "TIMESTAMP=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
@@ -105,11 +105,11 @@ jobs:
         with:
           switches: -avzr --delete --exclude='*.log' --exclude='.DS_Store'
           path: deploy-package/
-          remote_path: ${{ secrets[matrix.theme_dir_secret] }}
-          remote_host: ${{ secrets.DO_HOST }}
-          remote_user: ${{ secrets.DO_SSH_USER }}
+          remote_path: ${{ vars[matrix.theme_dir_var] }}
+          remote_host: ${{ vars.DO_HOST }}
+          remote_user: ${{ vars.DO_SSH_USER }}
           remote_key: ${{ secrets.DO_SSH_KEY }}
-          remote_port: ${{ secrets.DO_SSH_PORT }}
+          remote_port: ${{ vars.DO_SSH_PORT }}
 
       - name: Clear WordPress cache and verify deployment
         if: ${{ matrix.branch == github.ref_name }}
@@ -120,10 +120,10 @@ jobs:
           GITHUB_SHA: ${{ steps.set-env.outputs.GITHUB_SHA }}
           TIMESTAMP: ${{ steps.set-env.outputs.TIMESTAMP }}
         with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.DO_SSH_USER }}
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_SSH_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          port: ${{ secrets.DO_SSH_PORT }}
+          port: ${{ vars.DO_SSH_PORT }}
           script_stop: true
           envs: REMOTE_THEME_DIR,BRANCH,GITHUB_SHA,TIMESTAMP
           script: |

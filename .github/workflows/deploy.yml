@@ -193,15 +193,8 @@ jobs:
             # Check build directory
             echo ""
             echo "Checking built assets..."
-            if [ -d "build/blocks" ]; then
-              BLOCK_COUNT=$(find build/blocks -maxdepth 1 -type d | tail -n +2 | wc -l)
-              echo "  - Blocks built: $BLOCK_COUNT"
-            else
-              echo "  - No blocks built (blocks/ directory is empty)"
-            fi
-            
             if [ -f "assets/build/tailwind.css" ]; then
-              CSS_SIZE=$(du -h assets/build/tailwind.css | cut -f1)
+              CSS_SIZE=$(du -h assets/build/tailwind.css 2>/dev/null | cut -f1 || echo "unknown")
               echo "  - Tailwind CSS size: $CSS_SIZE"
             fi
 

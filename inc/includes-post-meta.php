@@ -26,9 +26,9 @@ function blgf_register_custom_html_meta_box() {
 add_action( 'add_meta_boxes', 'blgf_register_custom_html_meta_box' );
 
 /**
- * Render Custom HTML meta box
+ * Render Custom HTML meta box.
  *
- * @param WP_Post $post Current post object
+ * @param WP_Post $post Current post object.
  */
 function blgf_render_custom_html_meta_box( $post ) {
 	wp_nonce_field( 'blgf_custom_html_metabox', 'blgf_custom_html_nonce' );
@@ -84,9 +84,9 @@ function blgf_render_custom_html_meta_box( $post ) {
 }
 
 /**
- * Save Custom HTML meta box data
+ * Save Custom HTML meta box data.
  *
- * @param int $post_id Post ID
+ * @param int $post_id Post ID.
  */
 function blgf_save_custom_html_meta_box( $post_id ) {
 	// Check if nonce is set
@@ -128,14 +128,14 @@ function blgf_save_custom_html_meta_box( $post_id ) {
 add_action( 'save_post', 'blgf_save_custom_html_meta_box' );
 
 /**
- * Get post meta (wrapper function compatible with old Carbon Fields calls)
+ * Get post meta (wrapper function compatible with old Carbon Fields calls).
  *
- * @param int    $post_id Post ID
- * @param string $key Meta key
- * @param mixed  $default Default value
+ * @param int    $post_id Post ID.
+ * @param string $key Meta key.
+ * @param mixed  $default_value Default value.
  * @return mixed
  */
-function blgf_get_post_meta( $post_id, $key, $default = '' ) {
+function blgf_get_post_meta( $post_id, $key, $default_value = '' ) {
 	// Map old Carbon Fields keys to new keys
 	$key_map = array(
 		'crb_post_html_head'        => '_blgf_post_html_head',
@@ -148,5 +148,5 @@ function blgf_get_post_meta( $post_id, $key, $default = '' ) {
 
 	$value = get_post_meta( $post_id, $mapped_key, true );
 
-	return $value !== '' ? $value : $default;
+	return '' !== $value ? $value : $default_value;
 }

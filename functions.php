@@ -9,10 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-// Define theme constants.
-if ( ! defined( 'CUSTOM_THEME_TEXT_DOMAIN' ) ) {
-	define( 'CUSTOM_THEME_TEXT_DOMAIN', 'mbn-theme' );
-}
 if ( ! defined( 'CUSTOM_THEME_SECTION_BG_TABLET_IMAGE_SIZE' ) ) {
 	define( 'CUSTOM_THEME_SECTION_BG_TABLET_IMAGE_SIZE', 'section-bg-tablet' );
 }

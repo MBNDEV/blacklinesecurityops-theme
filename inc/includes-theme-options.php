@@ -1,6 +1,6 @@
 <?php
 /**
- * Native WordPress Theme Options (replaces Carbon Fields PresetOptionsContainer)
+ * Native WordPress Theme Options (replaces Carbon Fields PresetOptionsContainer).
  * Appearance > Theme Options
  *
  * @package BlackLineSecurityOps
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register theme options page under Appearance menu
+ * Register theme options page under Appearance menu.
  */
 function blgf_register_theme_options_page() {
 	add_theme_page(
@@ -25,22 +25,22 @@ function blgf_register_theme_options_page() {
 add_action( 'admin_menu', 'blgf_register_theme_options_page' );
 
 /**
- * Register theme option settings
+ * Register theme option settings.
  */
 function blgf_register_theme_settings() {
-	// Typography section
+	// Typography section.
 	register_setting( 'blgf_theme_options', 'blgf_font_primary', array( 'default' => 'inter' ) );
 	register_setting( 'blgf_theme_options', 'blgf_font_secondary', array( 'default' => 'system_sans' ) );
 
-	// Appearance section
+	// Appearance section.
 	register_setting( 'blgf_theme_options', 'blgf_primary_accent_color', array( 'default' => '#2563EB' ) );
 	register_setting( 'blgf_theme_options', 'blgf_secondary_accent_color', array( 'default' => '#64748B' ) );
 
-	// Performance section
+	// Performance section.
 	register_setting( 'blgf_theme_options', 'blgf_opt_front_remove_block_global', array( 'default' => true ) );
 	register_setting( 'blgf_theme_options', 'blgf_opt_front_remove_classic_theme_styles', array( 'default' => true ) );
 
-	// Custom HTML sections
+	// Custom HTML sections.
 	register_setting( 'blgf_theme_options', 'blgf_global_html_head', array( 'default' => '' ) );
 	register_setting( 'blgf_theme_options', 'blgf_global_html_before_body', array( 'default' => '' ) );
 	register_setting( 'blgf_theme_options', 'blgf_global_html_after_body', array( 'default' => '' ) );
@@ -49,14 +49,14 @@ function blgf_register_theme_settings() {
 add_action( 'admin_init', 'blgf_register_theme_settings' );
 
 /**
- * Render theme options page
+ * Render theme options page.
  */
 function blgf_render_theme_options_page() {
   if ( ! current_user_can( 'manage_options' ) ) {
       return;
   }
 
-	// Get font presets
+	// Get font presets.
 	$font_choices = array();
   foreach ( blgf_get_font_presets() as $slug => $preset ) {
       $font_choices[ $slug ] = $preset['label'];
@@ -210,7 +210,9 @@ function blgf_render_theme_options_page() {
 }
 
 /**
- * Enqueue color picker for theme options page
+ * Enqueue color picker for theme options page.
+ *
+ * @param string $hook Current admin page hook.
  */
 function blgf_enqueue_theme_options_assets( $hook ) {
   if ( 'appearance_page_mbn-theme-options' !== $hook ) {
@@ -223,14 +225,14 @@ function blgf_enqueue_theme_options_assets( $hook ) {
 add_action( 'admin_enqueue_scripts', 'blgf_enqueue_theme_options_assets' );
 
 /**
- * Get theme option (wrapper function compatible with old Carbon Fields calls)
+ * Get theme option (wrapper function compatible with old Carbon Fields calls).
  *
- * @param string $key Option key
- * @param mixed  $default Default value
+ * @param string $key Option key.
+ * @param mixed  $default_value Default value.
  * @return mixed
  */
-function blgf_get_theme_option( $key, $default = '' ) {
-	// Map old Carbon Fields keys to new keys
+function blgf_get_theme_option( $key, $default_value = '' ) {
+	// Map old Carbon Fields keys to new keys.
 	$key_map = array(
 		'crb_font_primary'                          => 'blgf_font_primary',
 		'crb_font_secondary'                        => 'blgf_font_secondary',
@@ -246,5 +248,5 @@ function blgf_get_theme_option( $key, $default = '' ) {
 
 	$mapped_key = isset( $key_map[ $key ] ) ? $key_map[ $key ] : $key;
 
-	return get_option( $mapped_key, $default );
+	return get_option( $mapped_key, $default_value );
 }

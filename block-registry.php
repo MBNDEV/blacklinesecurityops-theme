@@ -24,25 +24,25 @@ function blacklinesecurityops_register_blocks() {
 	$blocks_dir = get_theme_file_path( 'build/blocks' );
 
 	// Check if blocks directory exists.
-	if ( ! is_dir( $blocks_dir ) ) {
-		return;
-	}
+  if ( ! is_dir( $blocks_dir ) ) {
+      return;
+  }
 
 	// Get all subdirectories in the blocks folder.
 	$block_folders = glob( $blocks_dir . '/*', GLOB_ONLYDIR );
 
-	if ( empty( $block_folders ) ) {
-		return;
-	}
+  if ( empty( $block_folders ) ) {
+      return;
+  }
 
 	// Register each block that has a block.json file.
-	foreach ( $block_folders as $block_folder ) {
-		$block_json = $block_folder . '/block.json';
+  foreach ( $block_folders as $block_folder ) {
+      $block_json = $block_folder . '/block.json';
 
-		if ( file_exists( $block_json ) ) {
-			register_block_type( $block_folder );
-		}
-	}
+    if ( file_exists( $block_json ) ) {
+        register_block_type( $block_folder );
+    }
+  }
 }
 add_action( 'init', 'blacklinesecurityops_register_blocks' );
 

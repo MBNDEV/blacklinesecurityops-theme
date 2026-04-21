@@ -24,46 +24,47 @@ function blacklinesecurityops_register_blocks() {
 	$blocks_dir = get_theme_file_path( 'build/blocks' );
 
 	// Check if blocks directory exists.
-  if ( ! is_dir( $blocks_dir ) ) {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        error_log( 'Block directory not found: ' . $blocks_dir );
-    }
-      return;
-  }
+	if ( ! is_dir( $blocks_dir ) ) {
+		MBN_Logger::warning(
+			'Block directory not found',
+			array( 'path' => $blocks_dir )
+		);
+		return;
+	}
 
 	// Get all subdirectories in the blocks folder.
 	$block_folders = glob( $blocks_dir . '/*', GLOB_ONLYDIR );
 
-  if ( empty( $block_folders ) ) {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        error_log( 'No block folders found in: ' . $blocks_dir );
-    }
-      return;
-  }
+	if ( empty( $block_folders ) ) {
+		MBN_Logger::warning(
+			'No block folders found',
+			array( 'directory' => $blocks_dir )
+		);
+		return;
+	}
 
 	// Register each block that has a block.json file.
-  foreach ( $block_folders as $block_folder ) {
-      $block_json = $block_folder . '/block.json';
+	foreach ( $block_folders as $block_folder ) {
+		$block_json = $block_folder . '/block.json';
 
-    if ( file_exists( $block_json ) ) {
-        $registered = register_block_type( $block_folder );
+		if ( file_exists( $block_json ) ) {
+			$registered = register_block_type( $block_folder );
 
-        // Optional: Log registration for debugging.
-      if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        if ( $registered ) {
-            error_log(
-              sprintf(
-                'Successfully registered block: %s (namespace: %s)',
-                basename( $block_folder ),
-                $registered->name
-              )
-            );
-        } else {
-            error_log( sprintf( 'Failed to register block: %s', basename( $block_folder ) ) );
-        }
-      }
-    }
-  }
+			// Log registration for debugging.
+			if ( $registered ) {
+				MBN_Logger::block(
+					'Block registered successfully',
+					basename( $block_folder ),
+					array( 'namespace' => $registered->name )
+				);
+			} else {
+				MBN_Logger::error(
+					'Failed to register block',
+					array( 'block' => basename( $block_folder ) )
+				);
+			}
+		}
+	}
 }
 add_action( 'init', 'blacklinesecurityops_register_blocks' );
 

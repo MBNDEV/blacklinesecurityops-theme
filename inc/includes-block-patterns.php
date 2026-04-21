@@ -30,7 +30,7 @@ add_action( 'init', 'blacklinesecurityops_register_pattern_category' );
  */
 function blacklinesecurityops_register_block_patterns() {
 
-	// Hero + Content Pattern
+	// Hero + Content Pattern.
 	register_block_pattern(
       'blacklinesecurityops/hero-with-content',
       array(
@@ -53,7 +53,7 @@ function blacklinesecurityops_register_block_patterns() {
 	  )
 	);
 
-	// Two Column Layout Pattern
+	// Two Column Layout Pattern.
 	register_block_pattern(
       'blacklinesecurityops/two-column-content',
       array(

@@ -356,9 +356,12 @@ function custom_theme_get_global_footer_template_output_html(): string {
   if ( $post_id <= 0 ) {
     // Log: Template not found
     if ( function_exists( 'MBN_Logger' ) ) {
-      MBN_Logger::warning( 'Footer template post not found', array(
-        'slug' => custom_theme_footer_template_slug()
-      ));
+      MBN_Logger::warning(
+        'Footer template post not found',
+        array(
+			'slug' => custom_theme_footer_template_slug(),
+        )
+      );
     }
     // Debug: Template not found
     if ( current_user_can( 'edit_posts' ) && WP_DEBUG ) {
@@ -375,11 +378,14 @@ function custom_theme_get_global_footer_template_output_html(): string {
   if ( 'publish' !== $post->post_status ) {
     // Log: Template not published
     if ( function_exists( 'MBN_Logger' ) ) {
-      MBN_Logger::warning( 'Footer template not published', array(
-        'post_id' => $post_id,
-        'status' => $post->post_status,
-        'edit_link' => get_edit_post_link( $post_id )
-      ));
+      MBN_Logger::warning(
+        'Footer template not published',
+        array(
+			'post_id'   => $post_id,
+			'status'    => $post->post_status,
+			'edit_link' => get_edit_post_link( $post_id ),
+        )
+      );
     }
     // Debug: Template not published
     if ( current_user_can( 'edit_posts' ) && WP_DEBUG ) {
@@ -401,12 +407,15 @@ function custom_theme_get_global_footer_template_output_html(): string {
   if ( '' === trim( wp_strip_all_tags( $html ) ) ) {
     // Log: Empty footer
     if ( function_exists( 'MBN_Logger' ) ) {
-      MBN_Logger::warning( 'Footer template has no visible content', array(
-        'post_id' => $post_id,
-        'content_length' => strlen( $post->post_content ),
-        'html_length' => strlen( $html ),
-        'edit_link' => get_edit_post_link( $post_id )
-      ));
+      MBN_Logger::warning(
+        'Footer template has no visible content',
+        array(
+			'post_id'        => $post_id,
+			'content_length' => strlen( $post->post_content ),
+			'html_length'    => strlen( $html ),
+			'edit_link'      => get_edit_post_link( $post_id ),
+        )
+      );
     }
     if ( current_user_can( 'edit_posts' ) && WP_DEBUG ) {
       return '<!-- Footer Template is published but has no visible content. Edit it at: ' . get_edit_post_link( $post_id ) . ' -->';

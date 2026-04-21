@@ -43,6 +43,14 @@ function custom_theme_import_all_templates_from_files() {
 
 	// Import page templates from page-templates/
 	$page_template_slugs = custom_theme_get_layout_template_file_slugs();
+
+	// Initialize WP_Filesystem.
+	global $wp_filesystem;
+	if ( empty( $wp_filesystem ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+	}
+
   foreach ( $page_template_slugs as $slug ) {
     try {
         $file_path = get_theme_file_path( 'page-templates/' . $slug . '.php' );
@@ -50,10 +58,8 @@ function custom_theme_import_all_templates_from_files() {
         continue;
       }
 
-        // Load content from file
-        ob_start();
-        include $file_path;
-        $content = ob_get_clean();
+    	// Load content from file using WP_Filesystem.
+      	$content = $wp_filesystem->get_contents( $file_path );
 
       if ( false === $content ) {
           throw new Exception( sprintf( 'Failed to read file: %s', $file_path ) );
@@ -189,6 +195,13 @@ function custom_theme_export_templates_to_files() {
 	$exported = 0;
 	$errors   = array();
 
+	// Initialize WP_Filesystem.
+	global $wp_filesystem;
+	if ( empty( $wp_filesystem ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+	}
+
 	// Export header/footer to template-parts/
 	$system_templates = array(
 		custom_theme_header_template_slug() => array(
@@ -261,20 +274,9 @@ function custom_theme_export_templates_to_files() {
           $file_content .= $content;
 
           $file_path = get_theme_file_path( $config['dir'] . '/' . $config['filename'] . '.php' );
-          // Debug: Log the actual file path being written
-          MBN_Logger::info(
-            'Exporting Block Template',
-            array(
-				'slug'      => $slug,
-				'title'     => $post->post_title,
-				'file_path' => $file_path,
-				'dir'       => $config['dir'],
-				'filename'  => $config['filename'],
-            )
-          );
-          // Write file
-          // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-          $written = file_put_contents( $file_path, $file_content );
+          
+          // Write file using WP_Filesystem.
+          $written = $wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE );
 
         if ( false === $written ) {
           throw new Exception( sprintf( 'Failed to write file: %s. Check file permissions.', $file_path ) );

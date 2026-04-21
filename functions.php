@@ -71,9 +71,6 @@ function blacklinesecurityops_theme_setup() {
 
 add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
 
-// Load logging utility first (so other components can use it).
-require_once get_theme_file_path( 'inc/includes-logger.php' );
-
 // Load theme components.
 require_once get_theme_file_path( 'block-registry.php' );
 require_once get_theme_file_path( 'tailwind-loader.php' );

@@ -174,9 +174,7 @@ function custom_theme_load_template_content_from_file( string $template_slug ): 
     throw new Exception( sprintf( 'Template file is not readable: %s. Check file permissions.', $file_path ) );
   }
 
-  ob_start();
-  include $file_path;
-  $content = ob_get_clean();
+  $content = file_get_contents( $file_path );
 
   if ( false === $content ) {
     throw new Exception( sprintf( 'Failed to read template file: %s', $file_path ) );
@@ -354,15 +352,6 @@ function custom_theme_get_global_footer_template_output_html(): string {
   $post_id = custom_theme_get_block_template_id_by_slug( custom_theme_footer_template_slug() );
 
   if ( $post_id <= 0 ) {
-    // Log: Template not found
-    if ( function_exists( 'MBN_Logger' ) ) {
-      MBN_Logger::warning(
-        'Footer template post not found',
-        array(
-			'slug' => custom_theme_footer_template_slug(),
-        )
-      );
-    }
     // Debug: Template not found
     if ( current_user_can( 'edit_posts' ) && WP_DEBUG ) {
       return '<!-- Footer Template post not found (slug: ' . custom_theme_footer_template_slug() . ') -->';
@@ -376,17 +365,7 @@ function custom_theme_get_global_footer_template_output_html(): string {
   }
 
   if ( 'publish' !== $post->post_status ) {
-    // Log: Template not published
-    if ( function_exists( 'MBN_Logger' ) ) {
-      MBN_Logger::warning(
-        'Footer template not published',
-        array(
-			'post_id'   => $post_id,
-			'status'    => $post->post_status,
-			'edit_link' => get_edit_post_link( $post_id ),
-        )
-      );
-    }
+    // Debug: Template not published
     // Debug: Template not published
     if ( current_user_can( 'edit_posts' ) && WP_DEBUG ) {
       return '<!-- Footer Template exists but is not published (status: ' . $post->post_status . ') -->';
@@ -406,17 +385,6 @@ function custom_theme_get_global_footer_template_output_html(): string {
   // Debug: Empty content
   if ( '' === trim( wp_strip_all_tags( $html ) ) ) {
     // Log: Empty footer
-    if ( function_exists( 'MBN_Logger' ) ) {
-      MBN_Logger::warning(
-        'Footer template has no visible content',
-        array(
-			'post_id'        => $post_id,
-			'content_length' => strlen( $post->post_content ),
-			'html_length'    => strlen( $html ),
-			'edit_link'      => get_edit_post_link( $post_id ),
-        )
-      );
-    }
     if ( current_user_can( 'edit_posts' ) && WP_DEBUG ) {
       return '<!-- Footer Template is published but has no visible content. Edit it at: ' . get_edit_post_link( $post_id ) . ' -->';
     }

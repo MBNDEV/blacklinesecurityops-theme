@@ -25,10 +25,6 @@ function blacklinesecurityops_register_blocks() {
 
 	// Check if blocks directory exists.
 	if ( ! is_dir( $blocks_dir ) ) {
-		MBN_Logger::warning(
-			'Block directory not found',
-			array( 'path' => $blocks_dir )
-		);
 		return;
 	}
 
@@ -36,10 +32,6 @@ function blacklinesecurityops_register_blocks() {
 	$block_folders = glob( $blocks_dir . '/*', GLOB_ONLYDIR );
 
 	if ( empty( $block_folders ) ) {
-		MBN_Logger::warning(
-			'No block folders found',
-			array( 'directory' => $blocks_dir )
-		);
 		return;
 	}
 
@@ -48,21 +40,7 @@ function blacklinesecurityops_register_blocks() {
 		$block_json = $block_folder . '/block.json';
 
 		if ( file_exists( $block_json ) ) {
-			$registered = register_block_type( $block_folder );
-
-			// Log registration for debugging.
-			if ( $registered ) {
-				MBN_Logger::block(
-					'Block registered successfully',
-					basename( $block_folder ),
-					array( 'namespace' => $registered->name )
-				);
-			} else {
-				MBN_Logger::error(
-					'Failed to register block',
-					array( 'block' => basename( $block_folder ) )
-				);
-			}
+			register_block_type( $block_folder );
 		}
 	}
 }

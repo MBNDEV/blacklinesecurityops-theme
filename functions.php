@@ -75,6 +75,51 @@ function blacklinesecurityops_theme_setup() {
 add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
 
 /**
+ * Enable SVG uploads
+ */
+function blacklinesecurityops_enable_svg_upload( $mimes ) {
+  $mimes['svg']  = 'image/svg+xml';
+  $mimes['svgz'] = 'image/svg+xml';
+  return $mimes;
+}
+add_filter( 'upload_mimes', 'blacklinesecurityops_enable_svg_upload' );
+
+/**
+ * Fix SVG display in media library
+ */
+function blacklinesecurityops_fix_svg_display( $response, $attachment, $meta ) {
+  if ( $response['type'] === 'image' && $response['subtype'] === 'svg+xml' && class_exists( 'SimpleXMLElement' ) ) {
+    try {
+      $path = get_attached_file( $attachment->ID );
+      if ( @file_exists( $path ) ) {
+        $svg = @file_get_contents( $path );
+        if ( $svg !== false ) {
+          $svg = simplexml_load_string( $svg );
+          if ( $svg !== false ) {
+            $width  = 0;
+            $height = 0;
+            if ( $svg['width'] ) {
+              $width = floatval( $svg['width'] );
+            }
+            if ( $svg['height'] ) {
+              $height = floatval( $svg['height'] );
+            }
+            if ( $width > 0 && $height > 0 ) {
+              $response['width']  = $width;
+              $response['height'] = $height;
+            }
+          }
+        }
+      }
+    } catch ( Exception $e ) {
+      // Silently fail
+    }
+  }
+  return $response;
+}
+add_filter( 'wp_prepare_attachment_for_js', 'blacklinesecurityops_fix_svg_display', 10, 3 );
+
+/**
  * Enqueue Slick Slider for Logo List block
  */
 function blacklinesecurityops_enqueue_slick_slider() {

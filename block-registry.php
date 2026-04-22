@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Auto-discover and register all native Gutenberg blocks.
  *
  * Scans the build/blocks/ directory for subdirectories containing block.json files
- * and registers them with WordPress.
+ * and registers them with WordPress. Supports nested blocks (e.g., mbn-slider/slider-item).
  *
  * @return void
  */
@@ -31,10 +31,16 @@ function blacklinesecurityops_register_blocks() {
       return;
   }
 
-	// Get all subdirectories in the blocks folder.
+	// Get all subdirectories in the blocks folder (top-level blocks).
 	$block_folders = glob( $blocks_dir . '/*', GLOB_ONLYDIR );
+	
+	// Also get nested blocks (e.g., mbn-slider/slider-item).
+	$nested_block_folders = glob( $blocks_dir . '/*/*', GLOB_ONLYDIR );
+	
+	// Combine both arrays.
+	$all_block_folders = array_merge( $block_folders, $nested_block_folders );
 
-  if ( empty( $block_folders ) ) {
+  if ( empty( $all_block_folders ) ) {
     if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
         error_log( 'No block folders found in: ' . $blocks_dir );
     }
@@ -42,7 +48,7 @@ function blacklinesecurityops_register_blocks() {
   }
 
 	// Register each block that has a block.json file.
-  foreach ( $block_folders as $block_folder ) {
+  foreach ( $all_block_folders as $block_folder ) {
       $block_json = $block_folder . '/block.json';
 
     if ( file_exists( $block_json ) ) {

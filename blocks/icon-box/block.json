@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "mbn-theme/icon-box",
+  "title": "Icon Box",
+  "category": "mbn-blocks",
+  "icon": "star-filled",
+  "description": "Display an icon with title and description",
+  "keywords": ["icon", "box", "feature", "svg"],
+  "textdomain": "mbn-theme",
+  "editorScript": "file:./index.js",
+  "style": "file:./style.css",
+  "attributes": {
+    "iconType": {
+      "type": "string",
+      "default": "image",
+      "enum": ["image", "svg"]
+    },
+    "iconImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "iconImageId": {
+      "type": "number"
+    },
+    "iconSvgCode": {
+      "type": "string",
+      "default": ""
+    },
+    "iconPosition": {
+      "type": "string",
+      "default": "center",
+      "enum": ["left", "right", "center"]
+    },
+    "iconSize": {
+      "type": "number",
+      "default": 64
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "h3",
+      "enum": ["h2", "h3", "h4", "h5", "span"]
+    },
+    "titleClass": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleFontSize": {
+      "type": "number",
+      "default": 0
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "descriptionColor": {
+      "type": "string",
+      "default": ""
+    },
+    "descriptionFontSize": {
+      "type": "number",
+      "default": 0
+    }
+  }
+}

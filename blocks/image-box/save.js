@@ -7,7 +7,11 @@ export default function save({ attributes }) {
     imageWidth,
     title,
     titleTag,
+    titleColor,
+    titleFontSize,
     content,
+    contentColor,
+    contentFontSize,
     buttonText,
     buttonUrl,
     buttonStyle,
@@ -45,6 +49,10 @@ export default function save({ attributes }) {
               tagName={titleTag}
               value={title}
               className="image-box-title"
+              style={{
+                color: titleColor || undefined,
+                fontSize: titleFontSize ? `${titleFontSize}px` : undefined
+              }}
             />
           )}
 
@@ -53,6 +61,10 @@ export default function save({ attributes }) {
               tagName="div"
               value={content}
               className="image-box-text"
+              style={{
+                color: contentColor || undefined,
+                fontSize: contentFontSize ? `${contentFontSize}px` : undefined
+              }}
             />
           )}
 

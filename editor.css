@@ -16,12 +16,12 @@ p {
     margin-bottom: 1.5rem;
 }
 
-.wp-block-post-title {
-    font-size:20px;
+.wp-block {
+    border:0 !important
 }
 
-.wp-block-cover.bgsec {
-	background: #011C4C !important;
+.wp-block-post-title {
+    font-size:20px;
 }
 
 .wp-block-group {
@@ -37,7 +37,7 @@ p {
   right: 0;
   top: 0;
   bottom: 0;
-  border:1px dashed #ccc;
+  border:1px dashed rgba(255,255,255,0.5);
 }
 
 
@@ -63,6 +63,7 @@ p {
 .wp-block[data-align="full"] {
   width: 100%;
   max-width: 100%;
+  margin: 0 !important;
 }
 
 .display-flex {
@@ -94,4 +95,58 @@ p {
 .imgfull {
     width:100%;
     max-width:100%;
+}
+
+
+.wp-block-mbn-theme-slider-item {
+    margin: 0 !important;
+}
+.mbn-slider-items .block-list-appender {
+    position: static !important;
+    align-items: center;
+    background: #f9f9f9;
+    display: flex;
+}
+
+.wp-block-button__link {
+  border-radius: 0;
+  background-image: linear-gradient(92deg,#5C5C5C 11.4%,#FFF4E0 110.47%);
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
+  --tw-shadow: inset 0 -5px 13px 0 #2C2C2C;
+  --tw-shadow-colored: inset 0 -5px 13px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.wp-block.is-vertical {
+    align-items: stretch;
+}
+
+.icon-box {
+    margin-top:0 !important;
+    margin-bottom: 10px !important;
+    padding:0 !important;
+}
+.icon-box.flex_column > div{
+    flex-direction: column !important;
+    gap: 5px;
+}
+.icon-box-description {
+    margin: 0 0 12px;
+}
+
+.display-slider .mbn-slider-items {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0;
 }

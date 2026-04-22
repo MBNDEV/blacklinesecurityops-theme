@@ -1,12 +1,12 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "mbn-theme/logo-list",
-  "title": "Logo List",
+  "name": "mbn-theme/mbn-slider",
+  "title": "MBN Slider",
   "category": "mbn-blocks",
-  "icon": "images-alt2",
-  "description": "Display logos as grid or slider with responsive controls",
-  "keywords": ["logo", "gallery", "slider", "carousel", "clients"],
+  "icon": "slides",
+  "description": "Add items with any blocks inside, display as slider or grid",
+  "keywords": ["slider", "carousel", "grid", "container", "wrapper"],
   "textdomain": "mbn-theme",
   "editorScript": "file:./index.js",
   "style": "file:./style.css",
@@ -20,18 +20,14 @@
     }
   },
   "attributes": {
-    "logos": {
-      "type": "array",
-      "default": []
-    },
     "displayType": {
       "type": "string",
-      "default": "grid",
-      "enum": ["grid", "slider"]
+      "default": "slider",
+      "enum": ["slider", "grid"]
     },
     "gridColumns": {
       "type": "number",
-      "default": 4
+      "default": 3
     },
     "gridGap": {
       "type": "string",
@@ -55,35 +51,35 @@
     },
     "sliderDots": {
       "type": "boolean",
-      "default": false
+      "default": true
     },
     "sliderArrows": {
       "type": "boolean",
       "default": true
     },
-    "slidesDesktop": {
-      "type": "number",
-      "default": 5
+    "sliderFade": {
+      "type": "boolean",
+      "default": false
     },
-    "slidesTablet": {
+    "sliderCenterMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "slidesDesktop": {
       "type": "number",
       "default": 3
     },
-    "slidesMobile": {
+    "slidesTablet": {
       "type": "number",
       "default": 2
     },
-    "logoHeight": {
+    "slidesMobile": {
+      "type": "number",
+      "default": 1
+    },
+    "itemMinHeight": {
       "type": "string",
-      "default": "80px"
-    },
-    "grayscale": {
-      "type": "boolean",
-      "default": false
-    },
-    "grayscaleHover": {
-      "type": "boolean",
-      "default": false
+      "default": ""
     }
   }
 }

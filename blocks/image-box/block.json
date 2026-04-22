@@ -3,7 +3,7 @@
   "apiVersion": 3,
   "name": "mbn-theme/image-box",
   "title": "Image Box",
-  "category": "layout",
+  "category": "mbn-blocks",
   "icon": "format-image",
   "description": "A flexible box with image, title, content and button",
   "keywords": ["image", "box", "card", "content"],
@@ -69,6 +69,22 @@
     "buttonTarget": {
       "type": "boolean",
       "default": false
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleFontSize": {
+      "type": "number",
+      "default": 0
+    },
+    "contentColor": {
+      "type": "string",
+      "default": ""
+    },
+    "contentFontSize": {
+      "type": "number",
+      "default": 0
     }
   }
 }

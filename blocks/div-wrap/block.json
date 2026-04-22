@@ -3,7 +3,7 @@
   "apiVersion": 3,
   "name": "mbn-theme/div-wrap",
   "title": "Div Wrap",
-  "category": "layout",
+  "category": "mbn-blocks",
   "icon": "editor-table",
   "description": "A flexible container block with background image/video support and custom CSS",
   "keywords": ["container", "wrapper", "group", "row", "div"],

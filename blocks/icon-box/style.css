@@ -1,0 +1,118 @@
+/**
+ * Icon Box Block Styles
+ */
+
+/* Base Styles */
+.icon-box {
+  display: block;
+  width: 100%;
+}
+
+.icon-box-inner {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Icon Styles */
+.icon-box-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box-icon img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.icon-box-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Content Styles */
+.icon-box-content {
+  flex: 1;
+  min-width: 0; /* Prevent flex item overflow */
+}
+
+.icon-box-title {
+  margin: 0 0 0.5rem 0;
+}
+
+.icon-box-title:empty {
+  display: none;
+}
+
+.icon-box-description {
+  margin: 0;
+}
+
+.icon-box-description:empty {
+  display: none;
+}
+
+.icon-box-description p {
+  margin: 0 0 12px 0;
+}
+
+.icon-box-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Position Variations */
+.icon-box.icon-position-left .icon-box-inner {
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.icon-box.icon-position-right .icon-box-inner {
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.icon-box.icon-position-center .icon-box-inner {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .icon-box-inner {
+    gap: 0.75rem;
+  }
+  
+  /* Stack on mobile for left/right layouts */
+  .icon-box.icon-position-left .icon-box-inner,
+  .icon-box.icon-position-right .icon-box-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Editor-specific styles */
+.editor-styles-wrapper .icon-box {
+  padding: 1rem;
+  border: 1px dashed #e0e0e0;
+}
+
+.editor-styles-wrapper .icon-box-title[data-rich-text-placeholder]:empty::before {
+  opacity: 0.6;
+}
+
+.editor-styles-wrapper .icon-box-description[data-rich-text-placeholder]:empty::before {
+  opacity: 0.6;
+}

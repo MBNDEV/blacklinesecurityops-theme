@@ -3,7 +3,8 @@ import {
   InspectorControls,
   RichText,
   MediaUpload,
-  MediaUploadCheck 
+  MediaUploadCheck,
+  PanelColorSettings
 } from '@wordpress/block-editor';
 import { 
   PanelBody, 
@@ -11,6 +12,7 @@ import {
   Button,
   TextControl,
   ToggleControl,
+  RangeControl,
   __experimentalVStack as VStack 
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -23,7 +25,11 @@ export default function Edit({ attributes, setAttributes }) {
     imageWidth,
     title,
     titleTag,
+    titleColor,
+    titleFontSize,
     content,
+    contentColor,
+    contentFontSize,
     buttonText,
     buttonUrl,
     buttonStyle,
@@ -128,6 +134,52 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
+        <PanelColorSettings
+          title={__('Title Color', 'mbn-theme')}
+          colorSettings={[
+            {
+              value: titleColor,
+              onChange: (value) => setAttributes({ titleColor: value }),
+              label: __('Text Color', 'mbn-theme'),
+            },
+          ]}
+        />
+
+        <PanelBody title={__('Title Font Size', 'mbn-theme')} initialOpen={false}>
+          <RangeControl
+            label={__('Font Size (px)', 'mbn-theme')}
+            value={titleFontSize}
+            onChange={(value) => setAttributes({ titleFontSize: value })}
+            min={0}
+            max={100}
+            step={1}
+            help={__('0 = default theme size', 'mbn-theme')}
+          />
+        </PanelBody>
+
+        <PanelColorSettings
+          title={__('Content Color', 'mbn-theme')}
+          colorSettings={[
+            {
+              value: contentColor,
+              onChange: (value) => setAttributes({ contentColor: value }),
+              label: __('Text Color', 'mbn-theme'),
+            },
+          ]}
+        />
+
+        <PanelBody title={__('Content Font Size', 'mbn-theme')} initialOpen={false}>
+          <RangeControl
+            label={__('Font Size (px)', 'mbn-theme')}
+            value={contentFontSize}
+            onChange={(value) => setAttributes({ contentFontSize: value })}
+            min={0}
+            max={100}
+            step={1}
+            help={__('0 = default theme size', 'mbn-theme')}
+          />
+        </PanelBody>
+
         <PanelBody title={__('Button Settings', 'mbn-theme')} initialOpen={false}>
           <VStack spacing={3}>
             <TextControl
@@ -178,6 +230,10 @@ export default function Edit({ attributes, setAttributes }) {
               onChange={(value) => setAttributes({ title: value })}
               placeholder={__('Enter title...', 'mbn-theme')}
               className="image-box-title"
+              style={{
+                color: titleColor || undefined,
+                fontSize: titleFontSize ? `${titleFontSize}px` : undefined
+              }}
             />
 
             <RichText
@@ -188,6 +244,10 @@ export default function Edit({ attributes, setAttributes }) {
               className="image-box-text"
               multiline="p"
               allowedFormats={['core/bold', 'core/italic', 'core/link', 'core/underline', 'core/strikethrough']}
+              style={{
+                color: contentColor || undefined,
+                fontSize: contentFontSize ? `${contentFontSize}px` : undefined
+              }}
             />
 
             {buttonText && (

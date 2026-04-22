@@ -87,6 +87,9 @@ add_action( 'wp_enqueue_scripts', 'custom_theme_enqueue_tailwind_front', 8 );
  * @return void
  */
 function custom_theme_enqueue_tailwind_editor(): void {
+  // Re-register if needed (in case init hook hasn't run yet in some contexts)
+  custom_theme_register_tailwind_styles();
+
   if ( ! wp_style_is( 'custom-theme-tailwind', 'registered' ) ) {
     return;
   }
@@ -97,4 +100,4 @@ function custom_theme_enqueue_tailwind_editor(): void {
     wp_add_inline_style( 'custom-theme-tailwind', $css );
   }
 }
-add_action( 'enqueue_block_editor_assets', 'custom_theme_enqueue_tailwind_editor' );
+add_action( 'enqueue_block_editor_assets', 'custom_theme_enqueue_tailwind_editor', 5 );

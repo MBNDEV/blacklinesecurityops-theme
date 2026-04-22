@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Auto-discover and register all native Gutenberg blocks.
  *
  * Scans the build/blocks/ directory for subdirectories containing block.json files
- * and registers them with WordPress. Supports nested blocks (e.g., mbn-slider/slider-item).
+ * and registers them with WordPress.
  *
  * @return void
  */
@@ -25,49 +25,22 @@ function blacklinesecurityops_register_blocks() {
 
 	// Check if blocks directory exists.
   if ( ! is_dir( $blocks_dir ) ) {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        error_log( 'Block directory not found: ' . $blocks_dir );
-    }
       return;
   }
 
-	// Get all subdirectories in the blocks folder (top-level blocks).
+	// Get all subdirectories in the blocks folder.
 	$block_folders = glob( $blocks_dir . '/*', GLOB_ONLYDIR );
-	
-	// Also get nested blocks (e.g., mbn-slider/slider-item).
-	$nested_block_folders = glob( $blocks_dir . '/*/*', GLOB_ONLYDIR );
-	
-	// Combine both arrays.
-	$all_block_folders = array_merge( $block_folders, $nested_block_folders );
 
-  if ( empty( $all_block_folders ) ) {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        error_log( 'No block folders found in: ' . $blocks_dir );
-    }
+  if ( empty( $block_folders ) ) {
       return;
   }
 
 	// Register each block that has a block.json file.
-  foreach ( $all_block_folders as $block_folder ) {
+  foreach ( $block_folders as $block_folder ) {
       $block_json = $block_folder . '/block.json';
 
     if ( file_exists( $block_json ) ) {
-        $registered = register_block_type( $block_folder );
-
-        // Optional: Log registration for debugging.
-      if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        if ( $registered ) {
-            error_log(
-              sprintf(
-                'Successfully registered block: %s (namespace: %s)',
-                basename( $block_folder ),
-                $registered->name
-              )
-            );
-        } else {
-            error_log( sprintf( 'Failed to register block: %s', basename( $block_folder ) ) );
-        }
-      }
+        register_block_type( $block_folder );
     }
   }
 }

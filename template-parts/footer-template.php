@@ -1,11 +1,19 @@
 <?php
 /**
+<<<<<<< HEAD
  * Default Footer Template content.
  * 
  * This file syncs to the "Footer Template" Block Template post on theme activation.
  * Edit the Block Template post in WordPress admin, then export back to this file
  * using the export button in the admin.
  * 
+=======
+ * Footer Template Block Template.
+ *
+ * Syncs with "Footer Template" Block Template post.
+ * Edit in WordPress admin, then export using Block Templates → Sync Tools.
+ *
+>>>>>>> 3e2c4ddcb9d2caaf99f82c223574d8a2ea095e7c
  * @package CustomTheme
  */
 
@@ -13,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
+<<<<<<< HEAD
 <!-- wp:mbn-theme/div-wrap {"style":{"spacing":{"padding":{"top":"50px"}},"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"color":{"background":"#020305"}},"textColor":"white"} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block  has-white-color has-text-color has-background has-link-color" style="background-color:#020305;padding-top:50px"><div class="div-wrap-content"><!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column {"width":"66.66%"} -->
@@ -72,3 +81,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div></div>
 <!-- /wp:mbn-theme/div-wrap -->
+=======
+<!-- wp:paragraph {"align":"center"} -->
+<p class="has-text-align-center">© 2026 Black Line Security Ops. All rights reserved.</p>
+<!-- /wp:paragraph -->
+>>>>>>> 3e2c4ddcb9d2caaf99f82c223574d8a2ea095e7c

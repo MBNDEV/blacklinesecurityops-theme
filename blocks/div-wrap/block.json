@@ -1,0 +1,103 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "mbn-theme/div-wrap",
+  "title": "Div Wrap",
+  "category": "mbn-blocks",
+  "icon": "editor-table",
+  "description": "A flexible container block with background image/video support and custom CSS",
+  "keywords": ["container", "wrapper", "group", "row", "div"],
+  "textdomain": "mbn-theme",
+  "editorScript": "file:./index.js",
+  "style": "file:./style.css",
+  "supports": {
+    "align": ["wide", "full"],
+    "html": false,
+    "color": {
+      "background": true,
+      "text": true,
+      "gradients": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "backgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number"
+    },
+    "backgroundVideoUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundVideoId": {
+      "type": "number"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "none",
+      "enum": ["none", "image", "video"]
+    },
+    "backgroundSize": {
+      "type": "string",
+      "default": "cover"
+    },
+    "backgroundPosition": {
+      "type": "string",
+      "default": "center center"
+    },
+    "backgroundRepeat": {
+      "type": "string",
+      "default": "no-repeat"
+    },
+    "backgroundAttachment": {
+      "type": "string",
+      "default": "scroll"
+    },
+    "videoLoop": {
+      "type": "boolean",
+      "default": true
+    },
+    "videoMuted": {
+      "type": "boolean",
+      "default": true
+    },
+    "videoAutoplay": {
+      "type": "boolean",
+      "default": true
+    },
+    "customCSS": {
+      "type": "string",
+      "default": ""
+    },
+    "customClassName": {
+      "type": "string",
+      "default": ""
+    },
+    "minHeight": {
+      "type": "string",
+      "default": ""
+    },
+    "borderWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": "solid"
+    },
+    "borderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "borderRadius": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

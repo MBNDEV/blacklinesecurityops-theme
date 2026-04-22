@@ -74,7 +74,10 @@ function blacklinesecurityops_theme_setup() {
 add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
 
 /**
- * Enable SVG uploads
+ * Enable SVG uploads.
+ *
+ * @param array $mimes Allowed MIME types.
+ * @return array
  */
 function blacklinesecurityops_enable_svg_upload( $mimes ) {
   $mimes['svg']  = 'image/svg+xml';
@@ -85,35 +88,37 @@ add_filter( 'upload_mimes', 'blacklinesecurityops_enable_svg_upload' );
 
 /**
  * Fix SVG display in media library
+ *
+ * @param array      $response   Prepared attachment data.
+ * @param WP_Post    $attachment Attachment object.
+ * @param array|bool $meta       Attachment metadata (unused).
+ * @return array
  */
-function blacklinesecurityops_fix_svg_display( $response, $attachment, $meta ) {
-  if ( $response['type'] === 'image' && $response['subtype'] === 'svg+xml' && class_exists( 'SimpleXMLElement' ) ) {
-    try {
-      $path = get_attached_file( $attachment->ID );
-      if ( @file_exists( $path ) ) {
-        $svg = @file_get_contents( $path );
-        if ( $svg !== false ) {
-          $svg = simplexml_load_string( $svg );
-          if ( $svg !== false ) {
-            $width  = 0;
-            $height = 0;
-            if ( $svg['width'] ) {
-              $width = floatval( $svg['width'] );
-            }
-            if ( $svg['height'] ) {
-              $height = floatval( $svg['height'] );
-            }
-            if ( $width > 0 && $height > 0 ) {
-              $response['width']  = $width;
-              $response['height'] = $height;
-            }
-          }
-        }
-      }
-    } catch ( Exception $e ) {
-      // Silently fail
+function blacklinesecurityops_fix_svg_display( $response, $attachment, $meta ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+  if ( 'image' !== $response['type'] || 'svg+xml' !== $response['subtype'] || ! class_exists( 'SimpleXMLElement' ) ) {
+    return $response;
+  }
+
+  $path = get_attached_file( $attachment->ID );
+  if ( ! $path || ! file_exists( $path ) ) {
+    return $response;
+  }
+
+  $svg_content = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+  if ( false === $svg_content ) {
+    return $response;
+  }
+
+  $svg = simplexml_load_string( $svg_content );
+  if ( false !== $svg ) {
+    $width  = $svg['width'] ? floatval( $svg['width'] ) : 0;
+    $height = $svg['height'] ? floatval( $svg['height'] ) : 0;
+    if ( $width > 0 && $height > 0 ) {
+      $response['width']  = $width;
+      $response['height'] = $height;
     }
   }
+
   return $response;
 }
 add_filter( 'wp_prepare_attachment_for_js', 'blacklinesecurityops_fix_svg_display', 10, 3 );

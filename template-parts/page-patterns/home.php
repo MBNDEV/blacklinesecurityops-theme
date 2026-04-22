@@ -1,30 +1,29 @@
 <?php
 /**
  * Page Pattern: Home
- * 
+ *
  * This file contains the complete page data for the 'Home' page.
  * It can be imported to create/update the page on other environments.
- * 
+ *
  * Includes: Content, Featured Image, Status, Attributes, Custom Fields
- * 
+ *
  * To use: Tools → Page Content Sync → Import All Pages from Files
- * 
+ *
  * @package CustomTheme
  */
 
 return array(
-	'title'              => 'Home',
-	'slug'               => 'home',
-	'status'             => 'publish',
-	'excerpt'            => '',
-	'parent_slug'        => '',
-	'menu_order'         => 0,
-	'template'           => '',
-	'featured_image_url' => '',
+	'title'               => 'Home',
+	'slug'                => 'home',
+	'status'              => 'publish',
+	'excerpt'             => '',
+	'parent_slug'         => '',
+	'menu_order'          => 0,
+	'template'            => '',
+	'featured_image_url'  => '',
 	'featured_image_path' => '', // Theme assets path (ships via Git)
-	'custom_fields'      => array (
-),
-	'content'            => <<<'EOD'
+	'custom_fields'       => array(),
+	'content'             => <<<'EOD'
 <!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-sechero.jpg","backgroundImageId":69,"backgroundType":"image","customClassName":"hero_test","borderWidth":"0","metadata":{"name":"Hero"},"className":"sec_hero","style":{"spacing":{"padding":{"top":"0","bottom":"0","left":"0px","right":"0px"}}}} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block hero_test sec_hero" style="padding-top:0;padding-right:0px;padding-bottom:0;padding-left:0px;background-image:url(http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-sechero.jpg);background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:scroll;border-width:0;border-style:solid"><div class="div-wrap-content"><!-- wp:cover {"url":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/portrait-of-bearded-bodyguard-in-earphone.mp4","id":66,"dimRatio":0,"isUserOverlayColor":true,"backgroundType":"video","customGradient":"linear-gradient(135deg,rgb(0,0,0) 0%,rgba(0,0,0,0) 100%)","contentPosition":"center center","isDark":false,"sizeSlug":"full","className":"postatic","style":{"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"spacing":{"padding":{"top":"100px","bottom":"100px"}}},"textColor":"white","layout":{"type":"constrained"}} -->
 <div class="wp-block-cover is-light postatic has-white-color has-text-color has-link-color" style="padding-top:100px;padding-bottom:100px"><video class="wp-block-cover__video-background intrinsic-ignore" autoplay muted loop playsinline src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/portrait-of-bearded-bodyguard-in-earphone.mp4" data-object-fit="cover"></video><span aria-hidden="true" class="wp-block-cover__background has-background-dim-0 has-background-dim has-background-gradient" style="background:linear-gradient(135deg,rgb(0,0,0) 0%,rgba(0,0,0,0) 100%)"></span><div class="wp-block-cover__inner-container"><!-- wp:paragraph {"className":"text_eyebrow","style":{"typography":{"textTransform":"uppercase"}}} -->
@@ -325,4 +324,5 @@ return array(
 <!-- /wp:columns --></div></div>
 <!-- /wp:mbn-theme/div-wrap -->
 EOD
+	,
 );

@@ -44,7 +44,7 @@ function blacklinesecurityops_theme_setup() {
 	add_editor_style( 'assets/build/tailwind.css' );
 
   // Enqueue editor styles
-  add_editor_style('editor.css');
+  add_editor_style( 'editor.css' );
 
   // Add support for responsive embedded content
   add_theme_support( 'responsive-embeds' );

@@ -36,16 +36,19 @@ function custom_theme_nav_menus_export_dir(): string {
  */
 function custom_theme_nav_menus_ensure_export_dir(): void {
 	$dir = custom_theme_nav_menus_export_dir();
-	if ( ! is_dir( $dir ) ) {
-		wp_mkdir_p( $dir );
-	}
-	if ( ! is_dir( $dir ) ) {
-		throw new Exception( sprintf( 'Could not create directory: %s', esc_html( $dir ) ) );
-	}
+
+  if ( ! is_dir( $dir ) ) {
+      wp_mkdir_p( $dir );
+  }
+
+  if ( ! is_dir( $dir ) ) {
+      throw new Exception( sprintf( 'Could not create directory: %s', esc_html( $dir ) ) );
+  }
+
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
-	if ( ! is_writable( $dir ) ) {
-		throw new Exception( sprintf( 'Directory is not writable: %s', esc_html( $dir ) ) );
-	}
+  if ( ! is_writable( $dir ) ) {
+      throw new Exception( sprintf( 'Directory is not writable: %s', esc_html( $dir ) ) );
+  }
 }
 
 /**
@@ -57,21 +60,21 @@ function custom_theme_nav_menus_ensure_export_dir(): void {
  */
 function custom_theme_nav_resolve_post_id( string $post_type, string $slug ): int {
 	$post = get_page_by_path( $slug, OBJECT, $post_type );
-	if ( $post instanceof WP_Post ) {
-		return (int) $post->ID;
-	}
+  if ( $post instanceof WP_Post ) {
+      return (int) $post->ID;
+  }
 
 	$posts = get_posts(
-		array(
-			'post_type'              => $post_type,
-			'name'                   => $slug,
-			'post_status'            => 'any',
-			'numberposts'            => 1,
-			'fields'                 => 'ids',
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		)
+      array(
+		  'post_type'              => $post_type,
+		  'name'                   => $slug,
+		  'post_status'            => 'any',
+		  'numberposts'            => 1,
+		  'fields'                 => 'ids',
+		  'no_found_rows'          => true,
+		  'update_post_meta_cache' => false,
+		  'update_post_term_cache' => false,
+	  )
 	);
 
 	return ! empty( $posts ) ? (int) $posts[0] : 0;
@@ -94,6 +97,160 @@ function custom_theme_nav_resolve_term_id( string $taxonomy, string $slug ): int
 // ---------------------------------------------------------------------------
 
 /**
+ * Build a map of item DB ID to 0-based array index for parent resolution.
+ *
+ * @param array $raw_items Raw nav menu item objects.
+ * @return array<int, int>
+ */
+function custom_theme_nav_build_id_index_map( array $raw_items ): array {
+	$id_to_index = array();
+  foreach ( $raw_items as $i => $item ) {
+      $id_to_index[ (int) $item->ID ] = $i;
+  }
+	return $id_to_index;
+}
+
+/**
+ * Enrich a menu item entry with a portable object_slug for post_type items.
+ *
+ * @param array   $entry Raw entry array (passed by reference).
+ * @param WP_Post $post  Post object for this item.
+ * @return void
+ */
+function custom_theme_nav_enrich_post_type_entry( array &$entry, WP_Post $post ): void {
+	$entry['object_slug'] = $post->post_name;
+}
+
+/**
+ * Enrich a menu item entry with a portable object_slug for taxonomy items.
+ *
+ * @param array   $entry Raw entry array (passed by reference).
+ * @param WP_Term $term  Term object for this item.
+ * @return void
+ */
+function custom_theme_nav_enrich_taxonomy_entry( array &$entry, WP_Term $term ): void {
+	$entry['object_slug']     = $term->slug;
+	$entry['object_taxonomy'] = $term->taxonomy;
+}
+
+/**
+ * Serialize a single raw menu item object to a portable array entry.
+ *
+ * Post/page items are stored by slug so they resolve correctly on any environment.
+ * Parent relationships are stored as 0-based array indices, not database IDs.
+ *
+ * @param object         $item        Raw nav menu item.
+ * @param array<int,int> $id_to_index Map of item DB ID to array index.
+ * @return array
+ */
+function custom_theme_nav_serialize_item( object $item, array $id_to_index ): array {
+	$parent_index = -1;
+	$parent_db_id = (int) $item->menu_item_parent;
+
+  if ( $parent_db_id > 0 && isset( $id_to_index[ $parent_db_id ] ) ) {
+      $parent_index = $id_to_index[ $parent_db_id ];
+  }
+
+	$entry = array(
+		'title'        => $item->title,
+		'type'         => $item->type,
+		'object'       => $item->object,
+		'url'          => $item->url,
+		'target'       => $item->target,
+		'attr_title'   => $item->attr_title,
+		'description'  => $item->description,
+		'classes'      => array_values( array_filter( (array) $item->classes ) ),
+		'xfn'          => $item->xfn,
+		'order'        => (int) $item->menu_order,
+		'parent_index' => $parent_index,
+	);
+
+	if ( 'post_type' === $item->type && $item->object_id > 0 ) {
+		$post = get_post( (int) $item->object_id );
+      if ( $post instanceof WP_Post ) {
+          custom_theme_nav_enrich_post_type_entry( $entry, $post );
+      }
+	}
+
+	if ( 'taxonomy' === $item->type && $item->object_id > 0 ) {
+		$term = get_term( (int) $item->object_id );
+      if ( $term instanceof WP_Term ) {
+          custom_theme_nav_enrich_taxonomy_entry( $entry, $term );
+      }
+	}
+
+	return $entry;
+}
+
+/**
+ * Resolve which registered theme locations the given menu is assigned to.
+ *
+ * @param WP_Term $menu Nav menu term.
+ * @return string[] Array of location slugs.
+ */
+function custom_theme_nav_resolve_menu_locations( WP_Term $menu ): array {
+	$all_locations  = get_nav_menu_locations();
+	$menu_locations = array();
+
+  foreach ( $all_locations as $location => $menu_id ) {
+    if ( (int) $menu_id === (int) $menu->term_id ) {
+        $menu_locations[] = $location;
+    }
+  }
+
+	return $menu_locations;
+}
+
+/**
+ * Build the PHP file content string for a nav menu export.
+ *
+ * @param WP_Term $menu          Nav menu term.
+ * @param array   $exported_data Data array to serialize.
+ * @return string
+ */
+function custom_theme_nav_build_export_file_content( WP_Term $menu, array $exported_data ): string {
+	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- used for file serialization, not debugging.
+	$exported_array = var_export( $exported_data, true );
+
+	$content  = "<?php\n";
+	$content .= "/**\n";
+	$content .= " * Nav Menu: {$menu->name}\n";
+	$content .= " *\n";
+	$content .= " * Auto-exported by Theme Nav Menu Sync.\n";
+	$content .= " * Edit menus in Appearance > Menus, then re-export via\n";
+	$content .= " * Block Templates > Nav Menu Sync.\n";
+	$content .= " *\n";
+	$content .= " * NOTE: Post/page items are stored as slugs for portability.\n";
+	$content .= " * Custom links: use relative URLs (e.g. /contact) to stay portable.\n";
+	$content .= " *\n";
+	$content .= " * @package CustomTheme\n";
+	$content .= " */\n\n";
+	$content .= 'return ' . $exported_array . ";\n";
+
+	return $content;
+}
+
+/**
+ * Write content to a file using WP_Filesystem.
+ *
+ * @param string $file_path    Absolute path to write.
+ * @param string $file_content Content to write.
+ * @throws Exception On write failure.
+ */
+function custom_theme_nav_write_file( string $file_path, string $file_content ): void {
+	global $wp_filesystem;
+
+  if ( empty( $wp_filesystem ) ) {
+      require_once ABSPATH . 'wp-admin/includes/file.php';
+      WP_Filesystem();
+  }
+
+  if ( false === $wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE ) ) {
+      throw new Exception( sprintf( 'Failed to write: %s', esc_html( $file_path ) ) );
+  }
+}
+
+/**
  * Serialize a single WP_Term (nav_menu) to a PHP file.
  *
  * Post/page items are stored by slug so they resolve correctly on any environment.
@@ -106,105 +263,29 @@ function custom_theme_nav_resolve_term_id( string $taxonomy, string $slug ): int
  * @throws Exception On write failure.
  */
 function custom_theme_export_nav_menu( WP_Term $menu ): string {
-	$raw_items = wp_get_nav_menu_items( $menu->term_id );
-	$raw_items = is_array( $raw_items ) ? $raw_items : array();
-
-	// Build item-ID → array-index map for parent resolution.
-	$id_to_index = array();
-	foreach ( $raw_items as $i => $item ) {
-		$id_to_index[ (int) $item->ID ] = $i;
-	}
+	$raw_items   = wp_get_nav_menu_items( $menu->term_id );
+	$raw_items   = is_array( $raw_items ) ? $raw_items : array();
+	$id_to_index = custom_theme_nav_build_id_index_map( $raw_items );
 
 	$items = array();
-	foreach ( $raw_items as $i => $item ) {
-		$parent_index = -1;
-		$parent_db_id = (int) $item->menu_item_parent;
-		if ( $parent_db_id > 0 && isset( $id_to_index[ $parent_db_id ] ) ) {
-			$parent_index = $id_to_index[ $parent_db_id ];
-		}
+  foreach ( $raw_items as $item ) {
+      $items[] = custom_theme_nav_serialize_item( $item, $id_to_index );
+  }
 
-		$entry = array(
-			'title'        => $item->title,
-			'type'         => $item->type,    // 'post_type' | 'taxonomy' | 'custom'
-			'object'       => $item->object,  // 'page' | 'post' | 'category' | 'custom' etc.
-			'url'          => $item->url,
-			'target'       => $item->target,
-			'attr_title'   => $item->attr_title,
-			'description'  => $item->description,
-			'classes'      => array_values( array_filter( (array) $item->classes ) ),
-			'xfn'          => $item->xfn,
-			'order'        => (int) $item->menu_order,
-			'parent_index' => $parent_index,
-		);
-
-		// Store a portable slug for post_type items.
-		if ( 'post_type' === $item->type && $item->object_id > 0 ) {
-			$post = get_post( (int) $item->object_id );
-			if ( $post instanceof WP_Post ) {
-				$entry['object_slug'] = $post->post_name;
-			}
-		}
-
-		// Store taxonomy + slug for taxonomy items.
-		if ( 'taxonomy' === $item->type && $item->object_id > 0 ) {
-			$term = get_term( (int) $item->object_id );
-			if ( $term instanceof WP_Term ) {
-				$entry['object_slug']     = $term->slug;
-				$entry['object_taxonomy'] = $term->taxonomy;
-			}
-		}
-
-		$items[] = $entry;
-	}
-
-	// Collect which registered theme locations this menu is assigned to.
-	$all_locations    = get_nav_menu_locations();
-	$menu_locations   = array();
-	foreach ( $all_locations as $location => $menu_id ) {
-		if ( (int) $menu_id === (int) $menu->term_id ) {
-			$menu_locations[] = $location;
-		}
-	}
-
-	// Build the PHP file content.
 	$data = array(
 		'name'      => $menu->name,
 		'slug'      => $menu->slug,
-		'locations' => $menu_locations,
+		'locations' => custom_theme_nav_resolve_menu_locations( $menu ),
 		'items'     => $items,
 	);
 
-	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- used for file serialization, not debugging.
-	$exported_array = var_export( $data, true );
-
-	$file_content  = "<?php\n";
-	$file_content .= "/**\n";
-	$file_content .= " * Nav Menu: {$menu->name}\n";
-	$file_content .= " *\n";
-	$file_content .= " * Auto-exported by Theme Nav Menu Sync.\n";
-	$file_content .= " * Edit menus in Appearance > Menus, then re-export via\n";
-	$file_content .= " * Block Templates > Nav Menu Sync.\n";
-	$file_content .= " *\n";
-	$file_content .= " * NOTE: Post/page items are stored as slugs for portability.\n";
-	$file_content .= " * Custom links: use relative URLs (e.g. /contact) to stay portable.\n";
-	$file_content .= " *\n";
-	$file_content .= " * @package CustomTheme\n";
-	$file_content .= " */\n\n";
-	$file_content .= 'return ' . $exported_array . ";\n";
+	$file_content = custom_theme_nav_build_export_file_content( $menu, $data );
 
 	custom_theme_nav_menus_ensure_export_dir();
 
 	$file_path = custom_theme_nav_menus_export_dir() . '/' . sanitize_file_name( $menu->slug ) . '.php';
 
-	global $wp_filesystem;
-	if ( empty( $wp_filesystem ) ) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		WP_Filesystem();
-	}
-
-	if ( false === $wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE ) ) {
-		throw new Exception( sprintf( 'Failed to write: %s', esc_html( $file_path ) ) );
-	}
+	custom_theme_nav_write_file( $file_path, $file_content );
 
 	return $file_path;
 }
@@ -219,14 +300,14 @@ function custom_theme_export_all_nav_menus(): array {
 	$exported = 0;
 	$errors   = array();
 
-	foreach ( $menus as $menu ) {
-		try {
-			custom_theme_export_nav_menu( $menu );
-			++$exported;
-		} catch ( Exception $e ) {
-			$errors[] = $menu->name . ': ' . $e->getMessage();
-		}
-	}
+  foreach ( $menus as $menu ) {
+    try {
+        custom_theme_export_nav_menu( $menu );
+        ++$exported;
+    } catch ( Exception $e ) {
+        $errors[] = $menu->name . ': ' . $e->getMessage();
+    }
+  }
 
 	return array(
 		'exported' => $exported,
@@ -246,14 +327,15 @@ function custom_theme_export_all_nav_menus(): array {
  * @throws Exception If required keys are missing or types are wrong.
  */
 function custom_theme_validate_nav_menu_file_data( $data, string $filename ): void {
-	if ( ! is_array( $data ) ) {
-		throw new Exception( sprintf( 'Invalid format in %s: expected array.', esc_html( $filename ) ) );
-	}
-	foreach ( array( 'name', 'slug', 'items' ) as $required ) {
-		if ( ! isset( $data[ $required ] ) ) {
-			throw new Exception( sprintf( 'Missing required key "%s" in %s.', esc_html( $required ), esc_html( $filename ) ) );
-		}
-	}
+  if ( ! is_array( $data ) ) {
+      throw new Exception( sprintf( 'Invalid format in %s: expected array.', esc_html( $filename ) ) );
+  }
+
+  foreach ( array( 'name', 'slug', 'items' ) as $required ) {
+    if ( ! isset( $data[ $required ] ) ) {
+        throw new Exception( sprintf( 'Missing required key "%s" in %s.', esc_html( $required ), esc_html( $filename ) ) );
+    }
+  }
 }
 
 /**
@@ -266,16 +348,105 @@ function custom_theme_validate_nav_menu_file_data( $data, string $filename ): vo
  */
 function custom_theme_nav_get_or_create_menu( string $name, string $slug ): int {
 	$existing = wp_get_nav_menu_object( $slug );
-	if ( $existing instanceof WP_Term ) {
-		return (int) $existing->term_id;
-	}
+  if ( $existing instanceof WP_Term ) {
+      return (int) $existing->term_id;
+  }
 
 	$result = wp_create_nav_menu( $name );
-	if ( is_wp_error( $result ) ) {
-		throw new Exception( $result->get_error_message() );
-	}
+  if ( is_wp_error( $result ) ) {
+      throw new Exception( esc_html( $result->get_error_message() ) );
+  }
 
 	return (int) $result;
+}
+
+/**
+ * Resolve the object-id args for a post_type menu item.
+ *
+ * @param array  $args      Args array being built (passed by reference).
+ * @param string $post_type Post type slug.
+ * @param string $slug      Post slug.
+ * @return void
+ */
+function custom_theme_nav_apply_post_type_object_id( array &$args, string $post_type, string $slug ): void {
+	$post_id = custom_theme_nav_resolve_post_id( $post_type, $slug );
+  if ( $post_id > 0 ) {
+      $args['menu-item-object-id'] = $post_id;
+      $args['menu-item-url']       = (string) get_permalink( $post_id );
+  }
+}
+
+/**
+ * Resolve the object-id args for a taxonomy menu item.
+ *
+ * @param array  $args        Args array being built (passed by reference).
+ * @param string $object_type Taxonomy slug fallback when object_taxonomy is absent.
+ * @param string $slug        Term slug.
+ * @param array  $item        Raw serialized item (may contain object_taxonomy key).
+ * @return void
+ */
+function custom_theme_nav_apply_taxonomy_object_id( array &$args, string $object_type, string $slug, array $item ): void {
+	$taxonomy = sanitize_key( $item['object_taxonomy'] ?? $object_type );
+	$term_id  = custom_theme_nav_resolve_term_id( $taxonomy, $slug );
+
+  if ( $term_id > 0 ) {
+      $args['menu-item-object-id'] = $term_id;
+      $link                        = get_term_link( $term_id, $taxonomy );
+      $args['menu-item-url']       = is_string( $link ) ? $link : $args['menu-item-url'];
+  }
+}
+
+/**
+ * Resolve and apply object-ID args to a menu item args array based on item type.
+ *
+ * Extracted from custom_theme_nav_build_item_args to reduce cyclomatic complexity.
+ *
+ * @param array $args Args array being built (passed by reference).
+ * @param array $item Serialized menu item.
+ * @return void
+ */
+function custom_theme_nav_resolve_object_id_args( array &$args, array $item ): void {
+	$type = $args['menu-item-type'];
+	$slug = sanitize_title( $item['object_slug'] ?? '' );
+
+  if ( '' === $slug ) {
+      return;
+  }
+
+  if ( 'post_type' === $type ) {
+      custom_theme_nav_apply_post_type_object_id( $args, $args['menu-item-object'], $slug );
+  } elseif ( 'taxonomy' === $type ) {
+      custom_theme_nav_apply_taxonomy_object_id( $args, $args['menu-item-object'], $slug, $item );
+  }
+}
+
+/**
+ * Merge a raw serialized menu item with safe scalar defaults.
+ *
+ * Centralises all null-coalescing / ternary logic so that
+ * custom_theme_nav_build_item_args remains below the complexity threshold.
+ *
+ * @param array $item Raw serialized menu item.
+ * @param int   $pos  1-based fallback menu order position.
+ * @return array Item with every expected key guaranteed to be present.
+ */
+function custom_theme_nav_normalize_item( array $item, int $pos ): array {
+	return wp_parse_args(
+      $item,
+      array(
+		  'title'       => '',
+		  'type'        => 'custom',
+		  'object'      => 'custom',
+		  'url'         => '',
+		  'target'      => '',
+		  'attr_title'  => '',
+		  'description' => '',
+		  'classes'     => array(),
+		  'xfn'         => '',
+		  'order'       => $pos,
+		  'object_slug' => '',
+	  )
+	);
 }
 
 /**
@@ -287,42 +458,113 @@ function custom_theme_nav_get_or_create_menu( string $name, string $slug ): int 
  * @return array
  */
 function custom_theme_nav_build_item_args( array $item, int $pos ): array {
+	$item = custom_theme_nav_normalize_item( $item, $pos );
+
 	$args = array(
-		'menu-item-title'       => sanitize_text_field( $item['title'] ?? '' ),
-		'menu-item-type'        => sanitize_text_field( $item['type'] ?? 'custom' ),
-		'menu-item-object'      => sanitize_text_field( $item['object'] ?? 'custom' ),
-		'menu-item-url'         => esc_url_raw( $item['url'] ?? '' ),
-		'menu-item-target'      => sanitize_text_field( $item['target'] ?? '' ),
-		'menu-item-attr-title'  => sanitize_text_field( $item['attr_title'] ?? '' ),
-		'menu-item-description' => sanitize_text_field( $item['description'] ?? '' ),
-		'menu-item-classes'     => implode( ' ', array_map( 'sanitize_html_class', (array) ( $item['classes'] ?? array() ) ) ),
-		'menu-item-xfn'         => sanitize_text_field( $item['xfn'] ?? '' ),
-		'menu-item-position'    => isset( $item['order'] ) ? (int) $item['order'] : $pos,
+		'menu-item-title'       => sanitize_text_field( $item['title'] ),
+		'menu-item-type'        => sanitize_text_field( $item['type'] ),
+		'menu-item-object'      => sanitize_text_field( $item['object'] ),
+		'menu-item-url'         => esc_url_raw( $item['url'] ),
+		'menu-item-target'      => sanitize_text_field( $item['target'] ),
+		'menu-item-attr-title'  => sanitize_text_field( $item['attr_title'] ),
+		'menu-item-description' => sanitize_text_field( $item['description'] ),
+		'menu-item-classes'     => implode( ' ', array_map( 'sanitize_html_class', (array) $item['classes'] ) ),
+		'menu-item-xfn'         => sanitize_text_field( $item['xfn'] ),
+		'menu-item-position'    => (int) $item['order'],
 		'menu-item-status'      => 'publish',
 		'menu-item-parent-id'   => 0,
 	);
 
-	$type   = $args['menu-item-type'];
-	$object = $args['menu-item-object'];
-	$slug   = sanitize_title( $item['object_slug'] ?? '' );
-
-	if ( 'post_type' === $type && '' !== $slug ) {
-		$post_id = custom_theme_nav_resolve_post_id( $object, $slug );
-		if ( $post_id > 0 ) {
-			$args['menu-item-object-id'] = $post_id;
-			$args['menu-item-url']       = (string) get_permalink( $post_id );
-		}
-	} elseif ( 'taxonomy' === $type && '' !== $slug ) {
-		$taxonomy = sanitize_key( $item['object_taxonomy'] ?? $object );
-		$term_id  = custom_theme_nav_resolve_term_id( $taxonomy, $slug );
-		if ( $term_id > 0 ) {
-			$args['menu-item-object-id'] = $term_id;
-			$link                        = get_term_link( $term_id, $taxonomy );
-			$args['menu-item-url']       = is_string( $link ) ? $link : $args['menu-item-url'];
-		}
-	}
+	custom_theme_nav_resolve_object_id_args( $args, $item );
 
 	return $args;
+}
+
+/**
+ * Delete all existing items in a nav menu for a clean slate before re-import.
+ *
+ * @param int $menu_id Menu term_id.
+ * @return void
+ */
+function custom_theme_nav_clear_menu_items( int $menu_id ): void {
+	$existing = wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) );
+  if ( ! is_array( $existing ) ) {
+      return;
+  }
+
+  foreach ( $existing as $old_item ) {
+      wp_delete_post( (int) $old_item->ID, true );
+  }
+}
+
+/**
+ * First-pass insert: create all items and return an array-index to new post ID map.
+ *
+ * @param int   $menu_id Menu term_id.
+ * @param array $items   Serialized items array.
+ * @return array<int, int>
+ */
+function custom_theme_nav_insert_items_first_pass( int $menu_id, array $items ): array {
+	$new_ids = array();
+
+  foreach ( $items as $i => $item ) {
+      $args   = custom_theme_nav_build_item_args( $item, $i + 1 );
+      $new_id = wp_update_nav_menu_item( $menu_id, 0, $args );
+
+    if ( ! is_wp_error( $new_id ) ) {
+        $new_ids[ $i ] = (int) $new_id;
+    }
+  }
+
+	return $new_ids;
+}
+
+/**
+ * Second-pass: wire up parent/child relationships using the new post IDs.
+ *
+ * @param int             $menu_id Menu term_id.
+ * @param array           $items   Serialized items array.
+ * @param array<int, int> $new_ids Array-index to new post ID map.
+ * @return void
+ */
+function custom_theme_nav_wire_parent_relationships( int $menu_id, array $items, array $new_ids ): void {
+  foreach ( $items as $i => $item ) {
+      $parent_index = (int) ( $item['parent_index'] ?? -1 );
+
+    if ( $parent_index < 0 || ! isset( $new_ids[ $parent_index ], $new_ids[ $i ] ) ) {
+        continue;
+    }
+
+      wp_update_nav_menu_item(
+        $menu_id,
+        $new_ids[ $i ],
+        array(
+			'menu-item-parent-id' => $new_ids[ $parent_index ],
+			'menu-item-status'    => 'publish',
+		)
+      );
+  }
+}
+
+/**
+ * Assign a menu to theme locations.
+ *
+ * @param int      $menu_id   Menu term_id.
+ * @param string[] $locations Array of theme location slugs to assign.
+ * @return void
+ */
+function custom_theme_nav_assign_locations( int $menu_id, array $locations ): void {
+  if ( empty( $locations ) ) {
+      return;
+  }
+
+	$current = get_nav_menu_locations();
+
+  foreach ( $locations as $location ) {
+      $current[ sanitize_key( $location ) ] = $menu_id;
+  }
+
+	set_theme_mod( 'nav_menu_locations', $current );
 }
 
 /**
@@ -344,48 +586,13 @@ function custom_theme_import_single_nav_menu( array $data ): array {
 	$created = ! ( wp_get_nav_menu_object( $slug ) instanceof WP_Term );
 	$menu_id = custom_theme_nav_get_or_create_menu( $name, $slug );
 
-	// Clear existing items for a clean slate.
-	$existing = wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) );
-	if ( is_array( $existing ) ) {
-		foreach ( $existing as $old_item ) {
-			wp_delete_post( (int) $old_item->ID, true );
-		}
-	}
+	custom_theme_nav_clear_menu_items( $menu_id );
 
-	// First pass: create all items, collect new IDs.
-	$new_ids = array(); // array-index → new nav_menu_item post ID.
-	foreach ( $items as $i => $item ) {
-		$args   = custom_theme_nav_build_item_args( $item, $i + 1 );
-		$new_id = wp_update_nav_menu_item( $menu_id, 0, $args );
-		if ( ! is_wp_error( $new_id ) ) {
-			$new_ids[ $i ] = (int) $new_id;
-		}
-	}
+	$new_ids = custom_theme_nav_insert_items_first_pass( $menu_id, $items );
 
-	// Second pass: wire up parent relationships.
-	foreach ( $items as $i => $item ) {
-		$parent_index = (int) ( $item['parent_index'] ?? -1 );
-		if ( $parent_index < 0 || ! isset( $new_ids[ $parent_index ], $new_ids[ $i ] ) ) {
-			continue;
-		}
-		wp_update_nav_menu_item(
-			$menu_id,
-			$new_ids[ $i ],
-			array(
-				'menu-item-parent-id' => $new_ids[ $parent_index ],
-				'menu-item-status'    => 'publish',
-			)
-		);
-	}
+	custom_theme_nav_wire_parent_relationships( $menu_id, $items, $new_ids );
 
-	// Assign to registered theme locations.
-	if ( ! empty( $locs ) ) {
-		$current = get_nav_menu_locations();
-		foreach ( $locs as $location ) {
-			$current[ sanitize_key( $location ) ] = $menu_id;
-		}
-		set_theme_mod( 'nav_menu_locations', $current );
-	}
+	custom_theme_nav_assign_locations( $menu_id, $locs );
 
 	return array( 'created' => $created );
 }
@@ -399,34 +606,35 @@ function custom_theme_import_single_nav_menu( array $data ): array {
 function custom_theme_import_all_nav_menus(): array {
 	$dir = custom_theme_nav_menus_export_dir();
 
-	if ( ! is_dir( $dir ) ) {
-		throw new Exception( 'Nav menus directory not found. Export menus first.' );
-	}
+  if ( ! is_dir( $dir ) ) {
+      throw new Exception( 'Nav menus directory not found. Export menus first.' );
+  }
 
 	$files = glob( $dir . '/*.php' );
-	if ( empty( $files ) ) {
-		throw new Exception( sprintf( 'No nav menu files found in %s. Export first and commit to Git.', esc_html( $dir ) ) );
-	}
+  if ( empty( $files ) ) {
+      throw new Exception( sprintf( 'No nav menu files found in %s. Export first and commit to Git.', esc_html( $dir ) ) );
+  }
 
 	$created = 0;
 	$updated = 0;
 	$errors  = array();
 
-	foreach ( $files as $file ) {
-		try {
-			$filename = basename( $file );
-			$data     = include $file; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_include
-			custom_theme_validate_nav_menu_file_data( $data, $filename );
-			$result = custom_theme_import_single_nav_menu( $data );
-			if ( $result['created'] ) {
-				++$created;
-			} else {
-				++$updated;
-			}
-		} catch ( Exception $e ) {
-			$errors[] = basename( $file ) . ': ' . $e->getMessage();
-		}
-	}
+  foreach ( $files as $file ) {
+    try {
+        $filename = basename( $file );
+        $data     = include $file; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_include
+        custom_theme_validate_nav_menu_file_data( $data, $filename );
+        $result = custom_theme_import_single_nav_menu( $data );
+
+      if ( $result['created'] ) {
+        ++$created;
+      } else {
+          ++$updated;
+      }
+    } catch ( Exception $e ) {
+        $errors[] = basename( $file ) . ': ' . $e->getMessage();
+    }
+  }
 
 	return array(
 		'created' => $created,
@@ -440,64 +648,111 @@ function custom_theme_import_all_nav_menus(): array {
 // ---------------------------------------------------------------------------
 
 /**
+ * Build the admin notice message for an export result.
+ *
+ * @param array $result Result from custom_theme_export_all_nav_menus().
+ * @return string Message string.
+ */
+function custom_theme_nav_build_export_message( array $result ): string {
+	$message = sprintf(
+		// translators: %d is the number of menus exported.
+      __( '%d menu(s) exported to template-parts/nav-menus/ successfully!', 'mbn-theme' ),
+      $result['exported']
+	);
+
+  if ( ! empty( $result['errors'] ) ) {
+      $message .= ' Errors: ' . implode( '; ', array_map( 'esc_html', $result['errors'] ) );
+  }
+
+	return $message;
+}
+
+/**
+ * Build the admin notice message for an import result.
+ *
+ * @param array $result Result from custom_theme_import_all_nav_menus().
+ * @return string Message string.
+ */
+function custom_theme_nav_build_import_message( array $result ): string {
+	$message = sprintf(
+		// translators: %1$d menus created, %2$d updated.
+      __( 'Import complete! Created: %1$d, Updated: %2$d', 'mbn-theme' ),
+      $result['created'],
+      $result['updated']
+	);
+
+  if ( ! empty( $result['errors'] ) ) {
+      $message .= ' | Errors: ' . implode( '; ', array_map( 'esc_html', $result['errors'] ) );
+  }
+
+	return $message;
+}
+
+/**
+ * Handle an export form submission.
+ *
+ * @return void
+ */
+function custom_theme_handle_export_action(): void {
+  try {
+      $result  = custom_theme_export_all_nav_menus();
+      $message = custom_theme_nav_build_export_message( $result );
+      $type    = empty( $result['errors'] ) ? 'updated' : 'warning';
+      add_settings_error( 'custom_theme_nav_sync', 'export_success', $message, $type );
+  } catch ( Exception $e ) {
+      add_settings_error(
+        'custom_theme_nav_sync',
+        'export_error',
+        'Export failed: ' . esc_html( $e->getMessage() ),
+        'error'
+      );
+  }
+}
+
+/**
+ * Handle an import form submission.
+ *
+ * @return void
+ */
+function custom_theme_handle_import_action(): void {
+  try {
+      $result  = custom_theme_import_all_nav_menus();
+      $message = custom_theme_nav_build_import_message( $result );
+      $type    = empty( $result['errors'] ) ? 'updated' : 'warning';
+      add_settings_error( 'custom_theme_nav_sync', 'import_success', $message, $type );
+  } catch ( Exception $e ) {
+      add_settings_error(
+        'custom_theme_nav_sync',
+        'import_error',
+        'Import failed: ' . esc_html( $e->getMessage() ),
+        'error'
+      );
+  }
+}
+
+/**
  * Process export/import form submissions.
  *
  * @return void
  */
 function custom_theme_handle_nav_menu_sync_actions(): void {
-	if ( ! isset( $_POST['custom_theme_nav_sync_action'] ) ) {
-		return;
-	}
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
+  if ( ! isset( $_POST['custom_theme_nav_sync_action'] ) ) {
+      return;
+  }
+
+  if ( ! current_user_can( 'manage_options' ) ) {
+      return;
+  }
 
 	check_admin_referer( 'custom_theme_nav_sync', 'custom_theme_nav_sync_nonce' );
 
 	$action = sanitize_text_field( wp_unslash( $_POST['custom_theme_nav_sync_action'] ) );
 
-	if ( 'export_menus' === $action ) {
-		try {
-			$result  = custom_theme_export_all_nav_menus();
-			$message = sprintf(
-				// translators: %d is the number of menus exported.
-				__( '%d menu(s) exported to template-parts/nav-menus/ successfully!', 'mbn-theme' ),
-				$result['exported']
-			);
-			if ( ! empty( $result['errors'] ) ) {
-				$message .= ' Errors: ' . implode( '; ', array_map( 'esc_html', $result['errors'] ) );
-			}
-			add_settings_error(
-				'custom_theme_nav_sync',
-				'export_success',
-				$message,
-				empty( $result['errors'] ) ? 'updated' : 'warning'
-			);
-		} catch ( Exception $e ) {
-			add_settings_error( 'custom_theme_nav_sync', 'export_error', 'Export failed: ' . esc_html( $e->getMessage() ), 'error' );
-		}
-	} elseif ( 'import_menus' === $action ) {
-		try {
-			$result  = custom_theme_import_all_nav_menus();
-			$message = sprintf(
-				// translators: %1$d menus created, %2$d updated.
-				__( 'Import complete! Created: %1$d, Updated: %2$d', 'mbn-theme' ),
-				$result['created'],
-				$result['updated']
-			);
-			if ( ! empty( $result['errors'] ) ) {
-				$message .= ' | Errors: ' . implode( '; ', array_map( 'esc_html', $result['errors'] ) );
-			}
-			add_settings_error(
-				'custom_theme_nav_sync',
-				'import_success',
-				$message,
-				empty( $result['errors'] ) ? 'updated' : 'warning'
-			);
-		} catch ( Exception $e ) {
-			add_settings_error( 'custom_theme_nav_sync', 'import_error', 'Import failed: ' . esc_html( $e->getMessage() ), 'error' );
-		}
-	}
+  if ( 'export_menus' === $action ) {
+      custom_theme_handle_export_action();
+  } elseif ( 'import_menus' === $action ) {
+      custom_theme_handle_import_action();
+  }
 }
 add_action( 'admin_init', 'custom_theme_handle_nav_menu_sync_actions' );
 
@@ -512,14 +767,69 @@ add_action( 'admin_init', 'custom_theme_handle_nav_menu_sync_actions' );
  */
 function custom_theme_add_nav_menu_sync_page(): void {
 	add_management_page(
-		__( 'Nav Menu Sync', 'mbn-theme' ),
-		__( 'Nav Menu Sync', 'mbn-theme' ),
-		'manage_options',
-		'nav-menu-sync',
-		'custom_theme_render_nav_menu_sync_page'
+      __( 'Nav Menu Sync', 'mbn-theme' ),
+      __( 'Nav Menu Sync', 'mbn-theme' ),
+      'manage_options',
+      'nav-menu-sync',
+      'custom_theme_render_nav_menu_sync_page'
 	);
 }
 add_action( 'admin_menu', 'custom_theme_add_nav_menu_sync_page' );
+
+/**
+ * Render the menu status table rows.
+ *
+ * @param array  $menus      Array of WP_Term nav menu objects.
+ * @param array  $assigned   Result of get_nav_menu_locations().
+ * @param array  $registered Result of get_registered_nav_menus().
+ * @param string $export_dir Absolute export directory path.
+ * @return void
+ */
+function custom_theme_render_nav_menu_table_rows( array $menus, array $assigned, array $registered, string $export_dir ): void {
+  foreach ( $menus as $menu ) {
+      $menu_items = wp_get_nav_menu_items( $menu->term_id );
+      $item_count = is_array( $menu_items ) ? count( $menu_items ) : 0;
+      $menu_locs  = array();
+
+    foreach ( $assigned as $loc => $mid ) {
+      if ( (int) $mid === (int) $menu->term_id && isset( $registered[ $loc ] ) ) {
+        $menu_locs[] = esc_html( $registered[ $loc ] ) . ' <code>(' . esc_html( $loc ) . ')</code>';
+      }
+    }
+
+      $file_path = $export_dir . '/' . sanitize_file_name( $menu->slug ) . '.php';
+      $has_file  = file_exists( $file_path );
+    ?>
+		<tr>
+			<td><strong><?php echo esc_html( $menu->name ); ?></strong></td>
+			<td><code><?php echo esc_html( $menu->slug ); ?></code></td>
+			<td><?php echo esc_html( (string) $item_count ); ?></td>
+			<td>
+              <?php
+              if ( $menu_locs ) {
+                  echo wp_kses(
+                    implode( '<br>', $menu_locs ),
+                    array(
+						'br'   => array(),
+						'code' => array(),
+					)
+                  );
+              } else {
+                  echo '&mdash;';
+              }
+              ?>
+			</td>
+			<td>
+              <?php if ( $has_file ) : ?>
+					<span style="color:#46b450;">&#10003; <code><?php echo esc_html( $menu->slug ); ?>.php</code></span>
+				<?php else : ?>
+					<span style="color:#dba617;">&#9888; <?php esc_html_e( 'Not yet exported', 'mbn-theme' ); ?></span>
+				<?php endif; ?>
+			</td>
+		</tr>
+		<?php
+  }
+}
 
 /**
  * Render the Nav Menu Sync admin page.
@@ -527,12 +837,13 @@ add_action( 'admin_menu', 'custom_theme_add_nav_menu_sync_page' );
  * @return void
  */
 function custom_theme_render_nav_menu_sync_page(): void {
-	$menus         = wp_get_nav_menus();
-	$registered    = get_registered_nav_menus();
-	$assigned      = get_nav_menu_locations();
-	$export_dir    = custom_theme_nav_menus_export_dir();
-	$exported_files = is_dir( $export_dir ) ? ( glob( $export_dir . '/*.php' ) ?: array() ) : array();
-	?>
+	$menus          = wp_get_nav_menus();
+	$registered     = get_registered_nav_menus();
+	$assigned       = get_nav_menu_locations();
+	$export_dir     = custom_theme_nav_menus_export_dir();
+	$glob_result    = is_dir( $export_dir ) ? glob( $export_dir . '/*.php' ) : array();
+	$exported_files = is_array( $glob_result ) ? $glob_result : array();
+  ?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Nav Menu Sync', 'mbn-theme' ); ?></h1>
 		<p><?php esc_html_e( 'Export navigation menus to PHP files for Git tracking, then import on staging/production.', 'mbn-theme' ); ?></p>
@@ -556,32 +867,7 @@ function custom_theme_render_nav_menu_sync_page(): void {
 						</tr>
 					</thead>
 					<tbody>
-					<?php foreach ( $menus as $menu ) :
-						$menu_items  = wp_get_nav_menu_items( $menu->term_id );
-						$item_count  = is_array( $menu_items ) ? count( $menu_items ) : 0;
-						$menu_locs   = array();
-						foreach ( $assigned as $loc => $mid ) {
-							if ( (int) $mid === (int) $menu->term_id && isset( $registered[ $loc ] ) ) {
-								$menu_locs[] = esc_html( $registered[ $loc ] ) . ' <code>(' . esc_html( $loc ) . ')</code>';
-							}
-						}
-						$file_path  = $export_dir . '/' . sanitize_file_name( $menu->slug ) . '.php';
-						$has_file   = file_exists( $file_path );
-						?>
-						<tr>
-							<td><strong><?php echo esc_html( $menu->name ); ?></strong></td>
-							<td><code><?php echo esc_html( $menu->slug ); ?></code></td>
-							<td><?php echo esc_html( $item_count ); ?></td>
-							<td><?php echo $menu_locs ? implode( '<br>', $menu_locs ) : '&mdash;'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
-							<td>
-								<?php if ( $has_file ) : ?>
-									<span style="color:#46b450;">&#10003; <code><?php echo esc_html( $menu->slug ); ?>.php</code></span>
-								<?php else : ?>
-									<span style="color:#dba617;">&#9888; <?php esc_html_e( 'Not yet exported', 'mbn-theme' ); ?></span>
-								<?php endif; ?>
-							</td>
-						</tr>
-					<?php endforeach; ?>
+						<?php custom_theme_render_nav_menu_table_rows( $menus, $assigned, $registered, $export_dir ); ?>
 					</tbody>
 				</table>
 			<?php endif; ?>

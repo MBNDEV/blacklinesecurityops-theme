@@ -3,6 +3,7 @@ node_modules/
 .cursor/
 .vscode/
 build/
+assets/build/tailwind.css
 *.hot-update.js
 *.hot-update.json
 .DS_Store

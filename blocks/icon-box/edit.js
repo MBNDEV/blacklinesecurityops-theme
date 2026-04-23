@@ -37,6 +37,14 @@ export default function Edit({ attributes, setAttributes }) {
     }
   };
 
+  const decodeSvgCode = (str) => {
+    if (!str) return '';
+    const el = document.createElement('textarea');
+    el.innerHTML = str;
+    return el.value;
+  };
+
+
   return (
     <>
       <InspectorControls>
@@ -107,7 +115,7 @@ export default function Edit({ attributes, setAttributes }) {
                     {iconSvgCode && (
                       <div
                         style={{ marginTop: '10px', padding: '10px', border: '1px solid #ddd' }}
-                        dangerouslySetInnerHTML={{ __html: iconSvgCode }}
+                        dangerouslySetInnerHTML={{ __html: decodeSvgCode(iconSvgCode) }}
                       />
                     )}
                   </div>

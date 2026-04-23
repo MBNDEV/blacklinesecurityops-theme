@@ -38,6 +38,8 @@
     },
     "title": {
       "type": "string",
+      "source": "html",
+      "selector": ".icon-box-title",
       "default": ""
     },
     "titleTag": {
@@ -59,6 +61,8 @@
     },
     "description": {
       "type": "string",
+      "source": "html",
+      "selector": ".icon-box-description",
       "default": ""
     },
     "descriptionColor": {

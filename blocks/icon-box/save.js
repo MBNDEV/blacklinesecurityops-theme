@@ -1,4 +1,5 @@
 import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { RawHTML } from '@wordpress/element';
 
 export default function save({ attributes }) {
   const {
@@ -57,7 +58,9 @@ export default function save({ attributes }) {
                 className="icon-box-svg"
                 style={{ width: `${iconSize}px`, height: `${iconSize}px` }}
                 dangerouslySetInnerHTML={{ __html: iconSvgCode }}
-              />
+               >
+                <RawHTML>{iconSvgCode}</RawHTML> {/* ← The fix */}
+              </div>
             )}
           </div>
         )}

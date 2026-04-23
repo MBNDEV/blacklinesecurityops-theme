@@ -12,133 +12,126 @@
  * @package CustomTheme
  */
 
-return array (
-  'name' => 'Footer Menu',
-  'slug' => 'footer-menu',
-  'locations' => 
-  array (
-    0 => 'footer-menu',
-  ),
-  'items' => 
-  array (
-    0 => 
-    array (
-      'title' => 'Who We Protect',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/who-we-protect/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 1,
-      'parent_index' => -1,
-      'object_slug' => 'who-we-protect',
-    ),
-    1 => 
-    array (
-      'title' => 'Capabilities',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/capabilities/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 2,
-      'parent_index' => -1,
-      'object_slug' => 'capabilities',
-    ),
-    2 => 
-    array (
-      'title' => 'Leadership',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/leadership/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 3,
-      'parent_index' => -1,
-      'object_slug' => 'leadership',
-    ),
-    3 => 
-    array (
-      'title' => 'Standards',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/our-standards/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 4,
-      'parent_index' => -1,
-      'object_slug' => 'our-standards',
-    ),
-    4 => 
-    array (
-      'title' => 'Guardian Fund',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/guardian-fund/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 5,
-      'parent_index' => -1,
-      'object_slug' => 'guardian-fund',
-    ),
-    5 => 
-    array (
-      'title' => 'Careers',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/careers/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 6,
-      'parent_index' => -1,
-      'object_slug' => 'careers',
-    ),
-    6 => 
-    array (
-      'title' => 'Contact',
-      'type' => 'post_type',
-      'object' => 'page',
-      'url' => 'http://localhost/mybizniche/contact/',
-      'target' => '',
-      'attr_title' => '',
-      'description' => '',
-      'classes' => 
-      array (
-      ),
-      'xfn' => '',
-      'order' => 7,
-      'parent_index' => -1,
-      'object_slug' => 'contact',
-    ),
-  ),
+return array(
+	'name'      => 'Footer Menu',
+	'slug'      => 'footer-menu',
+	'locations' =>
+	array(
+		0 => 'footer-menu',
+	),
+	'items'     =>
+	array(
+		0 =>
+		array(
+			'title'        => 'Who We Protect',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/who-we-protect/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 1,
+			'parent_index' => -1,
+			'object_slug'  => 'who-we-protect',
+		),
+		1 =>
+		array(
+			'title'        => 'Capabilities',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/capabilities/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 2,
+			'parent_index' => -1,
+			'object_slug'  => 'capabilities',
+		),
+		2 =>
+		array(
+			'title'        => 'Leadership',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/leadership/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 3,
+			'parent_index' => -1,
+			'object_slug'  => 'leadership',
+		),
+		3 =>
+		array(
+			'title'        => 'Standards',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/our-standards/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 4,
+			'parent_index' => -1,
+			'object_slug'  => 'our-standards',
+		),
+		4 =>
+		array(
+			'title'        => 'Guardian Fund',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/guardian-fund/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 5,
+			'parent_index' => -1,
+			'object_slug'  => 'guardian-fund',
+		),
+		5 =>
+		array(
+			'title'        => 'Careers',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/careers/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 6,
+			'parent_index' => -1,
+			'object_slug'  => 'careers',
+		),
+		6 =>
+		array(
+			'title'        => 'Contact',
+			'type'         => 'post_type',
+			'object'       => 'page',
+			'url'          => 'http://localhost/mybizniche/contact/',
+			'target'       => '',
+			'attr_title'   => '',
+			'description'  => '',
+			'classes'      =>
+			array(),
+			'xfn'          => '',
+			'order'        => 7,
+			'parent_index' => -1,
+			'object_slug'  => 'contact',
+		),
+	),
 );

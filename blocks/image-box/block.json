@@ -34,7 +34,7 @@
     "imagePosition": {
       "type": "string",
       "default": "left",
-      "enum": ["left", "right", "background"]
+      "enum": ["left", "right", "top", "background"]
     },
     "imageWidth": {
       "type": "string",
@@ -48,6 +48,10 @@
       "type": "string",
       "default": "h2",
       "enum": ["h2", "h3", "h4", "h5", "span"]
+    },
+    "titleClass": {
+      "type": "string",
+      "default": ""
     },
     "content": {
       "type": "string",
@@ -85,6 +89,27 @@
     "contentFontSize": {
       "type": "number",
       "default": 0
+    },
+    "listContent": {
+      "type": "string",
+      "default": ""
+    },
+    "listType": {
+      "type": "string",
+      "default": "ul",
+      "enum": ["ul", "ol"]
+    },
+    "listFontSize": {
+      "type": "number",
+      "default": 0
+    },
+    "listColor": {
+      "type": "string",
+      "default": ""
+    },
+    "showList": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

@@ -23,6 +23,15 @@
   flex-direction: row-reverse;
 }
 
+/* Top Position */
+.image-position-top .image-box-inner {
+  flex-direction: column;
+}
+
+.image-position-top .image-box-image {
+  width: 100% !important;
+}
+
 /* Background Position */
 .image-position-background {
   position: relative;

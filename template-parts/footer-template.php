@@ -1,11 +1,10 @@
 <?php
 /**
- * Default Footer Template content.
- *
- * This file syncs to the "Footer Template" Block Template post on theme activation.
- * Edit the Block Template post in WordPress admin, then export back to this file
- * using the export button in the admin.
- *
+ * Footer Template Block Template.
+ * 
+ * Syncs with "Footer Template" Block Template post.
+ * Edit in WordPress admin, then export using Block Templates → Sync Tools.
+ * 
  * @package CustomTheme
  */
 
@@ -17,8 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block  has-white-color has-text-color has-background has-link-color" style="background-color:#020305;padding-top:50px"><div class="div-wrap-content"><!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column {"width":"66.66%"} -->
 <div class="wp-block-column" style="flex-basis:66.66%"><!-- wp:group {"className":"footer_info","layout":{"type":"flex","orientation":"vertical"}} -->
-<div class="wp-block-group footer_info"><!-- wp:image {"id":32,"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/logo-blackline.svg" alt="" class="wp-image-32"/></figure>
+<div class="wp-block-group footer_info"><!-- wp:image {"id":32,"sizeSlug":"full","linkDestination":"none","className":"footer_logo"} -->
+<figure class="wp-block-image size-full footer_logo"><img src="http://localhost:8082/wp-content/uploads/2026/04/logo-blackline.svg" alt="" class="wp-image-32"/></figure>
 <!-- /wp:image -->
 
 <!-- wp:paragraph -->
@@ -29,8 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p><a href="mailto:info@blacklinesecurityoperations.com">info@blacklinesecurityoperations.com</a></p>
 <!-- /wp:paragraph -->
 
-<!-- wp:social-links {"iconColor":"white","iconColorValue":"#ffffff","size":"has-large-icon-size","className":"is-style-logos-only"} -->
-<ul class="wp-block-social-links has-large-icon-size has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"#","service":"facebook"} /-->
+<!-- wp:social-links {"iconColor":"white","iconColorValue":"#ffffff","size":"has-normal-icon-size","className":"is-style-logos-only"} -->
+<ul class="wp-block-social-links has-normal-icon-size has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"#","service":"facebook"} /-->
 
 <!-- wp:social-link {"url":"#","service":"instagram"} /-->
 

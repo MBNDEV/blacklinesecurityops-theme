@@ -1,11 +1,10 @@
 <?php
 /**
- * Default Header Template content.
- *
- * This file syncs to the "Header Template" Block Template post on theme activation.
- * Edit the Block Template post in WordPress admin, then export back to this file
- * using the export button in the admin.
- *
+ * Header Template Block Template.
+ * 
+ * Syncs with "Header Template" Block Template post.
+ * Edit in WordPress admin, then export using Block Templates → Sync Tools.
+ * 
  * @package CustomTheme
  */
 
@@ -13,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<!-- wp:group {"metadata":{"categories":["header"],"patternName":"core/simple-header-with-dark-background","name":"Simple header with dark background"},"align":"full","className":"sec_navbar has-background-color","style":{"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"spacing":{"padding":{"top":"20px","bottom":"20px","left":"35px","right":"35px"}}},"backgroundColor":"black","textColor":"white","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
-<div class="wp-block-group alignfull sec_navbar has-background-color has-white-color has-black-background-color has-text-color has-background has-link-color" style="padding-top:20px;padding-right:35px;padding-bottom:20px;padding-left:35px"><!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
+<!-- wp:group {"metadata":{"categories":["header"],"patternName":"core/simple-header-with-dark-background","name":"Simple header with dark background"},"align":"full","className":"sec_navbar has-background-color","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+<div class="wp-block-group alignfull sec_navbar has-background-color"><!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:site-logo {"width":150,"className":"navbar_logo"} /--></div>
 <!-- /wp:group -->
 

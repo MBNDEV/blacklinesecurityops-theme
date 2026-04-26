@@ -1,29 +1,29 @@
 <?php
 /**
  * Page Pattern: About
- * 
+ *
  * This file contains the complete page data for the 'About' page.
  * It can be imported to create/update the page on other environments.
- * 
+ *
  * Includes: Content, Featured Image, Status, Attributes, Custom Fields
- * 
+ *
  * To use: Tools → Page Content Sync → Import All Pages from Files
- * 
+ *
  * @package CustomTheme
  */
 
 return array(
-	'title'              => "About",
-	'slug'               => "about",
-	'status'             => "publish",
-	'excerpt'            => "",
-	'parent_slug'        => "",
-	'menu_order'         => 0,
-	'template'           => "",
-	'featured_image_url' => "",
-	'featured_image_path' => "", // Theme assets path (ships via Git)
-	'custom_fields'      => [],
-	'content'            => <<<'EOD'
+	'title'               => 'About',
+	'slug'                => 'about',
+	'status'              => 'publish',
+	'excerpt'             => '',
+	'parent_slug'         => '',
+	'menu_order'          => 0,
+	'template'            => '',
+	'featured_image_url'  => '',
+	'featured_image_path' => '', // Theme assets path (ships via Git)
+	'custom_fields'       => array(),
+	'content'             => <<<'EOD'
 <!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://localhost:8082/wp-content/uploads/2026/04/bg-inner-hero.jpg","backgroundImageId":495,"backgroundType":"image","borderWidth":"0","borderRadius":"0","metadata":{"name":"Hero"},"className":"sec_ihero"} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_ihero" style="background-image:url(http://localhost:8082/wp-content/uploads/2026/04/bg-inner-hero.jpg);background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:scroll;border-width:0;border-style:solid;border-radius:0"><div class="div-wrap-content"><!-- wp:columns {"isStackedOnMobile":false,"className":"mb_0"} -->
 <div class="wp-block-columns is-not-stacked-on-mobile mb_0"><!-- wp:column {"verticalAlignment":"center","width":"720px"} -->
@@ -220,4 +220,5 @@ background-position-x: left calc(50% + 600px) !Important;
 }</style>
 <!-- /wp:mbn-theme/div-wrap -->
 EOD
+	,
 );

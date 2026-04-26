@@ -1,29 +1,29 @@
 <?php
 /**
  * Page Pattern: Careers
- * 
+ *
  * This file contains the complete page data for the 'Careers' page.
  * It can be imported to create/update the page on other environments.
- * 
+ *
  * Includes: Content, Featured Image, Status, Attributes, Custom Fields
- * 
+ *
  * To use: Tools → Page Content Sync → Import All Pages from Files
- * 
+ *
  * @package CustomTheme
  */
 
 return array(
-	'title'              => "Careers",
-	'slug'               => "careers",
-	'status'             => "publish",
-	'excerpt'            => "",
-	'parent_slug'        => "",
-	'menu_order'         => 0,
-	'template'           => "",
-	'featured_image_url' => "",
-	'featured_image_path' => "", // Theme assets path (ships via Git)
-	'custom_fields'      => [],
-	'content'            => <<<'EOD'
+	'title'               => 'Careers',
+	'slug'                => 'careers',
+	'status'              => 'publish',
+	'excerpt'             => '',
+	'parent_slug'         => '',
+	'menu_order'          => 0,
+	'template'            => '',
+	'featured_image_url'  => '',
+	'featured_image_path' => '', // Theme assets path (ships via Git)
+	'custom_fields'       => array(),
+	'content'             => <<<'EOD'
 <!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://localhost:8082/wp-content/uploads/2026/04/bg-inner-hero.jpg","backgroundImageId":495,"backgroundType":"image","minHeight":"500px","borderWidth":"0","borderRadius":"0","metadata":{"name":"Hero"},"className":"sec_ihero","style":{"spacing":{"padding":{"top":"150px","bottom":"100px","left":"0px","right":"0px"}}}} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_ihero" style="padding-top:150px;padding-right:0px;padding-bottom:100px;padding-left:0px;min-height:500px;background-image:url(http://localhost:8082/wp-content/uploads/2026/04/bg-inner-hero.jpg);background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:scroll;border-width:0;border-style:solid;border-radius:0"><div class="div-wrap-content"><!-- wp:columns {"isStackedOnMobile":false} -->
 <div class="wp-block-columns is-not-stacked-on-mobile"><!-- wp:column {"verticalAlignment":"center","width":"555px"} -->
@@ -302,4 +302,5 @@ return array(
 <!-- /wp:mbn-theme/content-box --></div></div>
 <!-- /wp:mbn-theme/div-wrap -->
 EOD
+	,
 );

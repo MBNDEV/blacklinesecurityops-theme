@@ -1,29 +1,29 @@
 <?php
 /**
  * Page Pattern: Contact
- * 
+ *
  * This file contains the complete page data for the 'Contact' page.
  * It can be imported to create/update the page on other environments.
- * 
+ *
  * Includes: Content, Featured Image, Status, Attributes, Custom Fields
- * 
+ *
  * To use: Tools → Page Content Sync → Import All Pages from Files
- * 
+ *
  * @package CustomTheme
  */
 
 return array(
-	'title'              => "Contact",
-	'slug'               => "contact",
-	'status'             => "publish",
-	'excerpt'            => "",
-	'parent_slug'        => "",
-	'menu_order'         => 0,
-	'template'           => "",
-	'featured_image_url' => "",
-	'featured_image_path' => "", // Theme assets path (ships via Git)
-	'custom_fields'      => [],
-	'content'            => <<<'EOD'
+	'title'               => 'Contact',
+	'slug'                => 'contact',
+	'status'              => 'publish',
+	'excerpt'             => '',
+	'parent_slug'         => '',
+	'menu_order'          => 0,
+	'template'            => '',
+	'featured_image_url'  => '',
+	'featured_image_path' => '', // Theme assets path (ships via Git)
+	'custom_fields'       => array(),
+	'content'             => <<<'EOD'
 <!-- wp:mbn-theme/div-wrap {"className":"sec_contactus","style":{"elements":{"link":{"color":{"text":"var:preset|color|white"}}}},"backgroundColor":"black","textColor":"white"} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_contactus has-white-color has-black-background-color has-text-color has-background has-link-color"><div class="div-wrap-content"><!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column -->
@@ -74,4 +74,5 @@ background:red;
 <p></p>
 <!-- /wp:paragraph -->
 EOD
+	,
 );

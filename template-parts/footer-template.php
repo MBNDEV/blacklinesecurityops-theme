@@ -1,10 +1,10 @@
 <?php
 /**
  * Footer Template Block Template.
- * 
+ *
  * Syncs with "Footer Template" Block Template post.
  * Edit in WordPress admin, then export using Block Templates → Sync Tools.
- * 
+ *
  * @package CustomTheme
  */
 

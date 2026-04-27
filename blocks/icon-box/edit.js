@@ -17,11 +17,27 @@ export default function Edit({ attributes, setAttributes }) {
     titleFontSize,
     description,
     descriptionColor,
-    descriptionFontSize
+    descriptionFontSize,
+    borderWidth,
+    borderStyle,
+    borderColor,
+    borderRadius,
+    backgroundColor,
+    padding,
+    margin
   } = attributes;
 
   const blockProps = useBlockProps({
-    className: `icon-box icon-position-${iconPosition}`
+    className: `icon-box icon-position-${iconPosition}`,
+    style: {
+      borderWidth: borderWidth ? `${borderWidth}px` : undefined,
+      borderStyle: borderStyle || undefined,
+      borderColor: borderColor || undefined,
+      borderRadius: borderRadius ? `${borderRadius}px` : undefined,
+      backgroundColor: backgroundColor || undefined,
+      padding: padding || undefined,
+      margin: margin || undefined
+    }
   });
 
   // Get alignment class based on position
@@ -211,6 +227,81 @@ export default function Edit({ attributes, setAttributes }) {
             max={100}
             step={1}
             help={__('0 = default theme size', 'mbn-theme')}
+          />
+        </PanelBody>
+
+        <PanelBody title={__('Border', 'mbn-theme')} initialOpen={false}>
+          <RangeControl
+            label={__('Border Width (px)', 'mbn-theme')}
+            value={borderWidth}
+            onChange={(value) => setAttributes({ borderWidth: value })}
+            min={0}
+            max={20}
+            step={1}
+            help={__('0 = no border', 'mbn-theme')}
+          />
+          <SelectControl
+            label={__('Border Style', 'mbn-theme')}
+            value={borderStyle}
+            options={[
+              { label: __('None', 'mbn-theme'), value: '' },
+              { label: __('Solid', 'mbn-theme'), value: 'solid' },
+              { label: __('Dashed', 'mbn-theme'), value: 'dashed' },
+              { label: __('Dotted', 'mbn-theme'), value: 'dotted' },
+              { label: __('Double', 'mbn-theme'), value: 'double' },
+            ]}
+            onChange={(value) => setAttributes({ borderStyle: value })}
+          />
+        </PanelBody>
+
+        <PanelColorSettings
+          title={__('Border Color', 'mbn-theme')}
+          colorSettings={[
+            {
+              value: borderColor,
+              onChange: (value) => setAttributes({ borderColor: value }),
+              label: __('Color', 'mbn-theme'),
+            },
+          ]}
+        />
+
+        <PanelBody title={__('Border Radius', 'mbn-theme')} initialOpen={false}>
+          <RangeControl
+            label={__('Radius (px)', 'mbn-theme')}
+            value={borderRadius}
+            onChange={(value) => setAttributes({ borderRadius: value })}
+            min={0}
+            max={100}
+            step={1}
+            help={__('0 = no rounded corners', 'mbn-theme')}
+          />
+        </PanelBody>
+
+        <PanelColorSettings
+          title={__('Background Color', 'mbn-theme')}
+          colorSettings={[
+            {
+              value: backgroundColor,
+              onChange: (value) => setAttributes({ backgroundColor: value }),
+              label: __('Color', 'mbn-theme'),
+            },
+          ]}
+        />
+
+        <PanelBody title={__('Spacing', 'mbn-theme')} initialOpen={false}>
+          <TextControl
+            label={__('Padding', 'mbn-theme')}
+            value={padding}
+            onChange={(value) => setAttributes({ padding: value })}
+            help={__('e.g., 20px or 20px 40px', 'mbn-theme')}
+            placeholder="20px"
+          />
+          <TextControl
+            label={__('Margin', 'mbn-theme')}
+            value={margin}
+            onChange={(value) => setAttributes({ margin: value })}
+            help={__('e.g., 20px or 20px 40px', 'mbn-theme')}
+            placeholder="20px"
           />
         </PanelBody>
       </InspectorControls>

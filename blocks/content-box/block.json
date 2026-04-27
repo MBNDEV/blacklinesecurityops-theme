@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "mbn-theme/content-box",
+  "title": "Content Box",
+  "category": "mbn-blocks",
+  "icon": "admin-page",
+  "description": "A flexible container with icon, title and nested blocks support",
+  "keywords": ["content", "box", "container", "icon", "wrapper"],
+  "textdomain": "mbn-theme",
+  "editorScript": "file:./index.js",
+  "style": "file:./style.css",
+  "supports": {
+    "align": ["wide", "full"],
+    "html": false
+  },
+  "attributes": {
+    "boxWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "borderWidth": {
+      "type": "number",
+      "default": 0
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": "solid",
+      "enum": ["none", "solid", "dashed", "dotted", "double"]
+    },
+    "borderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "boxPadding": {
+      "type": "string",
+      "default": ""
+    },
+    "boxMargin": {
+      "type": "string",
+      "default": ""
+    },
+    "iconImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "iconImageId": {
+      "type": "number"
+    },
+    "iconPosition": {
+      "type": "string",
+      "default": "center",
+      "enum": ["left", "right", "center"]
+    },
+    "iconSize": {
+      "type": "number",
+      "default": 64
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "h3",
+      "enum": ["h1", "h2", "h3", "h4", "h5", "div", "span"]
+    },
+    "titleClass": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleFontSize": {
+      "type": "number",
+      "default": 0
+    },
+    "customCSS": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

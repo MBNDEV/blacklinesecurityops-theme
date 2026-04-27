@@ -1,8 +1,8 @@
 <?php
 /**
- * Page Pattern: Our Standards
+ * Page Pattern: Privacy policy
  * 
- * This file contains the complete page data for the 'Our Standards' page.
+ * This file contains the complete page data for the 'Privacy policy' page.
  * It can be imported to create/update the page on other environments.
  * 
  * Includes: Content, Featured Image, Status, Attributes, Custom Fields
@@ -13,8 +13,8 @@
  */
 
 return array(
-	'title'              => "Our Standards",
-	'slug'               => "our-standards",
+	'title'              => "Privacy policy",
+	'slug'               => "privacy-policy",
 	'status'             => "publish",
 	'excerpt'            => "",
 	'parent_slug'        => "",
@@ -22,7 +22,7 @@ return array(
 	'template'           => "",
 	'featured_image_url' => "",
 	'featured_image_path' => "", // Theme assets path (ships via Git)
-	'custom_fields'      => [],
+	'custom_fields'      => {"_wp_page_template":"default"},
 	'content'            => <<<'EOD'
 
 EOD

@@ -3,8 +3,7 @@ import {
   InspectorControls,
   RichText,
   MediaUpload,
-  MediaUploadCheck,
-  PanelColorSettings
+  MediaUploadCheck
 } from '@wordpress/block-editor';
 import { 
   PanelBody, 
@@ -25,11 +24,17 @@ export default function Edit({ attributes, setAttributes }) {
     imageWidth,
     title,
     titleTag,
+    titleClass,
     titleColor,
     titleFontSize,
     content,
     contentColor,
     contentFontSize,
+    listContent,
+    listType,
+    listFontSize,
+    listColor,
+    showList,
     buttonText,
     buttonUrl,
     buttonStyle,
@@ -47,7 +52,7 @@ export default function Edit({ attributes, setAttributes }) {
     backgroundPosition: 'center',
   } : {};
 
-  const imageStyles = imagePosition !== 'background' ? {
+  const imageStyles = (imagePosition !== 'background' && imagePosition !== 'top') ? {
     width: imageWidth,
     flexShrink: 0
   } : {};
@@ -102,13 +107,14 @@ export default function Edit({ attributes, setAttributes }) {
             options={[
               { label: __('Left', 'mbn-theme'), value: 'left' },
               { label: __('Right', 'mbn-theme'), value: 'right' },
+              { label: __('Top', 'mbn-theme'), value: 'top' },
               { label: __('Background', 'mbn-theme'), value: 'background' }
             ]}
             onChange={(value) => setAttributes({ imagePosition: value })}
-            help={__('Position image on left, right, or as background', 'mbn-theme')}
+            help={__('Position image on left, right, top, or as background', 'mbn-theme')}
           />
 
-          {imagePosition !== 'background' && (
+          {(imagePosition !== 'background' && imagePosition !== 'top') && (
             <TextControl
               label={__('Image Width', 'mbn-theme')}
               value={imageWidth}
@@ -132,22 +138,22 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ titleTag: value })}
             help={__('Choose heading level for SEO', 'mbn-theme')}
           />
-        </PanelBody>
-
-        <PanelColorSettings
-          title={__('Title Color', 'mbn-theme')}
-          colorSettings={[
-            {
-              value: titleColor,
-              onChange: (value) => setAttributes({ titleColor: value }),
-              label: __('Text Color', 'mbn-theme'),
-            },
-          ]}
-        />
-
-        <PanelBody title={__('Title Font Size', 'mbn-theme')} initialOpen={false}>
+          <TextControl
+            label={__('Title Class', 'mbn-theme')}
+            value={titleClass}
+            onChange={(value) => setAttributes({ titleClass: value })}
+            placeholder={__('e.g., my-custom-class', 'mbn-theme')}
+            help={__('Add custom CSS class name(s)', 'mbn-theme')}
+          />
+          <TextControl
+            label={__('Title Color', 'mbn-theme')}
+            value={titleColor}
+            onChange={(value) => setAttributes({ titleColor: value })}
+            placeholder={__('e.g., #000000 or black', 'mbn-theme')}
+            help={__('CSS color value (hex, rgb, or name)', 'mbn-theme')}
+          />
           <RangeControl
-            label={__('Font Size (px)', 'mbn-theme')}
+            label={__('Title Font Size (px)', 'mbn-theme')}
             value={titleFontSize}
             onChange={(value) => setAttributes({ titleFontSize: value })}
             min={0}
@@ -157,20 +163,16 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelColorSettings
-          title={__('Content Color', 'mbn-theme')}
-          colorSettings={[
-            {
-              value: contentColor,
-              onChange: (value) => setAttributes({ contentColor: value }),
-              label: __('Text Color', 'mbn-theme'),
-            },
-          ]}
-        />
-
-        <PanelBody title={__('Content Font Size', 'mbn-theme')} initialOpen={false}>
+        <PanelBody title={__('Content Settings', 'mbn-theme')} initialOpen={false}>
+          <TextControl
+            label={__('Content Color', 'mbn-theme')}
+            value={contentColor}
+            onChange={(value) => setAttributes({ contentColor: value })}
+            placeholder={__('e.g., #333333 or gray', 'mbn-theme')}
+            help={__('CSS color value (hex, rgb, or name)', 'mbn-theme')}
+          />
           <RangeControl
-            label={__('Font Size (px)', 'mbn-theme')}
+            label={__('Content Font Size (px)', 'mbn-theme')}
             value={contentFontSize}
             onChange={(value) => setAttributes({ contentFontSize: value })}
             min={0}
@@ -178,6 +180,42 @@ export default function Edit({ attributes, setAttributes }) {
             step={1}
             help={__('0 = default theme size', 'mbn-theme')}
           />
+          <ToggleControl
+            label={__('Show List', 'mbn-theme')}
+            checked={showList}
+            onChange={(value) => setAttributes({ showList: value })}
+            help={__('Toggle to show or hide the list section', 'mbn-theme')}
+          />
+          {showList && (
+            <>
+              <SelectControl
+                label={__('List Type', 'mbn-theme')}
+                value={listType}
+                options={[
+                  { label: __('Unordered List (ul)', 'mbn-theme'), value: 'ul' },
+                  { label: __('Ordered List (ol)', 'mbn-theme'), value: 'ol' }
+                ]}
+                onChange={(value) => setAttributes({ listType: value })}
+                help={__('Choose list type for additional content', 'mbn-theme')}
+              />
+              <TextControl
+                label={__('List Color', 'mbn-theme')}
+                value={listColor}
+                onChange={(value) => setAttributes({ listColor: value })}
+                placeholder={__('e.g., #666666 or gray', 'mbn-theme')}
+                help={__('CSS color value (hex, rgb, or name)', 'mbn-theme')}
+              />
+              <RangeControl
+                label={__('List Font Size (px)', 'mbn-theme')}
+                value={listFontSize}
+                onChange={(value) => setAttributes({ listFontSize: value })}
+                min={0}
+                max={100}
+                step={1}
+                help={__('0 = default theme size', 'mbn-theme')}
+              />
+            </>
+          )}
         </PanelBody>
 
         <PanelBody title={__('Button Settings', 'mbn-theme')} initialOpen={false}>
@@ -217,7 +255,13 @@ export default function Edit({ attributes, setAttributes }) {
 
       <div {...blockProps} style={containerStyle}>
         <div className="image-box-inner">
-          {imagePosition !== 'background' && imageUrl && (
+          {imagePosition === 'top' && imageUrl && (
+            <div className="image-box-image image-box-image-top" style={{ width: '100%', marginBottom: '1rem' }}>
+              <img src={imageUrl} alt="" />
+            </div>
+          )}
+
+          {(imagePosition === 'left' || imagePosition === 'right') && imageUrl && (
             <div className="image-box-image" style={imageStyles}>
               <img src={imageUrl} alt="" />
             </div>
@@ -229,7 +273,7 @@ export default function Edit({ attributes, setAttributes }) {
               value={title}
               onChange={(value) => setAttributes({ title: value })}
               placeholder={__('Enter title...', 'mbn-theme')}
-              className="image-box-title"
+              className={['image-box-title', titleClass].filter(Boolean).join(' ')}
               style={{
                 color: titleColor || undefined,
                 fontSize: titleFontSize ? `${titleFontSize}px` : undefined
@@ -248,13 +292,35 @@ export default function Edit({ attributes, setAttributes }) {
                 color: contentColor || undefined,
                 fontSize: contentFontSize ? `${contentFontSize}px` : undefined
               }}
+              identifier="content"
             />
+
+            {showList && (
+              <div className="image-box-list-wrapper" style={{ marginTop: '12px' }}>
+                <RichText
+                  tagName={listType}
+                  value={listContent}
+                  onChange={(value) => setAttributes({ listContent: value })}
+                  placeholder={__('• Add list items (press Enter for new item)', 'mbn-theme')}
+                  className="image-box-list"
+                  multiline="li"
+                  allowedFormats={['core/bold', 'core/italic', 'core/link']}
+                  style={{
+                    color: listColor || undefined,
+                    fontSize: listFontSize ? `${listFontSize}px` : undefined,
+                    paddingLeft: listType === 'ul' ? '20px' : '25px'
+                  }}
+                  identifier="list"
+                  __unstablePastePlainText
+                />
+              </div>
+            )}
 
             {buttonText && (
               <div className="image-box-button">
                 <a 
                   href={buttonUrl} 
-                  className={`btn-${buttonStyle}`}
+                  className={`btn-${buttonStyle} wp-block-button__link`}
                   target={buttonTarget ? '_blank' : undefined}
                   rel={buttonTarget ? 'noopener noreferrer' : undefined}
                 >

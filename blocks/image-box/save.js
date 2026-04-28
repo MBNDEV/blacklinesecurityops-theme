@@ -7,11 +7,17 @@ export default function save({ attributes }) {
     imageWidth,
     title,
     titleTag,
+    titleClass,
     titleColor,
     titleFontSize,
     content,
     contentColor,
     contentFontSize,
+    listContent,
+    listType,
+    listFontSize,
+    listColor,
+    showList,
     buttonText,
     buttonUrl,
     buttonStyle,
@@ -29,7 +35,7 @@ export default function save({ attributes }) {
     backgroundPosition: 'center',
   } : {};
 
-  const imageStyles = imagePosition !== 'background' ? {
+  const imageStyles = (imagePosition !== 'background' && imagePosition !== 'top') ? {
     width: imageWidth,
     flexShrink: 0
   } : {};
@@ -37,7 +43,13 @@ export default function save({ attributes }) {
   return (
     <div {...blockProps} style={containerStyle}>
       <div className="image-box-inner">
-        {imagePosition !== 'background' && imageUrl && (
+        {imagePosition === 'top' && imageUrl && (
+          <div className="image-box-image image-box-image-top" style={{ width: '100%', marginBottom: '1rem' }}>
+            <img src={imageUrl} alt="" />
+          </div>
+        )}
+
+        {(imagePosition === 'left' || imagePosition === 'right') && imageUrl && (
           <div className="image-box-image" style={imageStyles}>
             <img src={imageUrl} alt="" />
           </div>
@@ -48,7 +60,7 @@ export default function save({ attributes }) {
             <RichText.Content
               tagName={titleTag}
               value={title}
-              className="image-box-title"
+              className={['image-box-title', titleClass].filter(Boolean).join(' ')}
               style={{
                 color: titleColor || undefined,
                 fontSize: titleFontSize ? `${titleFontSize}px` : undefined
@@ -68,11 +80,23 @@ export default function save({ attributes }) {
             />
           )}
 
+          {showList && listContent && (
+            <RichText.Content
+              tagName={listType}
+              value={listContent}
+              className="image-box-list"
+              style={{
+                color: listColor || undefined,
+                fontSize: listFontSize ? `${listFontSize}px` : undefined
+              }}
+            />
+          )}
+
           {buttonText && (
             <div className="image-box-button">
               <a 
                 href={buttonUrl} 
-                className={`btn-${buttonStyle}`}
+                className={`btn-${buttonStyle} wp-block-button__link`}
                 target={buttonTarget ? '_blank' : undefined}
                 rel={buttonTarget ? 'noopener noreferrer' : undefined}
               >

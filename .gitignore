@@ -7,5 +7,6 @@ assets/build/tailwind.css
 *.hot-update.js
 *.hot-update.json
 .DS_Store
+vendor/
 
 /docs

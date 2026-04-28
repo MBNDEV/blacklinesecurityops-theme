@@ -106,7 +106,6 @@
 /* Editor-specific styles */
 .editor-styles-wrapper .icon-box {
   padding: 1rem;
-  border: 1px dashed #e0e0e0;
 }
 
 .editor-styles-wrapper .icon-box-title[data-rich-text-placeholder]:empty::before {

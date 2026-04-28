@@ -15,7 +15,14 @@ export default function save({ attributes }) {
     titleFontSize,
     description,
     descriptionColor,
-    descriptionFontSize
+    descriptionFontSize,
+    borderWidth,
+    borderStyle,
+    borderColor,
+    borderRadius,
+    backgroundColor,
+    padding,
+    margin
   } = attributes;
 
   // Don't render if no content at all
@@ -24,7 +31,16 @@ export default function save({ attributes }) {
   }
 
   const blockProps = useBlockProps.save({
-    className: `icon-box icon-position-${iconPosition}`
+    className: `icon-box icon-position-${iconPosition}`,
+    style: {
+      borderWidth: borderWidth ? `${borderWidth}px` : undefined,
+      borderStyle: borderStyle || undefined,
+      borderColor: borderColor || undefined,
+      borderRadius: borderRadius ? `${borderRadius}px` : undefined,
+      backgroundColor: backgroundColor || undefined,
+      padding: padding || undefined,
+      margin: margin || undefined
+    }
   });
 
   // Get alignment class based on position

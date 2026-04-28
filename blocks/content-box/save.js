@@ -1,4 +1,5 @@
 import { useBlockProps, RichText, InnerBlocks } from '@wordpress/block-editor';
+import { sanitizeCSS } from './utils';
 
 export default function save({ attributes }) {
   const {
@@ -21,12 +22,14 @@ export default function save({ attributes }) {
     customCSS
   } = attributes;
 
+  const safeCss = sanitizeCSS( customCSS );
+
   // Don't render if no content at all
   if (!iconImageUrl && !title) {
     return (
       <>
-        {customCSS && (
-          <style>{customCSS}</style>
+        {safeCss && (
+          <style>{safeCss}</style>
         )}
         <div {...useBlockProps.save({ 
           className: 'content-box',
@@ -68,8 +71,8 @@ export default function save({ attributes }) {
 
   return (
     <>
-      {customCSS && (
-        <style>{customCSS}</style>
+      {safeCss && (
+        <style>{safeCss}</style>
       )}
       <div {...blockProps} style={{
         width: boxWidth || undefined,

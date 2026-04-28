@@ -1,6 +1,7 @@
 import { useBlockProps, InspectorControls, RichText, MediaUpload, MediaUploadCheck, InnerBlocks } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, RangeControl, TextControl, TextareaControl, Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { sanitizeCSS } from './utils';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
   const {
@@ -224,7 +225,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
       </InspectorControls>
 
       {customCSS && (
-        <style>{customCSS}</style>
+        <style>{sanitizeCSS( customCSS )}</style>
       )}
       
       <div {...blockProps} style={{

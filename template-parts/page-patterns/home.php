@@ -26,8 +26,8 @@ return array(
 	'content'             => <<<'EOD'
 <!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-sechero.jpg","backgroundImageId":69,"backgroundType":"image","customClassName":"hero_test","borderWidth":"0","metadata":{"name":"Hero"},"className":"sec_hero","style":{"spacing":{"padding":{"top":"0","bottom":"0","left":"0px","right":"0px"}}}} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block hero_test sec_hero" style="padding-top:0;padding-right:0px;padding-bottom:0;padding-left:0px;background-image:url(http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-sechero.jpg);background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:scroll;border-width:0;border-style:solid"><div class="div-wrap-content"><!-- wp:cover {"url":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/portrait-of-bearded-bodyguard-in-earphone.mp4","id":66,"dimRatio":0,"isUserOverlayColor":true,"backgroundType":"video","customGradient":"linear-gradient(135deg,rgb(0,0,0) 0%,rgba(0,0,0,0) 100%)","contentPosition":"center center","isDark":false,"sizeSlug":"full","className":"postatic","style":{"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"spacing":{"padding":{"top":"100px","bottom":"100px"}}},"textColor":"white","layout":{"type":"constrained"}} -->
-<div class="wp-block-cover is-light postatic has-white-color has-text-color has-link-color" style="padding-top:100px;padding-bottom:100px"><video class="wp-block-cover__video-background intrinsic-ignore" autoplay muted loop playsinline src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/portrait-of-bearded-bodyguard-in-earphone.mp4" data-object-fit="cover"></video><span aria-hidden="true" class="wp-block-cover__background has-background-dim-0 has-background-dim has-background-gradient" style="background:linear-gradient(135deg,rgb(0,0,0) 0%,rgba(0,0,0,0) 100%)"></span><div class="wp-block-cover__inner-container"><!-- wp:paragraph {"className":"text_eyebrow","style":{"typography":{"textTransform":"uppercase"}}} -->
-<p class="text_eyebrow" style="text-transform:uppercase">Experience.&nbsp; Vigilance.&nbsp; Confidence.</p>
+<div class="wp-block-cover is-light postatic has-white-color has-text-color has-link-color" style="padding-top:100px;padding-bottom:100px"><video class="wp-block-cover__video-background intrinsic-ignore" autoplay muted loop playsinline src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/portrait-of-bearded-bodyguard-in-earphone.mp4" data-object-fit="cover"></video><span aria-hidden="true" class="wp-block-cover__background has-background-dim-0 has-background-dim has-background-gradient" style="background:linear-gradient(135deg,rgb(0,0,0) 0%,rgba(0,0,0,0) 100%)"></span><div class="wp-block-cover__inner-container"><!-- wp:paragraph {"className":"text_eyebrow_lg","style":{"typography":{"textTransform":"uppercase"}}} -->
+<p class="text_eyebrow_lg" style="text-transform:uppercase">Experience.&nbsp; Vigilance.&nbsp; Confidence.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":1,"className":"text_gradient"} -->
@@ -113,7 +113,7 @@ return array(
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Blackline’s services can easily be set up to operate within defined monthly security budgets. We provide all required documentation for reimbursement and also integrate seamlessly with all existing congressional security guidelines.</p>
+<p>Blackline’s services can easily be set up to operate within defined monthly security budgets.&nbsp;We provide all required documentation for reimbursement and also integrate seamlessly with all existing congressional security guidelines.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
@@ -141,8 +141,8 @@ return array(
 <!-- /wp:mbn-theme/div-wrap -->
 
 <!-- wp:mbn-theme/div-wrap {"className":"sec_leadership","style":{"elements":{"link":{"color":{"text":"#b6b8bd"}}},"color":{"text":"#b6b8bd"},"spacing":{"padding":{"top":"50px","bottom":"50px"}}},"backgroundColor":"black"} -->
-<div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_leadership has-black-background-color has-text-color has-background has-link-color" style="color:#b6b8bd;padding-top:50px;padding-bottom:50px"><div class="div-wrap-content"><!-- wp:mbn-theme/icon-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","iconSize":72,"titleTag":"h2","titleClass":"text_gradient","className":"leadership_title"} -->
-<div class="wp-block-mbn-theme-icon-box icon-box icon-position-left leadership_title"><div class="icon-box-inner flex gap-4 flex-row items-start text-left"><div class="icon-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:72px;height:72px;object-fit:contain"/></div><div class="icon-box-content" style="flex:1px"><h2 class="icon-box-title text_gradient"><em>LEADERSHIP TEAM</em></h2></div></div></div>
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_leadership has-black-background-color has-text-color has-background has-link-color" style="color:#b6b8bd;padding-top:50px;padding-bottom:50px"><div class="div-wrap-content"><!-- wp:mbn-theme/icon-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","iconSize":72,"titleTag":"h2","titleClass":"text_gradient has_hr","className":"leadership_title"} -->
+<div class="wp-block-mbn-theme-icon-box icon-box icon-position-left leadership_title"><div class="icon-box-inner flex gap-4 flex-row items-start text-left"><div class="icon-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:72px;height:72px;object-fit:contain"/></div><div class="icon-box-content" style="flex:1px"><h2 class="icon-box-title text_gradient has_hr"><em>LEADERSHIP TEAM</em></h2></div></div></div>
 <!-- /wp:mbn-theme/icon-box -->
 
 <!-- wp:columns {"className":"leadership_box","style":{"typography":{"fontSize":"16px"}}} -->
@@ -162,7 +162,7 @@ return array(
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Brandon Tatum is the CEO of Blackline Security Operations.&nbsp; His impressive resumé includes over six years of service with the Tucson, Arizona Police Department as a SWAT operator, a Field Training Officer, a G.I., as well as their Public Information Officer.</p>
+<p>Brandon Tatum is the CEO of Blackline Security Operations. His impressive resumé includes over six years of service with the Tucson, Arizona Police Department as a SWAT operator, a Field Training Officer, a G.I., as well as their Public Information Officer.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -170,11 +170,11 @@ return array(
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Tatum is a true rarity in the field of private security.&nbsp; He brings an incomparable combination of law enforcement experience, tactical training and executive leadership that is far from ordinary in the protection industry.</p>
+<p>Tatum is a true rarity in the field of private security. He brings an incomparable combination of law enforcement experience, tactical training and executive leadership that is far from ordinary in the protection industry.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>As the hands-on leader of Blackline Security Operations, Tatum is the principal architect of Blackline’s mission and high operational standards.&nbsp; Brandon uses Blackline for all his own executive and family protection.&nbsp; This ensures that the company delivers a standard of excellence for its clients that the CEO himself relies on.</p>
+<p>As the hands-on leader of Blackline Security Operations, Tatum is the principal architect of Blackline’s mission and high operational standards. Brandon uses Blackline for all his own executive and family protection. This ensures that the company delivers a standard of excellence for its clients that the CEO himself relies on.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -221,8 +221,8 @@ return array(
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 
-<!-- wp:mbn-theme/icon-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","titleTag":"h2","titleClass":"text_gradient","className":"leadership_title"} -->
-<div class="wp-block-mbn-theme-icon-box icon-box icon-position-left leadership_title"><div class="icon-box-inner flex gap-4 flex-row items-start text-left"><div class="icon-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="icon-box-content" style="flex:1px"><h2 class="icon-box-title text_gradient"><em>LEADERSHIP TEAM</em></h2></div></div></div>
+<!-- wp:mbn-theme/icon-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","titleTag":"h2","titleClass":"text_gradient has_hr","className":"leadership_title"} -->
+<div class="wp-block-mbn-theme-icon-box icon-box icon-position-left leadership_title"><div class="icon-box-inner flex gap-4 flex-row items-start text-left"><div class="icon-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="icon-box-content" style="flex:1px"><h2 class="icon-box-title text_gradient has_hr"><em>LEADERSHIP TEAM</em></h2></div></div></div>
 <!-- /wp:mbn-theme/icon-box -->
 
 <!-- wp:columns {"className":"leadership_box","style":{"typography":{"fontSize":"16px"}}} -->

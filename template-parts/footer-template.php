@@ -24,8 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>At Blackline Security Operations, our mission is to deliver the nation's most trusted and uncompromising protective solutions to those who matter most</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:paragraph -->
-<p><a href="mailto:info@blacklinesecurityoperations.com">info@blacklinesecurityoperations.com</a></p>
+<!-- wp:paragraph {"className":"email_flex"} -->
+<p class="email_flex"><img class="wp-image-853" style="width: 20px;" src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-email2.svg" alt=""><a style="font-size: revert;" href="mailto:info@blacklinesecurityoperations.com">info@blacklinesecurityoperations.com</a></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:social-links {"iconColor":"white","iconColorValue":"#ffffff","size":"has-large-icon-size","className":"is-style-logos-only"} -->
@@ -62,7 +62,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- wp:columns {"verticalAlignment":"top"} -->
 <div class="wp-block-columns are-vertically-aligned-top"><!-- wp:column {"verticalAlignment":"top","className":"footer_copy"} -->
 <div class="wp-block-column is-vertically-aligned-top footer_copy"><!-- wp:paragraph -->
-<p>© 2026 Black Line Security Ops. All rights reserved.</p>
+<p>© 2026 Blackline Security Operations. All rights reserved.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column -->
 

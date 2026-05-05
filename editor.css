@@ -1,7 +1,8 @@
 /** === Custom Block Editor === */
-body {
+body.wp-admin {
     background-color: #000;
     color: #B6B8BD;
+    font-size: 14px !important;
 }
 
 h1 {

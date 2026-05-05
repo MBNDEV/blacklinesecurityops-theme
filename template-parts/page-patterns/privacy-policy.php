@@ -22,7 +22,7 @@ return array(
 	'template'            => '',
 	'featured_image_url'  => '',
 	'featured_image_path' => '', // Theme assets path (ships via Git)
-	'custom_fields'       => array( '_wp_page_template' => 'default' ),
+	'custom_fields'       => array(),
 	'content'             => <<<'EOD'
 
 EOD

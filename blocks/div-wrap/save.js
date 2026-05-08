@@ -14,6 +14,7 @@ export default function save({ attributes }) {
     videoAutoplay,
     customCSS,
     customClassName,
+    divId,
     minHeight,
     borderWidth,
     borderStyle,
@@ -22,7 +23,8 @@ export default function save({ attributes }) {
   } = attributes;
 
   const blockProps = useBlockProps.save({
-    className: `div-wrap-block ${customClassName}`,
+    id: divId || undefined,
+    className: [ 'div-wrap-block', customClassName ].filter( Boolean ).join( ' ' ),
     style: {
       minHeight: minHeight || undefined,
       backgroundImage: backgroundType === 'image' && backgroundImageUrl 

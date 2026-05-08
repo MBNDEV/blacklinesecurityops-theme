@@ -446,6 +446,12 @@ a.wp-block-button__link:hover {
 .contact_info .icon-box {
     @apply mb-5;
 }
+.contact_info .items-start .icon-box-icon {
+    @apply mb-[-30px];
+}
+.contact_info .items-start .icon-box-title {
+    @apply pl-[40px];
+}
 
 .sec_contactus  .gform_wrapper {
     @apply w-full;

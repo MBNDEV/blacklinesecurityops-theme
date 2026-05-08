@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<!-- wp:mbn-theme/div-wrap {"style":{"spacing":{"padding":{"top":"50px"}},"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"color":{"background":"#020305"}},"textColor":"white"} -->
-<div class="wp-block-mbn-theme-div-wrap div-wrap-block  has-white-color has-text-color has-background has-link-color" style="background-color:#020305;padding-top:50px"><div class="div-wrap-content"><!-- wp:columns -->
+<!-- wp:mbn-theme/div-wrap {"metadata":{"patternName":"core/block/904","name":"Footer"},"style":{"spacing":{"padding":{"top":"50px"}},"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"color":{"background":"#020305"}},"textColor":"white"} -->
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block has-white-color has-text-color has-background has-link-color" style="background-color:#020305;padding-top:50px"><div class="div-wrap-content"><!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column {"width":"66.66%"} -->
 <div class="wp-block-column" style="flex-basis:66.66%"><!-- wp:group {"className":"footer_info","layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group footer_info"><!-- wp:image {"id":32,"sizeSlug":"full","linkDestination":"none"} -->
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"className":"email_flex"} -->
-<p class="email_flex"><img class="wp-image-853" style="width: 20px;" src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-email2.svg" alt=""><a style="font-size: revert;" href="mailto:info@blacklinesecurityoperations.com">info@blacklinesecurityoperations.com</a></p>
+<p class="email_flex"><img class="wp-image-853" style="width: 20px;" src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/05/icon-email2.svg" alt=""><a style="font-size: revert;" href="mailto:info@blacklinesecurityoperations.com">info@blacklinesecurityoperations.com</a></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:social-links {"iconColor":"white","iconColorValue":"#ffffff","size":"has-large-icon-size","className":"is-style-logos-only"} -->

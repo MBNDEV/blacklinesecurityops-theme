@@ -98,6 +98,10 @@
     "borderRadius": {
       "type": "string",
       "default": ""
+    },
+    "divId": {
+      "type": "string",
+      "default": ""
     }
   }
 }

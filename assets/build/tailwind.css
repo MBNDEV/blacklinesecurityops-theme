@@ -715,6 +715,10 @@ video {
   margin-bottom: 1.25rem;
 }
 
+.mb-\[-30px\] {
+  margin-bottom: -30px;
+}
+
 .mb-\[25px\] {
   margin-bottom: 25px;
 }
@@ -1516,6 +1520,10 @@ video {
 
 .pl-\[20px\] {
   padding-left: 20px;
+}
+
+.pl-\[40px\] {
+  padding-left: 40px;
 }
 
 .pt-\[40px\] {
@@ -2829,6 +2837,14 @@ a.wp-block-button__link:hover {
 
 .contact_info .icon-box {
   margin-bottom: 1.25rem;
+}
+
+.contact_info .items-start .icon-box-icon {
+  margin-bottom: -30px;
+}
+
+.contact_info .items-start .icon-box-title {
+  padding-left: 40px;
 }
 
 .sec_contactus  .gform_wrapper {

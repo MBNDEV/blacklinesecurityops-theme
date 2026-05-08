@@ -3,7 +3,8 @@ import {
   InspectorControls, 
   InnerBlocks,
   MediaUpload,
-  MediaUploadCheck 
+  MediaUploadCheck,
+  InspectorAdvancedControls
 } from '@wordpress/block-editor';
 import { 
   PanelBody, 
@@ -32,6 +33,7 @@ export default function Edit({ attributes, setAttributes }) {
     videoAutoplay,
     customCSS,
     customClassName,
+    divId,
     minHeight,
     borderWidth,
     borderStyle,
@@ -40,7 +42,8 @@ export default function Edit({ attributes, setAttributes }) {
   } = attributes;
 
   const blockProps = useBlockProps({
-    className: `div-wrap-block ${customClassName}`,
+    id: divId || undefined,
+    className: [ 'div-wrap-block', customClassName ].filter( Boolean ).join( ' ' ),
     style: {
       minHeight: minHeight || undefined,
       backgroundImage: backgroundType === 'image' && backgroundImageUrl 
@@ -235,12 +238,6 @@ export default function Edit({ attributes, setAttributes }) {
             help={__('Set minimum height for the container', 'mbn-theme')}
           />
 
-          <TextControl
-            label={__('Custom Class Name', 'mbn-theme')}
-            value={customClassName}
-            onChange={(value) => setAttributes({ customClassName: value })}
-            help={__('Add custom CSS classes', 'mbn-theme')}
-          />
         </PanelBody>
 
         <PanelBody title={__('Border Settings', 'mbn-theme')} initialOpen={false}>
@@ -294,6 +291,15 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
       </InspectorControls>
+
+      <InspectorAdvancedControls>
+        <TextControl
+          label={__('HTML Anchor (ID)', 'mbn-theme')}
+          value={divId}
+          onChange={(value) => setAttributes({ divId: value })}
+          help={__('Enter a word or two — without spaces — to make a unique web address just for this block, called an "anchor."', 'mbn-theme')}
+        />
+      </InspectorAdvancedControls>
 
       <div {...blockProps}>
         {backgroundType === 'video' && backgroundVideoUrl && (

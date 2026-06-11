@@ -40,9 +40,6 @@ function blacklinesecurityops_theme_setup() {
 	// Add support for editor styles.
 	add_theme_support( 'editor-styles' );
 
-	// Inject compiled Tailwind CSS intro the iframed block editor canvas.
-	add_editor_style( 'assets/build/tailwind.css' );
-
   // Enqueue editor styles
   add_editor_style( 'editor.css' );
 

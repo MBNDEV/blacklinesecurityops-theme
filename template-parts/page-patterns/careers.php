@@ -25,7 +25,7 @@ return array(
 	'custom_fields'       => array(),
 	'content'             => <<<'EOD'
 <!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-inner-hero.jpg","backgroundImageId":495,"backgroundType":"image","minHeight":"500px","borderWidth":"0","borderRadius":"0","metadata":{"name":"Hero"},"className":"sec_ihero","style":{"spacing":{"padding":{"top":"150px","bottom":"100px","left":"0px","right":"0px"}}}} -->
-<div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_ihero" style="padding-top:150px;padding-right:0px;padding-bottom:100px;padding-left:0px;min-height:500px;background-image:url(http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-inner-hero.jpg);background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:scroll;border-width:0;border-style:solid;border-radius:0"><div class="div-wrap-content"><!-- wp:columns {"isStackedOnMobile":false} -->
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block sec_ihero" style="padding-top:150px;padding-right:0px;padding-bottom:100px;padding-left:0px;min-height:500px;background-image:url(http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/bg-inner-hero.jpg);background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:scroll;border-width:0;border-style:solid;border-radius:0"><div class="div-wrap-content"><!-- wp:columns {"isStackedOnMobile":false} -->
 <div class="wp-block-columns is-not-stacked-on-mobile"><!-- wp:column {"verticalAlignment":"center","width":"555px"} -->
 <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:555px"><!-- wp:heading {"level":1,"className":"text_gradient"} -->
 <h1 class="wp-block-heading text_gradient">PARTNERSHIPS</h1>
@@ -38,18 +38,22 @@ return array(
 <!-- /wp:columns --></div></div>
 <!-- /wp:mbn-theme/div-wrap -->
 
-<!-- wp:mbn-theme/div-wrap {"className":"sec_partnership"} -->
-<div class="wp-block-mbn-theme-div-wrap div-wrap-block  sec_partnership"><div class="div-wrap-content"><!-- wp:mbn-theme/content-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","title":"EXCITING PARTNERSHIP OPPORTUNITIES \u003cbr\u003eWITH BLACKLINE SECURITY OPERATIONS","titleClass":"text_gradient"} -->
-<div class="wp-block-mbn-theme-content-box content-box icon-position-left"><div class="content-box-inner flex gap-4 flex-row items-start"><div class="content-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="content-box-content" style="flex:1px;width:100%"><h3 class="content-box-title text_gradient">EXCITING PARTNERSHIP OPPORTUNITIES <br>WITH BLACKLINE SECURITY OPERATIONS</h3><div class="content-box-blocks"><!-- wp:columns {"style":{"spacing":{"padding":{"top":"15px"}}}} -->
-<div class="wp-block-columns" style="padding-top:15px"><!-- wp:column {"width":"44%"} -->
-<div class="wp-block-column" style="flex-basis:44%"><!-- wp:paragraph -->
+<!-- wp:mbn-theme/div-wrap {"className":"sec_partnership","style":{"spacing":{"padding":{"bottom":"0px"}}}} -->
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block sec_partnership" style="padding-bottom:0px"><div class="div-wrap-content"><!-- wp:mbn-theme/content-box {"boxPadding":"0 ","iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","title":"EXCITING PARTNERSHIP OPPORTUNITIES \u003cbr\u003eWITH BLACKLINE SECURITY OPERATIONS","titleClass":"text_gradient"} -->
+<div class="wp-block-mbn-theme-content-box content-box icon-position-left" style="padding:0 "><div class="content-box-inner flex gap-4 flex-row items-start"><div class="content-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="content-box-content" style="flex:1px;width:100%"><h3 class="content-box-title text_gradient">EXCITING PARTNERSHIP OPPORTUNITIES <br>WITH BLACKLINE SECURITY OPERATIONS</h3><div class="content-box-blocks"><!-- wp:columns {"style":{"spacing":{"padding":{"top":"15px"}}}} -->
+<div class="wp-block-columns" style="padding-top:15px"><!-- wp:column {"width":"45%"} -->
+<div class="wp-block-column" style="flex-basis:45%"><!-- wp:paragraph -->
 <p>Every member of our Security Ops team is a&nbsp; battle-tested former U.S. Special Forces veteran or a former top-tier law enforcement professional with documented experience in dynamic, high-stakes environments.&nbsp; No rent-a-cops.&nbsp; No ordinary security guards.&nbsp;This is what makes us different, more effective, and supremely dependable.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column -->
 
 <!-- wp:column -->
 <div class="wp-block-column"><!-- wp:paragraph -->
-<p>Every member of our Security Ops team is a&nbsp; battle-tested former U.S. Special Forces veteran or a former top-tier law enforcement professional with documented experience in dynamic, high-stakes environments.&nbsp; No rent-a-cops.&nbsp; No ordinary security guards.&nbsp;This is what makes us different, more effective, and supremely dependable.</p>
+<p>Our clients are high-net-worth individuals and families, business executives, public figures, faith-based institutions, media celebrities, and major events.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>We do not simply guard.&nbsp; We anticipate, assess, deter, and neutralize threats before they materialize.&nbsp; Every assignment is driven by “risk intelligence,” careful planning and preparation, and the very highest standards of tactical expertise.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
@@ -86,13 +90,19 @@ return array(
 <!-- /wp:paragraph --></div></div></div></div>
 <!-- /wp:mbn-theme/content-box --></div>
 <!-- /wp:column --></div>
-<!-- /wp:columns -->
+<!-- /wp:columns --></div></div></div></div>
+<!-- /wp:mbn-theme/content-box --></div></div>
+<!-- /wp:mbn-theme/div-wrap -->
 
-<!-- wp:mbn-theme/content-box {"boxWidth":"860px","boxPadding":"40px 0","iconPosition":"left","title":"Overview for Elite Protection Partner Companies:","titleClass":"text_gradient uppercase"} -->
-<div class="wp-block-mbn-theme-content-box content-box icon-position-left" style="width:860px;padding:40px 0"><div class="content-box-inner flex gap-4 flex-row items-start"><div class="content-box-content" style="flex:1px;width:100%"><h3 class="content-box-title text_gradient uppercase">Overview for Elite Protection Partner Companies:</h3><div class="content-box-blocks"><!-- wp:paragraph -->
-<p>Contracted EP teams will supplement Blackline protective details, provide travel and event protection, and execute mission-critical security operations which have little or no margin for error.&nbsp; Every new EP partner firm will represent and uphold the Blackline standard of excellence in every assignment we undertake, including…</p>
-<!-- /wp:paragraph --></div></div></div></div>
-<!-- /wp:mbn-theme/content-box -->
+<!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/06/bg-rec-01.png","backgroundImageId":931,"backgroundType":"image","backgroundSize":"auto","backgroundPosition":"top center","customCSS":".sec_overview {\nbackground-position:right top !important;\nbackground-size: 310px !important;\n}\n.max-w870 {\nmax-width: 870px;\n}\n@media(max-width:768px) {\n.sec_overview {padding-top:0 !important}\n}","className":"sec_overview","style":{"spacing":{"padding":{"top":"80px"}}}} -->
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block sec_overview" style="padding-top:80px;background-image:url(http://blacklinesecurityops.dev.local/wp-content/uploads/2026/06/bg-rec-01.png);background-size:auto;background-position:top center;background-repeat:no-repeat;background-attachment:scroll"><div class="div-wrap-content"><!-- wp:mbn-theme/content-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/06/icon-spacer.png","iconImageId":924,"iconPosition":"left","title":"Overview for Elite Protection Partner Companies:","titleClass":"text_gradient uppercase"} -->
+<div class="wp-block-mbn-theme-content-box content-box icon-position-left"><div class="content-box-inner flex gap-4 flex-row items-start"><div class="content-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/06/icon-spacer.png" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="content-box-content" style="flex:1px;width:100%"><h3 class="content-box-title text_gradient uppercase">Overview for Elite Protection Partner Companies:</h3><div class="content-box-blocks"><!-- wp:paragraph {"className":"max-w870"} -->
+<p class="max-w870">Contracted EP teams will supplement Blackline protective details, provide travel and event protection, and execute mission-critical security operations which have little or no margin for error.&nbsp; Every new EP partner firm will represent and uphold the Blackline standard of excellence in every assignment we undertake, including…</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:spacer {"height":"20px"} -->
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
 
 <!-- wp:media-text {"mediaId":515,"mediaLink":"http://blacklinesecurityops.dev.local/careers/img-client-protection/","mediaType":"image","mediaWidth":40,"verticalAlignment":"center","className":"mediatext_box"} -->
 <div class="wp-block-media-text is-stacked-on-mobile is-vertically-aligned-center mediatext_box" style="grid-template-columns:40% auto"><figure class="wp-block-media-text__media"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/img-client-protection.jpg" alt="" class="wp-image-515 size-full"/></figure><div class="wp-block-media-text__content"><!-- wp:heading {"level":4,"className":"text_gradient"} -->
@@ -245,12 +255,21 @@ return array(
 <!-- /wp:list-item --></ul>
 <!-- /wp:list --></div></div>
 <!-- /wp:media-text --></div></div></div></div>
-<!-- /wp:mbn-theme/content-box --></div></div>
+<!-- /wp:mbn-theme/content-box --></div></div><style>.sec_overview {
+background-position:right top !important;
+background-size: 310px !important;
+}
+.max-w870 {
+max-width: 870px;
+}
+@media(max-width:768px) {
+.sec_overview {padding-top:0 !important}
+}</style>
 <!-- /wp:mbn-theme/div-wrap -->
 
-<!-- wp:mbn-theme/div-wrap -->
-<div class="wp-block-mbn-theme-div-wrap div-wrap-block"><div class="div-wrap-content"><!-- wp:mbn-theme/content-box {"boxPadding":"40px 0 60px","iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","title":"The benefits of joining forces with Blackline:","titleTag":"h2","titleClass":"text_gradient"} -->
-<div class="wp-block-mbn-theme-content-box content-box icon-position-left" style="padding:40px 0 60px"><div class="content-box-inner flex gap-4 flex-row items-start"><div class="content-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="content-box-content" style="flex:1px;width:100%"><h2 class="content-box-title text_gradient">The benefits of joining forces with Blackline:</h2><div class="content-box-blocks"><!-- wp:group {"className":"iconbox_3cols","style":{"spacing":{"padding":{"bottom":"60px"}}},"layout":{"type":"flex","flexWrap":"wrap"}} -->
+<!-- wp:mbn-theme/div-wrap {"backgroundType":"image","backgroundSize":"auto","backgroundPosition":"top center"} -->
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block" style="background-size:auto;background-position:top center;background-repeat:no-repeat;background-attachment:scroll"><div class="div-wrap-content"><!-- wp:mbn-theme/content-box {"boxPadding":"40px 0 0","iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg","iconImageId":368,"iconPosition":"left","title":"The benefits of joining forces with Blackline:","titleTag":"h2","titleClass":"text_gradient"} -->
+<div class="wp-block-mbn-theme-content-box content-box icon-position-left" style="padding:40px 0 0"><div class="content-box-inner flex gap-4 flex-row items-start"><div class="content-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-brand.svg" alt="" style="width:64px;height:64px;object-fit:contain"/></div><div class="content-box-content" style="flex:1px;width:100%"><h2 class="content-box-title text_gradient">The benefits of joining forces with Blackline:</h2><div class="content-box-blocks"><!-- wp:group {"className":"iconbox_3cols","style":{"spacing":{"padding":{"bottom":"60px"}}},"layout":{"type":"flex","flexWrap":"wrap"}} -->
 <div class="wp-block-group iconbox_3cols" style="padding-bottom:60px"><!-- wp:mbn-theme/icon-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-check.svg","iconImageId":533,"iconPosition":"left","iconSize":24,"titleTag":"span","borderWidth":1,"borderStyle":"solid","borderColor":"#343434","padding":"20px","className":"flex_column"} -->
 <div class="wp-block-mbn-theme-icon-box icon-box icon-position-left flex_column" style="border-width:1px;border-style:solid;border-color:#343434;padding:20px"><div class="icon-box-inner flex gap-4 flex-row items-start text-left"><div class="icon-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-check.svg" alt="" style="width:24px;height:24px;object-fit:contain"/></div><div class="icon-box-content" style="flex:1px"><span class="icon-box-title">Blackline Security Operations is a purpose-driven, mission-focused company on a rapid growth track</span></div></div></div>
 <!-- /wp:mbn-theme/icon-box -->
@@ -270,13 +289,20 @@ return array(
 <!-- wp:mbn-theme/icon-box {"iconImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-check.svg","iconImageId":533,"iconPosition":"left","iconSize":24,"titleTag":"span","borderWidth":1,"borderStyle":"solid","borderColor":"#343434","padding":"20px","className":"flex_column"} -->
 <div class="wp-block-mbn-theme-icon-box icon-box icon-position-left flex_column" style="border-width:1px;border-style:solid;border-color:#343434;padding:20px"><div class="icon-box-inner flex gap-4 flex-row items-start text-left"><div class="icon-box-icon" style="flex-shrink:0"><img src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/04/icon-check.svg" alt="" style="width:24px;height:24px;object-fit:contain"/></div><div class="icon-box-content" style="flex:1px"><span class="icon-box-title">You will be part of&nbsp; a national network of executive security companies committed to excellence, integrity and operational discipline</span></div></div></div>
 <!-- /wp:mbn-theme/icon-box --></div>
-<!-- /wp:group -->
+<!-- /wp:group --></div></div></div></div>
+<!-- /wp:mbn-theme/content-box --></div></div>
+<!-- /wp:mbn-theme/div-wrap -->
 
-<!-- wp:columns -->
-<div class="wp-block-columns"><!-- wp:column {"width":"38%"} -->
+<!-- wp:mbn-theme/div-wrap {"backgroundImageUrl":"http://blacklinesecurityops.dev.local/wp-content/uploads/2026/06/bg-rec-br.png","backgroundImageId":932,"backgroundType":"image","backgroundSize":"auto","backgroundPosition":"top center","customCSS":".sec-become {\nbackground-position:right bottom !Important;\nz-index:1;\n}\n.sec-become:after {\ncontent:\u0022\u0022;\nbackground:url(/wp-content/uploads/2026/06/bg-rec-lt.png) no-repeat left bottom;\nposition:absolute;\ninset:0;\nz-index:-1;\n    top: -30%;\n    height: 100%;\n    width: 250px;\n}\n.sec-become .become_box {\n    margin-left: 90px;\n    border-top: 1px solid;\n    padding-top: 30px;\n}\n@media(max-width:768px) {\n.sec-become .become_box {margin-left:0;}\n}","className":"sec-become"} -->
+<div class="wp-block-mbn-theme-div-wrap div-wrap-block sec-become" style="background-image:url(http://blacklinesecurityops.dev.local/wp-content/uploads/2026/06/bg-rec-br.png);background-size:auto;background-position:top center;background-repeat:no-repeat;background-attachment:scroll"><div class="div-wrap-content"><!-- wp:columns {"className":"become_box"} -->
+<div class="wp-block-columns become_box"><!-- wp:column {"width":"38%"} -->
 <div class="wp-block-column" style="flex-basis:38%"><!-- wp:heading {"className":"text_gradient"} -->
 <h2 class="wp-block-heading text_gradient">BECOME AN INTEGRAL PART OF AN ELITE PROTECTIVE NETWORK.</h2>
 <!-- /wp:heading -->
+
+<!-- wp:spacer {"height":"20px"} -->
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
 
 <!-- wp:paragraph -->
 <p>Please reach out to us today.&nbsp;Tell us about your security company.&nbsp;</p>
@@ -298,8 +324,28 @@ return array(
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
-<!-- /wp:columns --></div></div></div></div>
-<!-- /wp:mbn-theme/content-box --></div></div>
+<!-- /wp:columns --></div></div><style>.sec-become {
+background-position:right bottom !Important;
+z-index:1;
+}
+.sec-become:after {
+content:"";
+background:url(/wp-content/uploads/2026/06/bg-rec-lt.png) no-repeat left bottom;
+position:absolute;
+inset:0;
+z-index:-1;
+    top: -30%;
+    height: 100%;
+    width: 250px;
+}
+.sec-become .become_box {
+    margin-left: 90px;
+    border-top: 1px solid;
+    padding-top: 30px;
+}
+@media(max-width:768px) {
+.sec-become .become_box {margin-left:0;}
+}</style>
 <!-- /wp:mbn-theme/div-wrap -->
 EOD
 	,

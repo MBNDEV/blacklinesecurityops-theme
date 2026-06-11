@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<!-- wp:mbn-theme/div-wrap {"metadata":{"patternName":"core/block/904","name":"Footer"},"style":{"spacing":{"padding":{"top":"50px"}},"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"color":{"background":"#020305"}},"textColor":"white"} -->
+<!-- wp:mbn-theme/div-wrap {"customCSS":".is-style-logos-only {\nmargin-left:-5px !important\n}\n.is-style-logos-only a {\nmax-width:28px \n}","metadata":{"patternName":"core/block/904","name":"Footer"},"style":{"spacing":{"padding":{"top":"50px"}},"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"color":{"background":"#020305"}},"textColor":"white"} -->
 <div class="wp-block-mbn-theme-div-wrap div-wrap-block has-white-color has-text-color has-background has-link-color" style="background-color:#020305;padding-top:50px"><div class="div-wrap-content"><!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column {"width":"66.66%"} -->
 <div class="wp-block-column" style="flex-basis:66.66%"><!-- wp:group {"className":"footer_info","layout":{"type":"flex","orientation":"vertical"}} -->
@@ -28,16 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p class="email_flex"><img class="wp-image-853" style="width: 20px;" src="http://blacklinesecurityops.dev.local/wp-content/uploads/2026/05/icon-email2.svg" alt=""><a style="font-size: revert;" href="mailto:info@blacklinesecurityoperations.com">info@blacklinesecurityoperations.com</a></p>
 <!-- /wp:paragraph -->
 
-<!-- wp:social-links {"iconColor":"white","iconColorValue":"#ffffff","size":"has-large-icon-size","className":"is-style-logos-only"} -->
-<ul class="wp-block-social-links has-large-icon-size has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"#","service":"facebook"} /-->
-
-<!-- wp:social-link {"url":"#","service":"instagram"} /-->
-
-<!-- wp:social-link {"url":"#","service":"x"} /-->
-
-<!-- wp:social-link {"url":"#","service":"linkedin"} /-->
-
-<!-- wp:social-link {"url":"#","service":"youtube"} /--></ul>
+<!-- wp:social-links {"iconColor":"white","iconColorValue":"#ffffff","openInNewTab":true,"size":"has-large-icon-size","className":"is-style-logos-only"} -->
+<ul class="wp-block-social-links has-large-icon-size has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"https://www.instagram.com/blacklinesecurityops/","service":"instagram","label":"","rel":"xx"} /--></ul>
 <!-- /wp:social-links --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column -->
@@ -67,7 +59,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- /wp:column -->
 
 <!-- wp:column {"verticalAlignment":"top","className":"footer_privacy"} -->
-<div class="wp-block-column is-vertically-aligned-top footer_privacy"><!-- wp:navigation {"ref":4,"overlayMenu":"never","layout":{"type":"flex","justifyContent":"right"}} /--></div>
+<div class="wp-block-column is-vertically-aligned-top footer_privacy"></div>
 <!-- /wp:column --></div>
-<!-- /wp:columns --></div></div>
+<!-- /wp:columns --></div></div><style>.is-style-logos-only {
+margin-left:-5px !important
+}
+.is-style-logos-only a {
+max-width:28px 
+}</style>
 <!-- /wp:mbn-theme/div-wrap -->

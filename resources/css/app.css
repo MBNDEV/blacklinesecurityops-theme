@@ -95,7 +95,7 @@ img.img_center,
 
 .ginput_container input[type="checkbox"],
 .ginput_container input[type="radio"]  {
-    @apply !p-1;
+    @apply !p-1 !h-[24px];
 }
 .ginput_container input[type="radio"] {
     @apply !rounded-full
@@ -121,7 +121,7 @@ img.img_center,
 }
 
 .text_gradient, .text_gradient > * {
-    @apply bg-gradient-to-b from-white to-[#999] bg-clip-text !text-transparent;
+    @apply bg-gradient-to-b from-white to-[#999] bg-clip-text !text-transparent pr-[2px];
     
 }
 .text_eyebrow {
@@ -418,7 +418,7 @@ a.wp-block-button__link:hover {
 .sec_getintouch .get_info {
     @apply pl-0 gap-5
             sm:pl-[65px]
-            md:pl-[80px];
+            lg:pl-[80px];
 }
 
 
@@ -438,16 +438,16 @@ a.wp-block-button__link:hover {
             max-md:justify-center;
 }
 .contact_info .col_phone {
-    @apply w-[40%];
+    @apply w-full xl:w-[40%];
 }
 .contact_info .col_email{
-    @apply w-[58%];
+    @apply w-full xl:w-[58%];
 }
 .contact_info .icon-box {
     @apply mb-5;
 }
 .contact_info .items-start .icon-box-icon {
-    @apply mb-[-30px];
+    @apply ml-[-70px] mb-[-32px] sm:ml-0 sm:mb-[-30px];
 }
 .contact_info .items-start .icon-box-title {
     @apply pl-[40px];

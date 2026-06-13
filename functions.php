@@ -87,6 +87,88 @@ function blacklinesecurityops_enable_svg_upload( $mimes ) {
 add_filter( 'upload_mimes', 'blacklinesecurityops_enable_svg_upload' );
 
 /**
+ * Load SVG string with XXE protection.
+ *
+ * @param string $svg_content SVG content string.
+ * @return SimpleXMLElement|false Parsed SVG or false on failure.
+ */
+function blacklinesecurityops_load_svg_safely( $svg_content ) {
+  $previous_value = null;
+
+  // Disable external entity loading to prevent XXE attacks (PHP < 8.0).
+  if ( PHP_VERSION_ID < 80000 ) {
+    $previous_value = libxml_disable_entity_loader( true ); // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated -- Required for XXE protection on PHP < 8.0
+  }
+
+  libxml_use_internal_errors( true );
+  $svg = simplexml_load_string( $svg_content, 'SimpleXMLElement', LIBXML_NONET );
+  libxml_clear_errors();
+
+  // Restore previous entity loader state.
+  if ( PHP_VERSION_ID < 80000 && null !== $previous_value ) {
+    libxml_disable_entity_loader( $previous_value ); // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated -- Required for XXE protection on PHP < 8.0
+  }
+
+  return $svg;
+}
+
+/**
+ * Remove dangerous tags from SVG.
+ *
+ * @param SimpleXMLElement $svg SVG object.
+ * @return void
+ */
+function blacklinesecurityops_remove_dangerous_svg_tags( $svg ) {
+  $dangerous_tags = array( 'script', 'foreignObject', 'iframe', 'embed', 'object' );
+
+  foreach ( $dangerous_tags as $tag ) {
+    $elements = $svg->xpath( '//' . $tag );
+    if ( is_array( $elements ) ) {
+      foreach ( $elements as $element ) {
+        unset( $element[0] );
+      }
+    }
+  }
+}
+
+/**
+ * Remove event handler attributes from SVG elements.
+ *
+ * @param SimpleXMLElement $svg SVG object.
+ * @return void
+ */
+function blacklinesecurityops_remove_svg_event_handlers( $svg ) {
+  $event_attributes = array(
+	  'onload',
+	  'onclick',
+	  'onmouseover',
+	  'onmouseout',
+	  'onmousemove',
+	  'onmousedown',
+	  'onmouseup',
+	  'onfocus',
+	  'onblur',
+	  'onchange',
+	  'onsubmit',
+	  'onerror',
+	  'onanimationend',
+	  'onanimationiteration',
+	  'onanimationstart',
+  );
+
+  $all_elements = $svg->xpath( '//*' );
+  if ( ! is_array( $all_elements ) ) {
+    return;
+  }
+
+  foreach ( $all_elements as $element ) {
+    foreach ( $event_attributes as $attr ) {
+      unset( $element[ $attr ] );
+    }
+  }
+}
+
+/**
  * Sanitize uploaded SVG files to prevent XSS attacks.
  *
  * Removes potentially dangerous elements and attributes from SVG content.
@@ -95,7 +177,7 @@ add_filter( 'upload_mimes', 'blacklinesecurityops_enable_svg_upload' );
  * @return array Modified file data or WP_Error on failure.
  */
 function blacklinesecurityops_sanitize_svg_upload( $file ) {
-  // Only process SVG files
+  // Only process SVG files.
   if ( ! isset( $file['type'] ) || 'image/svg+xml' !== $file['type'] ) {
     return $file;
   }
@@ -111,51 +193,17 @@ function blacklinesecurityops_sanitize_svg_upload( $file ) {
     return $file;
   }
 
-  // Disable external entity loading to prevent XXE attacks
-  if ( PHP_VERSION_ID < 80000 ) {
-    $previous_value = libxml_disable_entity_loader( true ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
-  }
-
-  // Load the SVG with error suppression
-  libxml_use_internal_errors( true );
-  $svg = simplexml_load_string( $svg_content, 'SimpleXMLElement', LIBXML_NONET );
-  libxml_clear_errors();
-
-  // Restore previous entity loader state
-  if ( PHP_VERSION_ID < 80000 ) {
-    libxml_disable_entity_loader( $previous_value ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
-  }
+  $svg = blacklinesecurityops_load_svg_safely( $svg_content );
 
   if ( false === $svg ) {
     $file['error'] = __( 'Invalid SVG file format.', 'mbn-theme' );
     return $file;
   }
 
-  // Dangerous tags that should be removed
-  $dangerous_tags = array( 'script', 'foreignObject', 'iframe', 'embed', 'object' );
+  blacklinesecurityops_remove_dangerous_svg_tags( $svg );
+  blacklinesecurityops_remove_svg_event_handlers( $svg );
 
-  foreach ( $dangerous_tags as $tag ) {
-    $elements = $svg->xpath( '//' . $tag );
-    if ( is_array( $elements ) ) {
-      foreach ( $elements as $element ) {
-        unset( $element[0] );
-      }
-    }
-  }
-
-  // Remove event handler attributes (onclick, onload, etc.) from all elements
-  $event_attributes = array( 'onload', 'onclick', 'onmouseover', 'onmouseout', 'onmousemove', 'onmousedown', 'onmouseup', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'onerror', 'onanimationend', 'onanimationiteration', 'onanimationstart' );
-  
-  $all_elements = $svg->xpath( '//*' );
-  if ( is_array( $all_elements ) ) {
-    foreach ( $all_elements as $element ) {
-      foreach ( $event_attributes as $attr ) {
-        unset( $element[ $attr ] );
-      }
-    }
-  }
-
-  // Save sanitized SVG back to temp file
+  // Save sanitized SVG back to temp file.
   $sanitized_content = $svg->asXML();
   if ( false === $sanitized_content ) {
     $file['error'] = __( 'Failed to sanitize SVG file.', 'mbn-theme' );
@@ -197,17 +245,7 @@ function blacklinesecurityops_fix_svg_display( $response, $attachment, $meta ) {
     return $response;
   }
 
-  // Disable external entity loading to prevent XXE attacks (PHP < 8.0)
-  if ( PHP_VERSION_ID < 80000 ) {
-    $previous_value = libxml_disable_entity_loader( true ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
-  }
-
-  $svg = simplexml_load_string( $svg_content, 'SimpleXMLElement', LIBXML_NONET );
-
-  // Restore previous entity loader state
-  if ( PHP_VERSION_ID < 80000 ) {
-    libxml_disable_entity_loader( $previous_value ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
-  }
+  $svg = blacklinesecurityops_load_svg_safely( $svg_content );
 
   if ( false !== $svg ) {
     $width  = $svg['width'] ? floatval( $svg['width'] ) : 0;

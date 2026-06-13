@@ -1,5 +1,15 @@
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 
+// Sanitize CSS to prevent XSS via style tag breakout
+const sanitizeCSS = (css) => {
+  if (!css) return '';
+  // Remove closing style tags and script tags to prevent injection
+  return css
+    .replace(/<\/style>/gi, '')
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<script[^>]*>/gi, '');
+};
+
 export default function save({ attributes }) {
   const {
     backgroundImageUrl,
@@ -63,7 +73,7 @@ export default function save({ attributes }) {
       </div>
 
       {customCSS && (
-        <style>{customCSS}</style>
+        <style>{sanitizeCSS(customCSS)}</style>
       )}
     </>
   );

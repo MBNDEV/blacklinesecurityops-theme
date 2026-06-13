@@ -17,6 +17,16 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
+// Sanitize CSS to prevent XSS via style tag breakout
+const sanitizeCSS = (css) => {
+  if (!css) return '';
+  // Remove closing style tags and script tags to prevent injection
+  return css
+    .replace(/<\/style>/gi, '')
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<script[^>]*>/gi, '');
+};
+
 export default function Edit({ attributes, setAttributes }) {
   const {
     backgroundImageUrl,
@@ -321,7 +331,7 @@ export default function Edit({ attributes, setAttributes }) {
       </div>
 
       {customCSS && (
-        <style>{customCSS}</style>
+        <style>{sanitizeCSS(customCSS)}</style>
       )}
     </>
   );

@@ -25,11 +25,6 @@ export default function save({ attributes }) {
     margin
   } = attributes;
 
-  // Don't render if no content at all
-  if (!iconImageUrl && !iconSvgCode && !title && !description) {
-    return null;
-  }
-
   const blockProps = useBlockProps.save({
     className: `icon-box icon-position-${iconPosition}`,
     style: {
@@ -73,9 +68,8 @@ export default function save({ attributes }) {
               <div
                 className="icon-box-svg"
                 style={{ width: `${iconSize}px`, height: `${iconSize}px` }}
-                dangerouslySetInnerHTML={{ __html: iconSvgCode }}
-               >
-                <RawHTML>{iconSvgCode}</RawHTML> {/* ← The fix */}
+              >
+                <RawHTML>{iconSvgCode}</RawHTML>
               </div>
             )}
           </div>

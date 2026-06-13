@@ -20,10 +20,6 @@ export default function save({ attributes }) {
     grayscaleHover
   } = attributes;
 
-  if (!logos || logos.length === 0) {
-    return null;
-  }
-
   const blockProps = useBlockProps.save({
     className: `logo-list display-${displayType} ${grayscale ? 'grayscale' : ''} ${grayscaleHover ? 'grayscale-hover' : ''}`,
   });

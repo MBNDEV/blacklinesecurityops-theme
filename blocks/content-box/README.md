@@ -50,10 +50,12 @@ A flexible container block with icon/image, title, and support for nested blocks
 ## Example Custom CSS
 
 ```css
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-padding: 40px;
-border-radius: 15px;
-box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+.content-box {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
 ```
 
 ## InnerBlocks Support

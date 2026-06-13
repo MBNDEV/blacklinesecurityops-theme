@@ -87,6 +87,94 @@ function blacklinesecurityops_enable_svg_upload( $mimes ) {
 add_filter( 'upload_mimes', 'blacklinesecurityops_enable_svg_upload' );
 
 /**
+ * Sanitize uploaded SVG files to prevent XSS attacks.
+ *
+ * Removes potentially dangerous elements and attributes from SVG content.
+ *
+ * @param array $file Upload file data.
+ * @return array Modified file data or WP_Error on failure.
+ */
+function blacklinesecurityops_sanitize_svg_upload( $file ) {
+  // Only process SVG files
+  if ( ! isset( $file['type'] ) || 'image/svg+xml' !== $file['type'] ) {
+    return $file;
+  }
+
+  if ( ! isset( $file['tmp_name'] ) || ! file_exists( $file['tmp_name'] ) ) {
+    return $file;
+  }
+
+  $svg_content = file_get_contents( $file['tmp_name'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+  if ( false === $svg_content ) {
+    $file['error'] = __( 'Failed to read SVG file.', 'mbn-theme' );
+    return $file;
+  }
+
+  // Disable external entity loading to prevent XXE attacks
+  if ( PHP_VERSION_ID < 80000 ) {
+    $previous_value = libxml_disable_entity_loader( true ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
+  }
+
+  // Load the SVG with error suppression
+  libxml_use_internal_errors( true );
+  $svg = simplexml_load_string( $svg_content, 'SimpleXMLElement', LIBXML_NONET );
+  libxml_clear_errors();
+
+  // Restore previous entity loader state
+  if ( PHP_VERSION_ID < 80000 ) {
+    libxml_disable_entity_loader( $previous_value ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
+  }
+
+  if ( false === $svg ) {
+    $file['error'] = __( 'Invalid SVG file format.', 'mbn-theme' );
+    return $file;
+  }
+
+  // Dangerous tags that should be removed
+  $dangerous_tags = array( 'script', 'foreignObject', 'iframe', 'embed', 'object' );
+
+  foreach ( $dangerous_tags as $tag ) {
+    $elements = $svg->xpath( '//' . $tag );
+    if ( is_array( $elements ) ) {
+      foreach ( $elements as $element ) {
+        unset( $element[0] );
+      }
+    }
+  }
+
+  // Remove event handler attributes (onclick, onload, etc.) from all elements
+  $event_attributes = array( 'onload', 'onclick', 'onmouseover', 'onmouseout', 'onmousemove', 'onmousedown', 'onmouseup', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'onerror', 'onanimationend', 'onanimationiteration', 'onanimationstart' );
+  
+  $all_elements = $svg->xpath( '//*' );
+  if ( is_array( $all_elements ) ) {
+    foreach ( $all_elements as $element ) {
+      foreach ( $event_attributes as $attr ) {
+        unset( $element[ $attr ] );
+      }
+    }
+  }
+
+  // Save sanitized SVG back to temp file
+  $sanitized_content = $svg->asXML();
+  if ( false === $sanitized_content ) {
+    $file['error'] = __( 'Failed to sanitize SVG file.', 'mbn-theme' );
+    return $file;
+  }
+
+  // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+  $result = file_put_contents( $file['tmp_name'], $sanitized_content );
+
+  if ( false === $result ) {
+    $file['error'] = __( 'Failed to write sanitized SVG file.', 'mbn-theme' );
+    return $file;
+  }
+
+  return $file;
+}
+add_filter( 'wp_handle_upload_prefilter', 'blacklinesecurityops_sanitize_svg_upload' );
+
+/**
  * Fix SVG display in media library
  *
  * @param array      $response   Prepared attachment data.
@@ -109,7 +197,18 @@ function blacklinesecurityops_fix_svg_display( $response, $attachment, $meta ) {
     return $response;
   }
 
-  $svg = simplexml_load_string( $svg_content );
+  // Disable external entity loading to prevent XXE attacks (PHP < 8.0)
+  if ( PHP_VERSION_ID < 80000 ) {
+    $previous_value = libxml_disable_entity_loader( true ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
+  }
+
+  $svg = simplexml_load_string( $svg_content, 'SimpleXMLElement', LIBXML_NONET );
+
+  // Restore previous entity loader state
+  if ( PHP_VERSION_ID < 80000 ) {
+    libxml_disable_entity_loader( $previous_value ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated
+  }
+
   if ( false !== $svg ) {
     $width  = $svg['width'] ? floatval( $svg['width'] ) : 0;
     $height = $svg['height'] ? floatval( $svg['height'] ) : 0;

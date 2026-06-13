@@ -242,7 +242,10 @@ function custom_theme_nav_write_file( string $file_path, string $file_content ):
 
   if ( empty( $wp_filesystem ) ) {
       require_once ABSPATH . 'wp-admin/includes/file.php';
-      WP_Filesystem();
+      $result = WP_Filesystem();
+    if ( false === $result || empty( $wp_filesystem ) ) {
+        throw new Exception( 'WP_Filesystem failed to initialize. Check file permissions or hosting configuration.' );
+    }
   }
 
   if ( false === $wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE ) ) {

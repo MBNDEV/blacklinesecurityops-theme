@@ -34,14 +34,20 @@ function blacklinesecurityops_theme_setup() {
 	// Add support for block styles.
 	add_theme_support( 'wp-block-styles' );
 
+  // Let WordPress manage the document <title> tag.
+  add_theme_support( 'title-tag' );
+
 	// Add support for full and wide align images.
 	add_theme_support( 'align-wide' );
 
 	// Add support for editor styles.
 	add_theme_support( 'editor-styles' );
 
-	// Add support for responsive embedded content.
-	add_theme_support( 'responsive-embeds' );
+  // Enqueue editor styles
+  add_editor_style( 'editor.css' );
+
+  // Add support for responsive embedded content
+  add_theme_support( 'responsive-embeds' );
 
 	// Add support for custom line height.
 	add_theme_support( 'custom-line-height' );
@@ -67,7 +73,229 @@ function blacklinesecurityops_theme_setup() {
 
 add_action( 'after_setup_theme', 'blacklinesecurityops_theme_setup' );
 
-// Load theme components.
+/**
+ * Enable SVG uploads.
+ *
+ * @param array $mimes Allowed MIME types.
+ * @return array
+ */
+function blacklinesecurityops_enable_svg_upload( $mimes ) {
+  $mimes['svg']  = 'image/svg+xml';
+  $mimes['svgz'] = 'image/svg+xml';
+  return $mimes;
+}
+add_filter( 'upload_mimes', 'blacklinesecurityops_enable_svg_upload' );
+
+/**
+ * Load SVG string with XXE protection.
+ *
+ * @param string $svg_content SVG content string.
+ * @return SimpleXMLElement|false Parsed SVG or false on failure.
+ */
+function blacklinesecurityops_load_svg_safely( $svg_content ) {
+  $previous_value = null;
+
+  // Disable external entity loading to prevent XXE attacks (PHP < 8.0).
+  if ( PHP_VERSION_ID < 80000 ) {
+    $previous_value = libxml_disable_entity_loader( true ); // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated -- Required for XXE protection on PHP < 8.0
+  }
+
+  libxml_use_internal_errors( true );
+  $svg = simplexml_load_string( $svg_content, 'SimpleXMLElement', LIBXML_NONET );
+  libxml_clear_errors();
+
+  // Restore previous entity loader state.
+  if ( PHP_VERSION_ID < 80000 && null !== $previous_value ) {
+    libxml_disable_entity_loader( $previous_value ); // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated -- Required for XXE protection on PHP < 8.0
+  }
+
+  return $svg;
+}
+
+/**
+ * Remove dangerous tags from SVG.
+ *
+ * @param SimpleXMLElement $svg SVG object.
+ * @return void
+ */
+function blacklinesecurityops_remove_dangerous_svg_tags( $svg ) {
+  $dangerous_tags = array( 'script', 'foreignObject', 'iframe', 'embed', 'object' );
+
+  foreach ( $dangerous_tags as $tag ) {
+    $elements = $svg->xpath( '//' . $tag );
+    if ( is_array( $elements ) ) {
+      foreach ( $elements as $element ) {
+        unset( $element[0] );
+      }
+    }
+  }
+}
+
+/**
+ * Remove event handler attributes from SVG elements.
+ *
+ * @param SimpleXMLElement $svg SVG object.
+ * @return void
+ */
+function blacklinesecurityops_remove_svg_event_handlers( $svg ) {
+  $event_attributes = array(
+	  'onload',
+	  'onclick',
+	  'onmouseover',
+	  'onmouseout',
+	  'onmousemove',
+	  'onmousedown',
+	  'onmouseup',
+	  'onfocus',
+	  'onblur',
+	  'onchange',
+	  'onsubmit',
+	  'onerror',
+	  'onanimationend',
+	  'onanimationiteration',
+	  'onanimationstart',
+  );
+
+  $all_elements = $svg->xpath( '//*' );
+  if ( ! is_array( $all_elements ) ) {
+    return;
+  }
+
+  foreach ( $all_elements as $element ) {
+    foreach ( $event_attributes as $attr ) {
+      unset( $element[ $attr ] );
+    }
+  }
+}
+
+/**
+ * Sanitize uploaded SVG files to prevent XSS attacks.
+ *
+ * Removes potentially dangerous elements and attributes from SVG content.
+ *
+ * @param array $file Upload file data.
+ * @return array Modified file data or WP_Error on failure.
+ */
+function blacklinesecurityops_sanitize_svg_upload( $file ) {
+  // Only process SVG files.
+  if ( ! isset( $file['type'] ) || 'image/svg+xml' !== $file['type'] ) {
+    return $file;
+  }
+
+  if ( ! isset( $file['tmp_name'] ) || ! file_exists( $file['tmp_name'] ) ) {
+    return $file;
+  }
+
+  $svg_content = file_get_contents( $file['tmp_name'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+  if ( false === $svg_content ) {
+    $file['error'] = __( 'Failed to read SVG file.', 'mbn-theme' );
+    return $file;
+  }
+
+  $svg = blacklinesecurityops_load_svg_safely( $svg_content );
+
+  if ( false === $svg ) {
+    $file['error'] = __( 'Invalid SVG file format.', 'mbn-theme' );
+    return $file;
+  }
+
+  blacklinesecurityops_remove_dangerous_svg_tags( $svg );
+  blacklinesecurityops_remove_svg_event_handlers( $svg );
+
+  // Save sanitized SVG back to temp file.
+  $sanitized_content = $svg->asXML();
+  if ( false === $sanitized_content ) {
+    $file['error'] = __( 'Failed to sanitize SVG file.', 'mbn-theme' );
+    return $file;
+  }
+
+  // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+  $result = file_put_contents( $file['tmp_name'], $sanitized_content );
+
+  if ( false === $result ) {
+    $file['error'] = __( 'Failed to write sanitized SVG file.', 'mbn-theme' );
+    return $file;
+  }
+
+  return $file;
+}
+add_filter( 'wp_handle_upload_prefilter', 'blacklinesecurityops_sanitize_svg_upload' );
+
+/**
+ * Fix SVG display in media library
+ *
+ * @param array      $response   Prepared attachment data.
+ * @param WP_Post    $attachment Attachment object.
+ * @param array|bool $meta       Attachment metadata (unused).
+ * @return array
+ */
+function blacklinesecurityops_fix_svg_display( $response, $attachment, $meta ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+  if ( 'image' !== $response['type'] || 'svg+xml' !== $response['subtype'] || ! class_exists( 'SimpleXMLElement' ) ) {
+    return $response;
+  }
+
+  $path = get_attached_file( $attachment->ID );
+  if ( ! $path || ! file_exists( $path ) ) {
+    return $response;
+  }
+
+  $svg_content = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+  if ( false === $svg_content ) {
+    return $response;
+  }
+
+  $svg = blacklinesecurityops_load_svg_safely( $svg_content );
+
+  if ( false !== $svg ) {
+    $width  = $svg['width'] ? floatval( $svg['width'] ) : 0;
+    $height = $svg['height'] ? floatval( $svg['height'] ) : 0;
+    if ( $width > 0 && $height > 0 ) {
+      $response['width']  = $width;
+      $response['height'] = $height;
+    }
+  }
+
+  return $response;
+}
+add_filter( 'wp_prepare_attachment_for_js', 'blacklinesecurityops_fix_svg_display', 10, 3 );
+
+/**
+ * Enqueue Slick Slider for Logo List block
+ */
+function blacklinesecurityops_enqueue_slick_slider() {
+  // Only load on frontend
+  if ( is_admin() ) {
+    return;
+  }
+
+  // Slick CSS
+  wp_enqueue_style(
+    'slick-slider',
+    'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
+    array(),
+    '1.8.1'
+  );
+
+  wp_enqueue_style(
+    'slick-theme',
+    'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css',
+    array(),
+    '1.8.1'
+  );
+
+  // Slick JS (requires jQuery)
+  wp_enqueue_script(
+    'slick-slider',
+    'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+    array( 'jquery' ),
+    '1.8.1',
+    true
+  );
+}
+add_action( 'wp_enqueue_scripts', 'blacklinesecurityops_enqueue_slick_slider' );
+
+// Load theme components
 require_once get_theme_file_path( 'block-registry.php' );
 require_once get_theme_file_path( 'tailwind-loader.php' );
 require_once get_theme_file_path( 'optimize.php' );
@@ -84,6 +312,7 @@ require_once get_theme_file_path( 'inc/includes-theme-block-section.php' );    /
 require_once get_theme_file_path( 'inc/includes-block-patterns.php' );         // Reusable block patterns.
 require_once get_theme_file_path( 'inc/includes-template-sync-tools.php' );    // Template import/export tools.
 require_once get_theme_file_path( 'inc/includes-page-sync.php' );              // Page content sync (optional).
+require_once get_theme_file_path( 'inc/includes-nav-menu-sync.php' );          // Nav menu export/import via Git.
 
 PucFactory::buildUpdateChecker(
   'https://github.com/MBNDEV/mbn-theme',

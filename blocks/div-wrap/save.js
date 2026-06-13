@@ -1,0 +1,80 @@
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+
+// Sanitize CSS to prevent XSS via style tag breakout
+const sanitizeCSS = (css) => {
+  if (!css) return '';
+  // Remove closing style tags and script tags to prevent injection
+  return css
+    .replace(/<\/style>/gi, '')
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<script[^>]*>/gi, '');
+};
+
+export default function save({ attributes }) {
+  const {
+    backgroundImageUrl,
+    backgroundVideoUrl,
+    backgroundType,
+    backgroundSize,
+    backgroundPosition,
+    backgroundRepeat,
+    backgroundAttachment,
+    videoLoop,
+    videoMuted,
+    videoAutoplay,
+    customCSS,
+    customClassName,
+    divId,
+    minHeight,
+    borderWidth,
+    borderStyle,
+    borderColor,
+    borderRadius
+  } = attributes;
+
+  const blockProps = useBlockProps.save({
+    id: divId || undefined,
+    className: [ 'div-wrap-block', customClassName ].filter( Boolean ).join( ' ' ),
+    style: {
+      minHeight: minHeight || undefined,
+      backgroundImage: backgroundType === 'image' && backgroundImageUrl 
+        ? `url(${backgroundImageUrl})` 
+        : undefined,
+      backgroundSize: backgroundType === 'image' ? backgroundSize : undefined,
+      backgroundPosition: backgroundType === 'image' ? backgroundPosition : undefined,
+      backgroundRepeat: backgroundType === 'image' ? backgroundRepeat : undefined,
+      backgroundAttachment: backgroundType === 'image' ? backgroundAttachment : undefined,
+      borderWidth: borderWidth || undefined,
+      borderStyle: borderWidth ? borderStyle : undefined,
+      borderColor: borderWidth && borderColor ? borderColor : undefined,
+      borderRadius: borderRadius || undefined,
+    }
+  });
+
+  return (
+    <>
+      <div {...blockProps}>
+        {backgroundType === 'video' && backgroundVideoUrl && (
+          <div className="div-wrap-video-background">
+            <video
+              autoPlay={videoAutoplay}
+              loop={videoLoop}
+              muted={videoMuted}
+              playsInline
+              className="div-wrap-video"
+            >
+              <source src={backgroundVideoUrl} type="video/mp4" />
+            </video>
+          </div>
+        )}
+        <div className="div-wrap-content">
+          <InnerBlocks.Content />
+        </div>
+      </div>
+
+      {customCSS && (
+        <style>{sanitizeCSS(customCSS)}</style>
+      )}
+    </>
+  );
+}

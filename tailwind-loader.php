@@ -82,19 +82,10 @@ function custom_theme_enqueue_tailwind_front(): void {
 add_action( 'wp_enqueue_scripts', 'custom_theme_enqueue_tailwind_front', 8 );
 
 /**
- * Enqueue the same inline Tailwind bundle in the block editor.
+ * Tailwind for the block editor is loaded via add_editor_style() in functions.php,
+ * which scopes it to the editor canvas (iframe) only.
  *
- * @return void
+ * Do NOT re-enqueue via enqueue_block_editor_assets — that hook loads styles into
+ * the main admin frame (unscoped), which causes Tailwind's preflight to reset
+ * WordPress admin UI components such as the social-link URL popover/input field.
  */
-function custom_theme_enqueue_tailwind_editor(): void {
-  if ( ! wp_style_is( 'custom-theme-tailwind', 'registered' ) ) {
-    return;
-  }
-
-  wp_enqueue_style( 'custom-theme-tailwind' );
-  $css = custom_theme_get_tailwind_build_css();
-  if ( '' !== $css ) {
-    wp_add_inline_style( 'custom-theme-tailwind', $css );
-  }
-}
-add_action( 'enqueue_block_editor_assets', 'custom_theme_enqueue_tailwind_editor' );

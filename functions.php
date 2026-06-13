@@ -34,6 +34,9 @@ function blacklinesecurityops_theme_setup() {
 	// Add support for block styles.
 	add_theme_support( 'wp-block-styles' );
 
+  // Let WordPress manage the document <title> tag.
+  add_theme_support( 'title-tag' );
+
 	// Add support for full and wide align images.
 	add_theme_support( 'align-wide' );
 

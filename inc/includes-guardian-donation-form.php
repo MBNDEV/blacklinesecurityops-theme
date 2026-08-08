@@ -33,9 +33,9 @@ add_filter( 'gform_other_choice_value', 'blacklinesecurityops_guardian_other_cho
  * @return string
  */
 function blacklinesecurityops_guardian_other_choice_label( $placeholder, $field ) {
-	if ( $field && 4 === (int) $field->formId && 2 === (int) $field->id ) {
-		return 'Enter an amount:';
-	}
+  if ( $field && 4 === (int) $field->formId && 2 === (int) $field->id ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- GF_Field's own camelCase property.
+      return 'Enter an amount:';
+  }
 
 	return $placeholder;
 }
@@ -53,7 +53,7 @@ function blacklinesecurityops_guardian_other_choice_label( $placeholder, $field 
  * @param object $form        The form object.
  * @return string
  */
-function blacklinesecurityops_guardian_other_amount_script( $form_string, $form ) {
+function blacklinesecurityops_guardian_other_amount_script( $form_string, $form ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the gform_get_form_filter_4 hook signature.
 	$script  = '<script>document.addEventListener("DOMContentLoaded", function () {';
 	$script .= 'var el = document.getElementById("input_4_2_other");';
 	$script .= 'if (el) { el.placeholder = "$"; if (el.value === "Enter an amount:") { el.value = ""; } }';

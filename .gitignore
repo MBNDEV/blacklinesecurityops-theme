@@ -10,3 +10,5 @@ assets/build/tailwind.css
 vendor/
 
 /docs
+infra-llm/
+.infra-llm.env

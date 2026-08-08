@@ -200,8 +200,7 @@ a.wp-block-button__link:hover {
 }
 
 .mbn-slider-items .slick-arrow:before {
-    content:"";
-    @apply block w-[26px] h-[23px] !opacity-70
+    @apply content-[""] block w-[26px] h-[23px] !opacity-70
             bg-[url(/wp-content/uploads/2026/04/icn-arrowr.svg)];
 }
 .mbn-slider-items .slick-prev:before {
@@ -411,8 +410,8 @@ a.wp-block-button__link:hover {
     @apply lg:max-w-[490px] mb-7;
 }
 .sec_getintouch .gitform {
-    @apply p-[20px] md:p-[40px] border-t-[5px] border-t-[#EEE];
-    background: radial-gradient(101.32% 101.32% at 50.09% -1.32%, #595959 0%, #262626 100%);
+    @apply p-[20px] md:p-[40px] border-t-[5px] border-t-[#EEE]
+            bg-[radial-gradient(101.32%_101.32%_at_50.09%_-1.32%,#595959_0%,#262626_100%)];
 }
 
 .sec_getintouch .get_info {
@@ -427,8 +426,8 @@ a.wp-block-button__link:hover {
             lg:py-[80px];
 }
 .sec_contactus .contact_form {
-    @apply p-[20px] md:p-[40px] border-t-[5px] border-t-[#EEE] text-[#fff];
-    background: radial-gradient(101.32% 101.32% at 50.09% -1.32%, #595959 0%, #262626 100%);
+    @apply p-[20px] md:p-[40px] border-t-[5px] border-t-[#EEE] text-[#fff]
+            bg-[radial-gradient(101.32%_101.32%_at_50.09%_-1.32%,#595959_0%,#262626_100%)];
 }
 .sec_contactus .contact_form .gform-field-label  {
     @apply text-[#fff];
@@ -622,4 +621,194 @@ nav.footer_nav ul a {
 }
 .btn_getdir:hover {
     @apply !text-[#fff];
+}
+
+
+/* Guardian Donation Form (form 4, page: Join the Guardian Program) */
+.sec_guardian_form {
+    @apply relative py-[40px]
+            lg:py-[80px];
+}
+.sec_guardian_form .gform_fields {
+    @apply !gap-5;
+}
+
+.sec_guardian_form .gf-section-title {
+    @apply uppercase mb-0;
+}
+
+/* One-time gift card: heading (top) + amount choices (bottom) merged into one bordered box */
+.sec_guardian_form .gf-card-onetime-top {
+    @apply !border-t-[3px] !border-t-[#eee] bg-[#141a2a] p-[20px] mb-0 !pb-[30px]
+            md:p-[30px];
+            border-style: solid;
+}
+.sec_guardian_form .gform-theme--framework .gfield--type-choice .gchoice{
+    @apply !items-center;
+}
+.sec_guardian_form .gf-onetime-amounts input[type=radio]:checked::before {
+    @apply !bg-[transparent];; 
+}
+.gform-theme--framework:where(:not(.gform_editor)) .gfield--type-section{
+    @apply !border-b-0;
+}
+.sec_guardian_form .gf-card-earmark-row {
+    @apply flex items-center !pb-[20px] !pt-[20px];
+}
+.sec_guardian_form .gf-card-onetime-bottom {
+    @apply bg-[#141a2a] p-[20px] pt-0 !-mt-5
+            md:p-[30px] md:pt-0;
+}
+.sec_guardian_form .gf-onetime-amounts .gfield_radio {
+    @apply !flex !flex-row !flex-wrap !items-center justify-between gap-6;
+}
+.sec_guardian_form .gf-onetime-amounts input[type="radio"] {
+    @apply !rounded-none !w-[22px] !h-[22px] shrink-0 !bg-transparent !border-2 !border-solid !border-[#B6B8BD] accent-transparent;
+}
+.sec_guardian_form .gf-onetime-amounts input[type="radio"]:checked {
+    @apply !border-[#DD9E2D] bg-center bg-no-repeat
+            bg-[length:100%_100%]
+            bg-[radial-gradient(circle,#DD9E2D_55%,transparent_56%)];
+}
+/* GF's default label color/size assumes a light form background; this section is dark */
+.sec_guardian_form .gf-onetime-amounts .gchoice label {
+    @apply !text-[#B6B8BD] !text-[20px] md:!text-[24px];
+}
+/* GF renders this choice as <input><label>Other</label><br><input.gchoice_other_control> —
+   the stray <br> lands the amount field on its own implicit grid row instead of beside the label. */
+.sec_guardian_form .gf-onetime-amounts .gchoice:has(.gchoice_other_control) {
+    @apply !flex !flex-row !flex-wrap !items-center gap-2;
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice:has(.gchoice_other_control) br {
+    @apply hidden;
+}
+/* Real placeholder="$" (set via JS once GF renders) replaces the old decorative "$" prefix */
+.sec_guardian_form .gf-onetime-amounts .gchoice_other_control {
+    @apply relative !w-[140px];
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice_other_control:disabled {
+    @apply !bg-[#626670] cursor-not-allowed;
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice_other_control:disabled::placeholder {
+    @apply text-[#B6B8BD];
+}
+/* Relocated beside the amount input via JS (see includes-guardian-donation-form.php) */
+.sec_guardian_form .gf-onetime-amounts .gfield_description {
+    @apply !mt-0 text-[#B6B8BD] font-['Titillium_Web'] text-[16px] italic font-light leading-[150%];
+}
+
+/* Recurring gift tier cards */
+.sec_guardian_form .gf-tier-grid {
+    @apply !grid !grid-cols-6 gap-5
+            max-md:!grid-cols-1;
+}
+.sec_guardian_form .gf-tier-1,
+.sec_guardian_form .gf-tier-2,
+.sec_guardian_form .gf-tier-3 {
+    @apply col-span-2 max-md:!col-span-1;
+}
+.sec_guardian_form .gf-tier-4,
+.sec_guardian_form .gf-tier-5 {
+    @apply col-span-3 max-md:!col-span-1;
+}
+.sec_guardian_form .gf-tier-6 {
+    @apply col-span-6 max-md:!col-span-1;
+}
+.sec_guardian_form .gf-tier-card {
+    @apply relative flex flex-col justify-center pt-[45px] pr-[37px] pb-[55px] pl-[25px] cursor-pointer border-b-[7px] border-b-[#3f3f3f] 
+            bg-[linear-gradient(180deg,#131416_0%,#141a2a_100%)];
+            border-bottom-style: solid;
+}
+/* Figma: 24px between name/price-block/button on the bigger (row 2-3) cards, 11px on
+   the smaller row-1 cards — reproduced via margins since name/price/desc/button are
+   flat siblings, not their own group wrapper. */
+.sec_guardian_form .gf-tier-name {
+    @apply block text-white font-semibold text-[22px] md:text-[28px] mb-[11px];
+}
+.sec_guardian_form .gf-tier-4 .gf-tier-name,
+.sec_guardian_form .gf-tier-5 .gf-tier-name,
+.sec_guardian_form .gf-tier-6 .gf-tier-name {
+    @apply md:mb-[24px];
+}
+.sec_guardian_form .gf-tier-price {
+    @apply block text-white font-semibold text-[20px] md:text-[24px];
+}
+.sec_guardian_form .gf-tier-desc {
+    @apply block italic font-light text-white text-[16px] pt-[10px] pb-[11px] -tracking-[0.18px] leading-[1.5];
+}
+.sec_guardian_form .gf-tier-4 .gf-tier-desc,
+.sec_guardian_form .gf-tier-5 .gf-tier-desc,
+.sec_guardian_form .gf-tier-6 .gf-tier-desc {
+    @apply md:mb-[24px];
+}
+.sec_guardian_form .gf-tier-subscribe {
+    @apply inline-flex items-center justify-center self-start !bg-[#DD9E2D] !text-black !font-bold !text-[16px] uppercase px-[21px] py-[12px] min-h-[45px] min-w-[177px];
+}
+.sec_guardian_form .gf-tier-note {
+    @apply italic text-white text-[14px] mt-[20px];
+}
+.sec_guardian_form .gf-tier-card:has(.gf-tier-input:checked) {
+    border: 3px solid #EEE !important;
+}
+/* Figma has no visible selection control on these cards — the whole card (a <label>)
+   is already the click target, so the native radio only needs to stay focusable. */
+.sec_guardian_form .gf-tier-card .gf-tier-input {
+    @apply absolute top-0 left-0 !w-[1px] !h-[1px] !p-0 opacity-0 overflow-hidden !m-0;
+}
+.sec_guardian_form .gf-tier-card:has(.gf-tier-input:focus-visible) {
+    @apply outline outline-2 outline-[#DD9E2D] outline-offset-2;
+}
+
+/* Tax-status disclaimer (reuses the global .disclaimer icon rule, bumped up in size) */
+.sec_guardian_form .gf-tax-disclaimer .disclaimer {
+    @apply !text-[16px];
+}
+
+/* "How is my money used" card + custom select caret */
+.sec_guardian_form .gf-howused {
+    @apply bg-[#141a2a] px-[20px] flex flex-wrap items-center gap-4
+            md:px-[30px] w-full max-w-[770px];
+}
+.sec_guardian_form .gf-howused  .ginput_container_select{
+    @apply !w-full !max-w-full;
+}
+.sec_guardian_form .gf-howused .gform-field-label {
+    @apply bg-gradient-to-b from-white to-[#999] bg-clip-text !text-transparent mb-0 shrink-0;
+}
+.sec_guardian_form .gf-howused select,
+.sec_guardian_form .gf-earmark-type select {
+    @apply !appearance-none bg-no-repeat !pr-[40px]
+            [background-position:right_16px_center]
+            bg-[url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='14'%20height='8'%3E%3Cpath%20d='M1%201l6%206%206-6'%20stroke='%23000'%20stroke-width='2'%20fill='none'/%3E%3C/svg%3E")];
+}
+/* One line, label before the dropdown, vertically centered — same pattern as .gf-howused */
+.sec_guardian_form .gf-earmark-type {
+    @apply !flex !flex-row !flex-nowrap !items-center gap-3;
+}
+.sec_guardian_form .gf-earmark-type .gform-field-label {
+    @apply !mb-0 shrink-0 text-[#B6B8BD] text-[16px] font-medium;
+}
+.sec_guardian_form .gf-earmark-type .ginput_container {
+    @apply !w-auto flex-1;
+}
+
+/* Disclosure notice paragraph */
+.sec_guardian_form .gf-disclosure-notice-text {
+    @apply italic text-white text-[16px] mb-[30px] leading-[1.5];
+}
+
+/* Earmark card: heading (top) + type/name row (bottom) merged into one box */
+.sec_guardian_form .gf-card-earmark-top {
+    @apply bg-[#141a2a] p-[20px] pb-0 mb-0
+            md:p-[30px] md:pb-0;
+}
+.sec_guardian_form .gf-earmark-heading {
+    @apply mb-0;
+}
+.sec_guardian_form .gf-card-earmark-bottom {
+    @apply bg-[#141a2a] px-[20px] pt-0 md:px-[30px] md:pt-0;
+}
+
+.sec_guardian_form .gform_footer {
+    @apply justify-center mt-[20px];
 }

@@ -313,6 +313,7 @@ require_once get_theme_file_path( 'inc/includes-block-patterns.php' );         /
 require_once get_theme_file_path( 'inc/includes-template-sync-tools.php' );    // Template import/export tools.
 require_once get_theme_file_path( 'inc/includes-page-sync.php' );              // Page content sync (optional).
 require_once get_theme_file_path( 'inc/includes-nav-menu-sync.php' );          // Nav menu export/import via Git.
+require_once get_theme_file_path( 'inc/includes-guardian-donation-form.php' ); // Guardian donation form: rich recurring-tier radio cards (form 4, field 4).
 
 PucFactory::buildUpdateChecker(
   'https://github.com/MBNDEV/mbn-theme',

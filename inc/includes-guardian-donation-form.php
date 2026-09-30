@@ -129,10 +129,10 @@ function blacklinesecurityops_guardian_choice_value( $field, $choice ) {
 	// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- GF_Field's own camelCase properties.
 	$value = ! empty( $choice['value'] ) || $field->enableChoiceValue ? $choice['value'] : rgar( $choice, 'text' );
 
-	if ( $field->enablePrice ) {
-		$price  = rgempty( 'price', $choice ) ? 0 : GFCommon::to_number( rgar( $choice, 'price' ) );
-		$value .= '|' . $price;
-	}
+  if ( $field->enablePrice ) {
+      $price  = rgempty( 'price', $choice ) ? 0 : GFCommon::to_number( rgar( $choice, 'price' ) );
+      $value .= '|' . $price;
+  }
 	// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 	return (string) $value;

@@ -111,6 +111,34 @@ function blacklinesecurityops_guardian_field_has_class( $field, $class_name ) {
 }
 
 /**
+ * Computes the submit value for a choice exactly as Gravity Forms would render it.
+ *
+ * GF hashes the choice values at render time and rejects any submitted value that isn't
+ * in that hash with "Invalid selection. Please select from the available choices."
+ * (GF_Field::get_state_validation_message). Two details make a raw `$choice['value']`
+ * fail that check: GF falls back to the choice *text* when no explicit value is set, and
+ * it appends `|<price>` on a field with prices enabled — which a donation tier field has.
+ *
+ * Mirrors GF_Field_Radio::get_choice_html().
+ *
+ * @param object $field  The GF_Field instance being rendered.
+ * @param array  $choice The choice properties.
+ * @return string
+ */
+function blacklinesecurityops_guardian_choice_value( $field, $choice ) {
+	// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- GF_Field's own camelCase properties.
+	$value = ! empty( $choice['value'] ) || $field->enableChoiceValue ? $choice['value'] : rgar( $choice, 'text' );
+
+	if ( $field->enablePrice ) {
+		$price  = rgempty( 'price', $choice ) ? 0 : GFCommon::to_number( rgar( $choice, 'price' ) );
+		$value .= '|' . $price;
+	}
+	// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+	return (string) $value;
+}
+
+/**
  * Renders the recurring-tier choices as clickable pricing cards.
  *
  * Scoped by the field's `gf-tier-cards` CSS class rather than a form ID: the form is
@@ -140,10 +168,15 @@ function blacklinesecurityops_render_guardian_tier_cards( $input, $field, $value
 	$index = 0;
   foreach ( (array) $field->choices as $choice ) {
       ++$index;
-      $slug    = $choice['value'];
-      $meta    = blacklinesecurityops_get_guardian_tier_card_for_choice( $choice );
-      $id      = 'choice_' . $form_id . '_' . $field->id . '_' . $index;
-      $checked = checked( $value, $slug, false );
+      $slug = blacklinesecurityops_guardian_choice_value( $field, $choice );
+      $meta = blacklinesecurityops_get_guardian_tier_card_for_choice( $choice );
+      $id   = 'choice_' . $form_id . '_' . $field->id . '_' . $index;
+
+    if ( rgblank( $value ) && 'entry' !== rgget( 'view' ) ) {
+        $checked = checked( (bool) rgar( $choice, 'isSelected' ), true, false );
+    } else {
+        $checked = checked( GFFormsModel::choice_value_match( $field, $choice, $value ), true, false );
+    }
 
       $out .= '<label class="gf-tier-card gf-tier-' . $index . '" for="' . esc_attr( $id ) . '">';
       $out .= '<input type="radio" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $slug ) . '" class="gf-tier-input"' . $checked . ' />';

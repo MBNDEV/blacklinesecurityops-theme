@@ -70,6 +70,40 @@ function custom_theme_register_block_template_post_type(): void {
 add_action( 'init', 'custom_theme_register_block_template_post_type', 5 );
 
 /**
+ * Keep Block Templates out of the XML sitemap.
+ *
+ * The post type stays public so the editor can preview a template and the theme can load
+ * one, but a header or footer fragment is not a page anyone should land on from search.
+ * Core builds its sitemap from every public post type, and Yoast builds its own index
+ * from its own settings, so both need telling separately.
+ *
+ * @param array<string,WP_Post_Type> $post_types Post types included in the sitemap.
+ * @return array<string,WP_Post_Type>
+ */
+function custom_theme_block_template_exclude_from_core_sitemap( $post_types ) {
+	unset( $post_types['mbn_block_template'] );
+
+	return $post_types;
+}
+add_filter( 'wp_sitemaps_post_types', 'custom_theme_block_template_exclude_from_core_sitemap' );
+
+/**
+ * Yoast counterpart of custom_theme_block_template_exclude_from_core_sitemap().
+ *
+ * @param bool   $excluded  Whether the type is excluded.
+ * @param string $post_type Post type being considered.
+ * @return bool
+ */
+function custom_theme_block_template_exclude_from_yoast_sitemap( $excluded, $post_type ) {
+  if ( 'mbn_block_template' === $post_type ) {
+      return true;
+  }
+
+	return $excluded;
+}
+add_filter( 'wpseo_sitemap_exclude_post_type', 'custom_theme_block_template_exclude_from_yoast_sitemap', 10, 2 );
+
+/**
  * Resolve a Block Template post ID by slug.
  *
  * @param string $slug Post name slug.

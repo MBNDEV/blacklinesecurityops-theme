@@ -692,9 +692,83 @@ nav.footer_nav ul a {
 .sec_guardian_form .gf-onetime-amounts .gchoice_other_control:disabled::placeholder {
     @apply text-[#B6B8BD];
 }
+/* The trailing "email us for a larger amount" choice is informational, not an amount to pick:
+   its label carries HTML (a <span> wrapping a mailto link) where the real amount choices carry
+   plain text. Hide its radio and let the copy read as a paragraph. Keyed off that markup rather
+   than a #choice_<form>_<field>_<index> id, so it survives the form being rebuilt under a new
+   id — the id-scoped version of these rules only ever matched one form. */
+.sec_guardian_form .gf-onetime-amounts .gchoice:has(label span) input[type="radio"] {
+    @apply !hidden;
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice:has(label span) label {
+    @apply !ml-0;
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice label span {
+    @apply !inline-block !max-w-[560px] !text-[16px];
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice label span a {
+    @apply !text-[#DD9E2D];
+}
+.sec_guardian_form .gf-onetime-amounts .gchoice label span a:hover {
+    @apply underline;
+}
+
 /* Relocated beside the amount input via JS (see includes-guardian-donation-form.php) */
 .sec_guardian_form .gf-onetime-amounts .gfield_description {
     @apply !mt-0 text-[#B6B8BD] font-['Titillium_Web'] text-[16px] italic font-light leading-[150%];
+}
+
+/* One control height across the whole form. The 56px reference came from the earmark row,
+   but was only ever applied to selects and that row's own input, leaving the contact and
+   payment text fields at their 43px default. Collect.js sizes its iframes from the input it
+   replaced (it un-hides it to measure), so this reaches the card fields too. */
+.sec_guardian_form .gfield input[type="text"],
+.sec_guardian_form .gfield input[type="email"],
+.sec_guardian_form .gfield input[type="tel"],
+.sec_guardian_form .gfield input[type="number"],
+.sec_guardian_form .gfield select {
+    @apply !min-h-[56px];
+}
+
+/* Payment method reads as two selectable tiles, not a radio list. The radio covers its tile
+   so the whole box is the hit target and stays keyboard-focusable; the label carries the
+   selected state. */
+.sec_guardian_form .gf-payment-method .gfield_radio {
+    @apply !grid !grid-cols-2 !gap-5
+            max-md:!grid-cols-1;
+}
+.sec_guardian_form .gf-payment-method .gchoice {
+    @apply !relative !block;
+}
+.sec_guardian_form .gf-payment-method .gchoice input[type="radio"] {
+    @apply !absolute !inset-0 !m-0 !h-full !w-full !opacity-0 cursor-pointer;
+}
+.sec_guardian_form .gf-payment-method .gchoice label {
+    @apply !m-0 flex min-h-[56px] items-center gap-3 border-2 border-solid border-transparent
+            bg-[#FAF3E6] px-4 py-3 !text-[16px] font-semibold !text-[#141A2A];
+}
+.sec_guardian_form .gf-payment-method .gchoice:has(input:checked) label {
+    @apply !border-[#DD9E2D];
+}
+.sec_guardian_form .gf-payment-method .gchoice:has(input:focus-visible) label {
+    @apply outline outline-2 outline-offset-2 outline-[#DD9E2D];
+}
+
+/* Tile glyphs, keyed off the choice value so they follow the method rather than its position. */
+.sec_guardian_form .gf-payment-method .gchoice label::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+.sec_guardian_form .gf-payment-method .gchoice:has(input[value="creditcard"]) label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141A2A' stroke-width='1.6'%3E%3Crect x='2' y='5' width='20' height='14' rx='2'/%3E%3Cpath d='M2 10h20'/%3E%3C/svg%3E");
+}
+.sec_guardian_form .gf-payment-method .gchoice:has(input[value="check"]) label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141A2A' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12 3l9 5H3z'/%3E%3Cpath d='M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20.5h18'/%3E%3C/svg%3E");
 }
 
 /* Recurring gift tier cards */

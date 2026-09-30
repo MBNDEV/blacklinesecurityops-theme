@@ -4,9 +4,16 @@
  *
  * Gravity Forms radio fields only support a plain-text label per choice, which can't
  * reproduce the Figma design's pricing cards (title, price, italic perk description,
- * gold "Subscribe" pill, and a footnote on one tier). This filter is scoped to the
- * exact form + field ID it targets (form 4, field 4) and cannot affect any other
- * Gravity Forms field on the site.
+ * gold "Subscribe" pill, and a footnote on one tier).
+ *
+ * The card copy itself lives in the Guardian Tiers Cards post type, not here.
+ *
+ * Every filter here is scoped by the custom CSS class on the target field —
+ * `gf-tier-cards` for the recurring tiers, `gf-onetime-amounts` for the one-time
+ * amount — and touches nothing else on the site. Scoping by form ID instead was the
+ * original approach and broke silently: the form is numbered differently per
+ * environment, so hooks written against one environment's ID render nothing on the
+ * others. The same classes already drive the styling in `resources/css/app.css`.
  *
  * @package CustomTheme
  */
@@ -15,8 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_filter( 'gform_field_input_4_4', 'blacklinesecurityops_render_guardian_tier_cards', 10, 5 );
-add_filter( 'gform_get_form_filter_4', 'blacklinesecurityops_guardian_other_amount_script', 10, 2 );
+add_filter( 'gform_field_input', 'blacklinesecurityops_render_guardian_tier_cards', 10, 5 );
+add_filter( 'gform_get_form_filter', 'blacklinesecurityops_guardian_other_amount_script', 10, 2 );
 add_filter( 'gform_other_choice_value', 'blacklinesecurityops_guardian_other_choice_label', 10, 2 );
 
 /**
@@ -28,12 +35,15 @@ add_filter( 'gform_other_choice_value', 'blacklinesecurityops_guardian_other_cho
  * drops it, reverting the label back to "Other". This filter computes the label at
  * render time instead, so it survives any admin edit of the form.
  *
+ * Scoped by the field's `gf-onetime-amounts` CSS class, not a form ID — see
+ * blacklinesecurityops_render_guardian_tier_cards() for why.
+ *
  * @param string              $placeholder Default "Other" label.
  * @param null|GF_Field_Radio $field       The field being rendered, or null.
  * @return string
  */
 function blacklinesecurityops_guardian_other_choice_label( $placeholder, $field ) {
-  if ( $field && 4 === (int) $field->formId && 2 === (int) $field->id ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- GF_Field's own camelCase property.
+  if ( blacklinesecurityops_guardian_field_has_class( $field, 'gf-onetime-amounts' ) ) {
       return 'Enter an amount:';
   }
 
@@ -49,15 +59,36 @@ function blacklinesecurityops_guardian_other_choice_label( $placeholder, $field 
  * Also relocates the field's "(minimum $1)" description — GF always renders it as a
  * block below the whole choice list — to sit beside the amount input, matching Figma.
  *
+ * Both element ids are derived from the form and field actually rendered; the field is
+ * located by its `gf-onetime-amounts` CSS class. The script no-ops when that field has
+ * no "Other" choice enabled, which is the case on the current form.
+ *
  * @param string $form_string Fully rendered form HTML.
- * @param object $form        The form object.
+ * @param array  $form        The form object.
  * @return string
  */
-function blacklinesecurityops_guardian_other_amount_script( $form_string, $form ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the gform_get_form_filter_4 hook signature.
+function blacklinesecurityops_guardian_other_amount_script( $form_string, $form ) {
+	$field_id = 0;
+
+  foreach ( (array) rgar( $form, 'fields' ) as $field ) {
+    if ( blacklinesecurityops_guardian_field_has_class( $field, 'gf-onetime-amounts' ) ) {
+        $field_id = (int) $field->id;
+        break;
+    }
+  }
+
+  if ( 0 === $field_id ) {
+      return $form_string;
+  }
+
+	$prefix   = (int) rgar( $form, 'id' ) . '_' . $field_id;
+	$input_id = wp_json_encode( 'input_' . $prefix . '_other' );
+	$desc_id  = wp_json_encode( 'gfield_description_' . $prefix );
+
 	$script  = '<script>document.addEventListener("DOMContentLoaded", function () {';
-	$script .= 'var el = document.getElementById("input_4_2_other");';
+	$script .= 'var el = document.getElementById(' . $input_id . ');';
 	$script .= 'if (el) { el.placeholder = "$"; if (el.value === "Enter an amount:") { el.value = ""; } }';
-	$script .= 'var desc = document.getElementById("gfield_description_4_2");';
+	$script .= 'var desc = document.getElementById(' . $desc_id . ');';
 	$script .= 'if (el && desc) { el.insertAdjacentElement("afterend", desc); }';
 	$script .= '});</script>';
 
@@ -65,77 +96,75 @@ function blacklinesecurityops_guardian_other_amount_script( $form_string, $form 
 }
 
 /**
- * Renders the six recurring-tier choices as clickable pricing cards.
+ * Tests whether a Gravity Forms field carries a given custom CSS class.
+ *
+ * @param null|object $field      The field being rendered, or null.
+ * @param string      $class_name Class to look for.
+ * @return bool
+ */
+function blacklinesecurityops_guardian_field_has_class( $field, $class_name ) {
+  if ( ! $field || ! isset( $field->cssClass ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- GF_Field's own camelCase property.
+      return false;
+  }
+
+	return in_array( $class_name, preg_split( '/\s+/', (string) $field->cssClass, -1, PREG_SPLIT_NO_EMPTY ), true ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- GF_Field's own camelCase property.
+}
+
+/**
+ * Renders the recurring-tier choices as clickable pricing cards.
+ *
+ * Scoped by the field's `gf-tier-cards` CSS class rather than a form ID: the form is
+ * numbered differently per environment, and an ID-scoped hook silently renders nothing
+ * on every environment but the one it was written against.
+ *
+ * Card copy (price, perk description, footnote) comes from the Guardian Tiers Cards post
+ * type, paired to each choice by title — see inc/includes-guardian-tier-cards-cpt.php. A
+ * choice with no matching card still renders as a card with just its label and Subscribe
+ * pill, so adding a choice in the form editor never breaks the grid.
  *
  * @param string $input   Default field input markup (replaced entirely).
- * @param object $field   The GF_Field_Radio instance for this field.
+ * @param object $field   The GF_Field instance for this field.
  * @param string $value   Currently selected choice value, if any.
  * @param int    $lead_id Entry ID (0 on the front-end form).
  * @param int    $form_id The form ID.
  * @return string
  */
 function blacklinesecurityops_render_guardian_tier_cards( $input, $field, $value, $lead_id, $form_id ) {
-	$tiers = array(
-		'guardian'           => array(
-			'price' => '$10/month',
-			'desc'  => 'Receive a free Blackline wristband',
-			'note'  => '',
-		),
-		'defender'           => array(
-			'price' => '$25/month',
-			'desc'  => 'Receive a free Blackline wristband and hat',
-			'note'  => '',
-		),
-		'protector'          => array(
-			'price' => '$50/month',
-			'desc'  => 'Receive a free Blackline wristband, hat and t-shirt',
-			'note'  => '',
-		),
-		'sentinel'           => array(
-			'price' => '$100/month',
-			'desc'  => 'Receive all the above plus a 2-hour firearms training course in Scottsdale, Arizona',
-			'note'  => '',
-		),
-		'founders_circle'    => array(
-			'price' => '$250/month',
-			'desc'  => 'Enjoy a one-on-one Facetime meeting with Brandon Tatum plus a personalized Blackline backpack filled with swag',
-			'note'  => '',
-		),
-		'strategic_guardian' => array(
-			'price' => '$6,000/year',
-			'desc'  => 'Strategic Guardians will enjoy a personal dinner with Brandon Tatum at The Belmont in Scottsdale, Arizona',
-			'note'  => 'This is a monthly $500 subscription, due up front, which becomes $500/month after 12 months.',
-		),
-	);
+  if ( ! blacklinesecurityops_guardian_field_has_class( $field, 'gf-tier-cards' ) ) {
+      return $input;
+  }
 
 	$name = 'input_' . $field->id;
 	$out  = '<div class="ginput_container ginput_container_radio gf-tier-grid">';
 
 	$index = 0;
-	foreach ( (array) $field->choices as $choice ) {
-		++$index;
-		$slug    = $choice['value'];
-		$meta    = isset( $tiers[ $slug ] ) ? $tiers[ $slug ] : array(
-			'price' => '',
-			'desc'  => '',
-			'note'  => '',
-		);
-		$id      = 'choice_' . $form_id . '_' . $field->id . '_' . $index;
-		$checked = checked( $value, $slug, false );
+  foreach ( (array) $field->choices as $choice ) {
+      ++$index;
+      $slug    = $choice['value'];
+      $meta    = blacklinesecurityops_get_guardian_tier_card_for_choice( $choice );
+      $id      = 'choice_' . $form_id . '_' . $field->id . '_' . $index;
+      $checked = checked( $value, $slug, false );
 
-		$out .= '<label class="gf-tier-card gf-tier-' . $index . '" for="' . esc_attr( $id ) . '">';
-		$out .= '<input type="radio" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $slug ) . '" class="gf-tier-input"' . $checked . ' />';
-		$out .= '<span class="gf-tier-name">' . esc_html( $choice['text'] ) . '</span>';
-		$out .= '<span class="gf-tier-price">' . esc_html( $meta['price'] ) . '</span>';
-		$out .= '<span class="gf-tier-desc">(' . esc_html( $meta['desc'] ) . ')</span>';
-		$out .= '<span class="gf-tier-subscribe">Subscribe</span>';
+      $out .= '<label class="gf-tier-card gf-tier-' . $index . '" for="' . esc_attr( $id ) . '">';
+      $out .= '<input type="radio" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $slug ) . '" class="gf-tier-input"' . $checked . ' />';
+      $out .= '<span class="gf-tier-name">' . esc_html( $choice['text'] ) . '</span>';
 
-		if ( $meta['note'] ) {
-			$out .= '<span class="gf-tier-note">' . esc_html( $meta['note'] ) . '</span>';
-		}
+    if ( $meta['price'] ) {
+        $out .= '<span class="gf-tier-price">' . esc_html( $meta['price'] ) . '</span>';
+    }
 
-		$out .= '</label>';
-	}
+    if ( $meta['desc'] ) {
+        $out .= '<span class="gf-tier-desc">(' . esc_html( $meta['desc'] ) . ')</span>';
+    }
+
+      $out .= '<span class="gf-tier-subscribe">Subscribe</span>';
+
+    if ( $meta['note'] ) {
+        $out .= '<span class="gf-tier-note">' . esc_html( $meta['note'] ) . '</span>';
+    }
+
+      $out .= '</label>';
+  }
 
 	$out .= '</div>';
 

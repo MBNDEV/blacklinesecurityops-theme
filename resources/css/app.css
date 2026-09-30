@@ -812,3 +812,255 @@ nav.footer_nav ul a {
 .sec_guardian_form .gform_footer {
     @apply justify-center mt-[20px];
 }
+
+/* Support Cam Higby page (page 688, form 5) */
+.sec_cam_hero {
+    position: relative;
+    isolation: isolate;
+    background-color: #030a13;
+}
+.sec_cam_hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, #030a13 32%, rgba(3, 10, 19, 0.35) 62%, rgba(3, 10, 19, 0) 100%);
+}
+.sec_cam_hero h1 {
+    @apply text-[40px] uppercase lg:text-[65px];
+    line-height: 67px;
+    font-weight: 600;
+}
+.sec_cam_bio,
+.sec_cam_form {
+    @apply py-[40px] lg:py-[80px];
+}
+.cam-profile {
+    @apply items-center gap-[40px] lg:gap-[84px] mb-[50px] lg:mb-[70px];
+}
+.cam-profile figure img {
+    @apply w-full rounded-[8px];
+}
+.cam-profile p {
+    @apply text-[16px] lg:text-[18px] leading-[1.5] text-[#b6b8bd] mb-[15px];
+}
+.cam-profile .cam-bio-lead {
+    @apply italic;
+}
+.cam-profile .cam-bio-lead strong,
+.cam-profile p strong {
+    @apply text-[#e8e8ea] font-bold;
+}
+.cam-profile .cam-bio-cost {
+    @apply text-[#fffeff] font-semibold not-italic;
+}
+.cam-btn-gold .wp-block-button__link {
+    @apply uppercase rounded-none px-[25px] py-[13px] text-[16px] font-bold text-black;
+    background: linear-gradient(102deg, #5c5c5c 11%, #fff4e0 110%);
+    box-shadow: inset 0 -5px 13px #2c2c2c;
+    letter-spacing: -0.16px;
+    line-height: 1.1;
+}
+.cam-videos {
+    @apply gap-[30px];
+}
+.cam-video-card {
+    @apply relative flex flex-col justify-end overflow-hidden rounded-[8px] border border-solid border-[#333] p-[20px] lg:p-[32px] aspect-[704/516] isolate;
+}
+.cam-video-card > .wp-block-image {
+    @apply absolute inset-0 m-0 -z-10;
+}
+.cam-video-card > .wp-block-image img {
+    @apply w-full h-full object-cover;
+}
+.cam-video-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(6deg, #000 20%, rgba(0, 0, 0, 0) 106%);
+}
+.cam-video-info {
+    @apply flex flex-col gap-[12px] items-start;
+}
+.cam-channel {
+    @apply gap-[7px] items-center;
+}
+.cam-channel .wp-block-image {
+    @apply m-0;
+}
+.cam-channel .wp-block-image img {
+    @apply rounded-full;
+}
+.cam-channel-name {
+    @apply m-0 text-[16px] font-bold uppercase leading-[1.1] tracking-[-0.16px] text-white;
+}
+.cam-video-title {
+    @apply m-0 text-[22px] lg:text-[28px] font-bold uppercase leading-[1.1] tracking-[-0.28px] text-white;
+}
+.cam-btn-watch .wp-block-button__link {
+    @apply flex items-center gap-[8px] rounded-none border border-solid border-white bg-transparent px-[21px] py-[12px] text-[16px] font-bold text-white;
+    letter-spacing: -0.16px;
+    line-height: 1.1;
+}
+.cam-btn-watch .wp-block-button__link::before {
+    content: "";
+    flex: none;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background: url(/wp-content/uploads/2026/09/icon-play.svg) center / 8px no-repeat, rgba(255, 0, 0, 0.9);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+.cam-form-panel {
+    @apply mx-auto w-full max-w-[799px] border-0 border-t-[3px] border-solid border-[#eee] bg-[#141a2a] p-[20px] lg:p-[30px];
+}
+.cam-form-panel .gform_wrapper {
+    @apply w-full;
+}
+.cam-form-panel .gform_fields {
+    row-gap: 15px;
+}
+.cam-form-panel .cam-section {
+    @apply mb-0;
+}
+.cam-form-panel .cam-section .gsection_title {
+    @apply m-0 pb-[8px] text-[24px] lg:text-[28px] font-semibold tracking-[-0.28px] text-white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+.cam-form-panel .cam-section {
+    border-bottom: 0;
+}
+.cam-form-panel .cam-amounts .gfield_radio,
+.cam-form-panel .cam-payment .gfield_radio {
+    @apply flex flex-wrap gap-x-[40px] gap-y-[8px];
+}
+.cam-form-panel .cam-amounts .gchoice label {
+    @apply text-[16px] font-light text-[#b6b8bd];
+}
+.cam-form-panel .cam-amounts input[type="radio"] {
+    accent-color: #dd9e2d;
+}
+.cam-form-panel .cam-payment .gfield_radio {
+    @apply grid grid-cols-2 gap-[23px];
+}
+.cam-form-panel .cam-payment .gchoice {
+    @apply flex items-center gap-[8px] bg-[#faf3e6] px-[24px] py-[16px] border-2 border-solid border-transparent;
+}
+.cam-form-panel .cam-payment .gchoice:has(input:checked) {
+    border-color: #d08500;
+}
+.cam-form-panel .cam-payment .gchoice label {
+    @apply font-bold text-[#141a2a] text-[16px] m-0;
+}
+.cam-form-panel .cam-payment input[type="radio"] {
+    accent-color: #d08500;
+}
+.cam-form-panel .cam-total {
+    @apply text-[20px] font-light tracking-[-0.2px] text-white;
+}
+.cam-form-panel .cam-total .ginput_total {
+    @apply text-white text-[20px] font-light;
+}
+.cam-form-panel .cam-total .gfield_label {
+    @apply text-white text-[20px] font-light;
+}
+.cam-form-panel .gform_footer {
+    @apply mt-[10px] p-0;
+}
+.cam-form-panel .gform_footer .gform_button {
+    @apply w-full h-[45px] border border-solid border-[#dd9e2d] bg-[#dd9e2d] text-[#020305] font-bold tracking-[-0.16px];
+}
+
+.cam-video-card > .wp-block-image img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+}
+.cam-form-panel .cam-amounts > .gfield_label,
+.cam-form-panel .cam-payment > .gfield_label {
+    @apply sr-only;
+}
+.cam-form-panel .cam-amounts .gfield_radio {
+    @apply !flex-row !flex-wrap !gap-x-[40px];
+}
+.cam-form-panel .cam-payment .gfield_radio {
+    @apply !grid !grid-cols-2 !gap-[23px];
+}
+.cam-form-panel .cam-amounts input[type="radio"],
+.cam-form-panel .cam-payment input[type="radio"] {
+    @apply !size-[18px];
+}
+.cam-form-panel .cam-card #input_5_10_5_container,
+.cam-form-panel .cam-card .ginput_cardextras + .ginput_full,
+.cam-form-panel .cam-card .ginput_full:has(#input_5_10_5) {
+    display: none;
+}
+.cam-form-panel .cam-card .gform_card_icon_container ~ .ginput_full {
+    @apply mb-0;
+}
+.cam-channel-name {
+    @apply whitespace-nowrap;
+}
+.cam-btn-watch .wp-block-button__link {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.cam-form-panel .cam-section:not(:first-child) {
+    @apply mt-[15px];
+}
+
+.cam-form-panel .cam-payment .gchoice {
+    @apply relative p-0 cursor-pointer;
+}
+.cam-form-panel .cam-payment .gchoice input[type="radio"] {
+    @apply absolute inset-0 !size-full opacity-0 cursor-pointer m-0;
+}
+.cam-form-panel .cam-payment .gchoice label {
+    @apply flex w-full items-center gap-[8px] px-[24px] py-[16px] cursor-pointer pointer-events-none;
+}
+.cam-form-panel .cam-payment .gchoice label::before {
+    content: "";
+    flex: none;
+    width: 24px;
+    height: 24px;
+    background: url("data:image/svg+xml,%3Csvg  width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg id='heroicons:credit-card'%3E %3Cpath id='Vector' d='M2.25 8.25H21.75M2.25 9H21.75M5.25 14.25H11.25M5.25 16.5H8.25M4.5 19.5H19.5C20.0967 19.5 20.669 19.2629 21.091 18.841C21.5129 18.419 21.75 17.8467 21.75 17.25V6.75C21.75 6.15326 21.5129 5.58097 21.091 5.15901C20.669 4.73705 20.0967 4.5 19.5 4.5H4.5C3.90326 4.5 3.33097 4.73705 2.90901 5.15901C2.48705 5.58097 2.25 6.15326 2.25 6.75V17.25C2.25 17.8467 2.48705 18.419 2.90901 18.841C3.33097 19.2629 3.90326 19.5 4.5 19.5Z' stroke='%23828282' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E %3C/g%3E %3C/svg%3E ") center / contain no-repeat;
+}
+.cam-form-panel .cam-payment .gchoice_5_9_1 label::before {
+    box-sizing: border-box;
+    width: 35px;
+    height: 18px;
+    border: 0.7px solid #e8e8ea;
+    border-radius: 5px;
+    background: url("data:image/svg+xml,%3Csvg  width='24.9993' height='9.96064' viewBox='0 0 24.9993 9.96064' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg id='logos:google-pay' clip-path='url(%23clip0_0_75)'%3E %3Cpath id='Vector' d='M17.5805 2.70939C18.2624 2.70939 18.7893 2.89831 19.1922 3.27615C19.5951 3.65395 19.781 4.15772 19.781 4.78743V7.80997H18.9132V7.11738H18.8822C18.5103 7.68414 17.9834 7.9675 17.3636 7.9675C16.8367 7.9675 16.3718 7.81002 15.9999 7.49522C15.6589 7.18037 15.442 6.73958 15.442 6.2673C15.442 5.76351 15.6279 5.35419 15.9999 5.03934C16.3718 4.72449 16.8987 4.59855 17.5185 4.59855C18.0764 4.59855 18.5103 4.69304 18.8512 4.91341V4.69304C18.8512 4.39915 18.7433 4.10531 18.5273 3.91383L18.4793 3.87441C18.2314 3.654 17.9214 3.52806 17.5805 3.52806C17.0537 3.52806 16.6507 3.74846 16.3718 4.18926L15.566 3.68539C16.0618 3.02419 16.7127 2.70939 17.5805 2.70939ZM13.2105 0.568359C13.7666 0.568359 14.2951 0.764958 14.7177 1.13158L14.7911 1.19802C15.225 1.57586 15.442 2.14262 15.442 2.74083C15.442 3.33904 15.225 3.87431 14.7911 4.2836C14.3572 4.69289 13.8303 4.91331 13.2105 4.91331L11.7228 4.88181V7.80997H10.793V0.568359H13.2105ZM17.7045 5.35414C17.3326 5.35414 17.0226 5.44859 16.7747 5.6375C16.5267 5.79491 16.4028 6.01529 16.4028 6.29865C16.4028 6.55056 16.5268 6.77093 16.7127 6.89691C16.9297 7.05434 17.1776 7.14877 17.4256 7.14877C17.7727 7.14877 18.1198 7.01162 18.3913 6.76296L18.4483 6.70799C18.7583 6.42463 18.9132 6.07828 18.9132 5.70044C18.6343 5.48007 18.2314 5.35409 17.7045 5.35409M13.2725 1.44988H11.7229V3.96885H13.2725C13.6134 3.96885 13.9544 3.84292 14.1713 3.59105C14.6672 3.11878 14.6672 2.33164 14.2023 1.85932L14.1713 1.82782C13.9234 1.57596 13.6134 1.41853 13.2725 1.45003M24.802 2.86681L21.7336 10.014H20.8038L21.9506 7.52667L19.936 2.89831H20.9278L22.3845 6.45613H22.4155L23.8412 2.89831H24.802V2.86681Z' fill='%235F6368'/%3E %3Cpath id='Vector_2' d='M8.03568 4.25217C8.03568 3.96881 8.00468 3.68546 7.97368 3.4021H4.09961V5.00786H6.3001C6.20714 5.51158 5.92821 5.98386 5.49431 6.26727V7.30626H6.827C7.60184 6.58212 8.03573 5.51158 8.03573 4.25222' fill='%234285F4'/%3E %3Cpath id='Vector_3' d='M4.0986 8.31377C5.21432 8.31377 6.14412 7.93593 6.82599 7.30622L5.4933 6.26723C5.12136 6.51909 4.65646 6.67651 4.0986 6.67651C3.04479 6.67651 2.11499 5.95237 1.80505 4.94482H0.441406V6.01531C1.15423 7.43215 2.54893 8.31377 4.0986 8.31377Z' fill='%2334A853'/%3E %3Cpath id='Vector_4' d='M1.80533 4.9448C1.61941 4.44103 1.61941 3.87431 1.80533 3.33904V2.26855H0.441684C-0.147228 3.43353 -0.147228 4.81887 0.441684 6.01529L1.80533 4.9448Z' fill='%23FBBC04'/%3E %3Cpath id='Vector_5' d='M4.09889 1.63894C4.68776 1.63894 5.24562 1.85936 5.67956 2.26865L6.85729 1.07223C6.11341 0.379533 5.12165 -0.029756 4.12985 0.00168993C2.58018 0.00168993 1.15453 0.883307 0.472656 2.30015L1.83635 3.37063C2.11528 2.36309 3.04508 1.63894 4.09889 1.63894Z' fill='%23EA4335'/%3E %3C/g%3E %3Cdefs%3E %3CclipPath id='clip0_0_75'%3E %3Crect width='24.9993' height='9.96064' fill='white'/%3E %3C/clipPath%3E %3C/defs%3E %3C/svg%3E ") center / 25px 10px no-repeat #fff;
+}
+.cam-form-panel .cam-card .ginput_cardinfo_right {
+    position: relative;
+}
+.cam-form-panel .cam-card .ginput_card_security_code_icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    background: url("data:image/svg+xml,%3Csvg  width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg id='heroicons:credit-card'%3E %3Cpath id='Vector' d='M2.25 8.25H21.75M2.25 9H21.75M5.25 14.25H11.25M5.25 16.5H8.25M4.5 19.5H19.5C20.0967 19.5 20.669 19.2629 21.091 18.841C21.5129 18.419 21.75 17.8467 21.75 17.25V6.75C21.75 6.15326 21.5129 5.58097 21.091 5.15901C20.669 4.73705 20.0967 4.5 19.5 4.5H4.5C3.90326 4.5 3.33097 4.73705 2.90901 5.15901C2.48705 5.58097 2.25 6.15326 2.25 6.75V17.25C2.25 17.8467 2.48705 18.419 2.90901 18.841C3.33097 19.2629 3.90326 19.5 4.5 19.5Z' stroke='%23828282' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E %3C/g%3E %3C/svg%3E ") center / contain no-repeat;
+}
+.cam-form-panel .cam-consent > .gfield_label {
+    @apply sr-only;
+}
+.cam-form-panel .cam-consent .ginput_container_consent {
+    @apply flex items-start gap-[12px];
+}
+.cam-form-panel .cam-consent input[type="checkbox"] {
+    @apply mt-[3px] !size-[18px] shrink-0;
+    accent-color: #dd9e2d;
+}
+.cam-form-panel .cam-consent .gfield_consent_label {
+    @apply text-[14px] font-light leading-[1.5] text-[#b6b8bd];
+}
+.cam-form-panel .cam-consent .gfield_consent_label a {
+    @apply text-[#dd9e2d] underline;
+}
+.cam-form-panel .cam-consent .gfield_consent_label .gfield_required {
+    display: none !important;
+}

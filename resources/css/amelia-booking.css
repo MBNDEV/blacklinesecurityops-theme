@@ -168,19 +168,87 @@
   line-height: 0;
 }
 
-/* Mobile */
-@media (max-width: 640px) {
-  .amelia-v2-booking .am-elf { padding: 20px 14px !important; }
-  .amelia-v2-booking .am-ec {
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    padding: 16px 14px 16px 48px !important;
+/* ---------- Responsive (list only, not the popup) ---------- */
+.amelia-v2-booking .am-ec__info-capacity { white-space: nowrap; }
+
+/* Small desktop: keep one row, tighten spacing so nothing wraps */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec {
+    gap: 14px;
+    padding: 14px 14px 14px 48px !important;
   }
-  .amelia-v2-booking .am-ec::before { left: 14px; top: 28px; margin-top: 0; }
-  .amelia-v2-booking .am-ec__info { flex: 1 1 auto; text-align: right; }
-  .amelia-v2-booking .am-ec__actions {
-    flex: 1 1 100%;
-    justify-content: space-between;
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec::before { left: 14px; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__period { min-width: 120px; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__period-date span { font-size: 16px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions { gap: 14px; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions-price p { font-size: 16px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions-btn .am-button { padding: 11px 14px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions-btn .am-button__inner {
+    font-size: 12px !important;
+    letter-spacing: .08em;
+  }
+}
+
+/* Tablet & mobile: stack into two rows (grid)
+   row 1 = date/time (left) + spots (right)
+   row 2 = price (left) + CTA (right) */
+@media (max-width: 1023px) {
+  .amelia-v2-booking:not(.am-dialog-popup) .am-elf { padding: 22px 16px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "period info" "actions actions";
+    align-items: start !important;
+    gap: 0 12px !important;
+    padding: 16px 16px 16px 50px !important;
+  }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec::before { left: 16px; top: 18px; margin-top: 0; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__period {
+    grid-area: period;
+    display: block !important;   /* Amelia turns this into one row on narrow widths */
+    width: auto !important;
+    min-width: 0 !important;
+  }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__info {
+    grid-area: info;
+    width: auto !important;
+    margin: 0 !important;
+    padding-top: 2px !important;
+    text-align: right !important;
+    align-self: start !important;
+  }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__info-other,
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__info-capacity {
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions {
+    grid-area: actions;
+    width: auto !important;
+    justify-content: space-between !important;
+    margin-top: 14px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid var(--bl-border) !important;
+  }
+}
+
+/* Phones: CTA goes full width under the price */
+@media (max-width: 480px) {
+  .amelia-v2-booking:not(.am-dialog-popup) .am-elf { padding: 18px 12px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-els__wrapper::before { font-size: 17px; margin-bottom: 16px; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec { padding: 14px 14px 14px 44px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec::before { left: 14px; top: 16px; width: 18px; height: 18px; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__period-date span { font-size: 16px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__info-capacity,
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__info-capacity span { font-size: 13px !important; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions-btn { flex: 1 1 100%; }
+  .amelia-v2-booking:not(.am-dialog-popup) .am-ec__actions-btn .am-button {
+    width: 100% !important;
+    justify-content: center;
   }
 }
 
@@ -625,3 +693,21 @@
 .amelia-v2-booking.am-dialog-popup ::-webkit-scrollbar { width: 6px; height: 6px; }
 .amelia-v2-booking.am-dialog-popup ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
 .amelia-v2-booking.am-dialog-popup ::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- Popup: small screens (640px and below) ---------- */
+@media (max-width: 640px) {
+  /* Spots / availability: align right */
+  .amelia-v2-booking #amelia-container .am-ec__info-other {
+    justify-content: flex-end !important;
+  }
+
+  /* Customer info form: one field per row */
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-elfci__form {
+    flex-direction: column !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-elfci__form .am-elfci__item {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-basis: 100% !important;
+  }
+}

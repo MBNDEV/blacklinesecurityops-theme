@@ -295,24 +295,6 @@ function blacklinesecurityops_enqueue_slick_slider() {
 }
 add_action( 'wp_enqueue_scripts', 'blacklinesecurityops_enqueue_slick_slider' );
 
-/**
- * Enqueue the Amelia booking overrides on every front-end page.
- */
-function blacklinesecurityops_enqueue_amelia_booking_styles() {
-  $path = get_theme_file_path( 'resources/css/amelia-booking.css' );
-  if ( ! is_readable( $path ) ) {
-    return;
-  }
-
-  wp_enqueue_style(
-    'blacklinesecurityops-amelia-booking',
-    get_theme_file_uri( 'resources/css/amelia-booking.css' ),
-    array(),
-    (string) filemtime( $path )
-  );
-}
-add_action( 'wp_enqueue_scripts', 'blacklinesecurityops_enqueue_amelia_booking_styles', 20 );
-
 // Load theme components
 require_once get_theme_file_path( 'block-registry.php' );
 require_once get_theme_file_path( 'tailwind-loader.php' );

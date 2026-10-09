@@ -4,6 +4,8 @@
  * @package CustomTheme
  */
 
+@import './amelia-booking.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -163,9 +163,10 @@
 }
 .amelia-v2-booking .am-ec__actions-btn .am-button__inner::after {
   content: "\203A";
-  margin-left: 8px;
-  font-size: 18px;
+  font-size: 22px;
   line-height: 0;
+  margin-left: 8px;
+  margin-top: -5px;
 }
 
 /* ---------- Responsive (list only, not the popup) ---------- */
@@ -696,8 +697,8 @@
 
 /* ---------- Popup: small screens (640px and below) ---------- */
 @media (max-width: 640px) {
-  /* Spots / availability: align right */
-  .amelia-v2-booking #amelia-container .am-ec__info-other {
+  /* Spots / availability: align right (date list only, not the popup) */
+  .amelia-v2-booking:not(.am-dialog-popup) #amelia-container .am-ec__info-other {
     justify-content: flex-end !important;
   }
 
@@ -709,5 +710,136 @@
     width: 100% !important;
     max-width: 100% !important;
     flex-basis: 100% !important;
+  }
+}
+
+/* ---------- Popup: Event Info card ----------
+   Desktop (1024px+): side by side (Amelia default + our popup styles)
+   Tablet & mobile (1023px and below): stacked
+   Note: Amelia adds .am-rw-500 even on desktop, so the stacking is tied to a media query */
+/* Desktop: side by side (date | details) */
+@media (min-width: 1024px) {
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 24px !important;
+    padding: 18px 20px !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__period {
+    display: block !important;          /* date on top, time underneath */
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 140px;
+    margin: 0 !important;
+    padding: 0 24px 0 0 !important;
+    border-right: 1px solid var(--bl-border) !important;
+    text-align: left !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__period-date {
+    justify-content: flex-start !important;
+    margin: 0 0 2px !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__period-time {
+    margin: 0 !important;
+    text-align: left !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__info {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__info-price {
+    margin: 0 0 4px !important;
+    color: #fff !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__info-other {
+    margin-top: 6px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+}
+
+/* Tablet & mobile: stacked */
+@media (max-width: 1023px) {
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 16px 18px !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__period {
+    display: block !important;          /* date on top, time underneath */
+    width: 100% !important;
+    margin: 0 0 12px !important;
+    padding: 0 0 12px !important;
+    border-bottom: 1px solid var(--bl-border) !important;
+    text-align: left !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__period-date {
+    justify-content: flex-start !important;
+    margin: 0 0 2px !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__period-time {
+    margin: 0 !important;
+    text-align: left !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__info {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-items: stretch !important;
+    text-align: left !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__info-price {
+    margin: 0 0 4px !important;
+    color: #fff !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-ec.am-rw-500 .am-ec__info-other {
+    width: 100% !important;
+    margin-top: 6px !important;
+    align-items: center !important;
+  }
+}
+
+/* ---------- Popup: undo Amelia's narrow-width stacking on desktop ----------
+   Amelia adds .am-rw-* classes even on desktop, which stacks parts of the popup */
+
+/* Attendee step footer (Go Back / Continue): side by side, auto width, all screen sizes */
+.amelia-v2-booking #amelia-container .am-eli__bringing-footer {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  margin-left: auto !important;
+}
+.amelia-v2-booking #amelia-container .am-eli__bringing-footer .am-button {
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+.amelia-v2-booking #amelia-container .am-eli__bringing-footer .am-button--secondary { order: 1 !important; }
+.amelia-v2-booking #amelia-container .am-eli__bringing-footer .am-button--primary { order: 2 !important; }
+
+@media (min-width: 1024px) {
+  /* Customer info form: two fields per row */
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-elfci__form {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+  }
+  .amelia-v2-booking.am-dialog-popup #amelia-container .am-elfci__form .am-elfci__item {
+    width: calc(50% - 12px) !important;
+    max-width: calc(50% - 12px) !important;
+    flex: 0 0 calc(50% - 12px) !important;
   }
 }

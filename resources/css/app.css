@@ -823,6 +823,9 @@ nav.footer_nav ul a {
 .sec_guardian_form .gf-tier-note {
     @apply italic text-white text-[14px] mt-[20px];
 }
+.sec_guardian_form .gf-tier-note a {
+    @apply !text-[#DD9E2D] hover:underline;
+}
 .sec_guardian_form .gf-tier-card:has(.gf-tier-input:checked) {
     border: 3px solid #EEE !important;
 }

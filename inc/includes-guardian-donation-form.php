@@ -187,7 +187,7 @@ function blacklinesecurityops_render_guardian_tier_cards( $input, $field, $value
     }
 
     if ( $meta['desc'] ) {
-        $out .= '<span class="gf-tier-desc">(' . esc_html( $meta['desc'] ) . ')</span>';
+        $out .= '<span class="gf-tier-desc">' . esc_html( $meta['desc'] ) . '</span>';
     }
 
       $out .= '<span class="gf-tier-subscribe">Subscribe</span>';

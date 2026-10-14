@@ -313,7 +313,8 @@ require_once get_theme_file_path( 'inc/includes-block-patterns.php' );         /
 require_once get_theme_file_path( 'inc/includes-template-sync-tools.php' );    // Template import/export tools.
 require_once get_theme_file_path( 'inc/includes-page-sync.php' );              // Page content sync (optional).
 require_once get_theme_file_path( 'inc/includes-nav-menu-sync.php' );          // Nav menu export/import via Git.
-require_once get_theme_file_path( 'inc/includes-guardian-donation-form.php' ); // Guardian donation form: rich recurring-tier radio cards (form 4, field 4).
+require_once get_theme_file_path( 'inc/includes-guardian-tier-cards-cpt.php' );  // Guardian Tiers Cards post type: editable copy for the donation form's tier cards.
+require_once get_theme_file_path( 'inc/includes-guardian-donation-form.php' ); // Guardian donation form: rich recurring-tier radio cards (scoped by the gf-tier-cards / gf-onetime-amounts field classes).
 
 PucFactory::buildUpdateChecker(
   'https://github.com/MBNDEV/mbn-theme',

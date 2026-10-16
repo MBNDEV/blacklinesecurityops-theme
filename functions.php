@@ -295,6 +295,21 @@ function blacklinesecurityops_enqueue_slick_slider() {
 }
 add_action( 'wp_enqueue_scripts', 'blacklinesecurityops_enqueue_slick_slider' );
 
+/**
+ * Amelia booking "Show more" toggle. Amelia renders client-side, so the script is
+ * always enqueued and bails out itself unless `.amelia-v2-booking` is in the DOM.
+ */
+function blacklinesecurityops_enqueue_amelia_booking_script() {
+  wp_enqueue_script(
+    'blacklinesecurityops-amelia-booking',
+    get_theme_file_uri( 'assets/js/amelia-booking.js' ),
+    array(),
+    filemtime( get_theme_file_path( 'assets/js/amelia-booking.js' ) ),
+    true
+  );
+}
+add_action( 'wp_enqueue_scripts', 'blacklinesecurityops_enqueue_amelia_booking_script' );
+
 // Load theme components
 require_once get_theme_file_path( 'block-registry.php' );
 require_once get_theme_file_path( 'tailwind-loader.php' );

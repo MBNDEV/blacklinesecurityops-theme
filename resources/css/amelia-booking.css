@@ -843,3 +843,133 @@
     flex: 0 0 calc(50% - 12px) !important;
   }
 }
+
+/* ===== Amelia content field – full width + Blackline theme ===== */
+.amelia-v2-booking #amelia-container .am-elfci__form .am-elfci__item.am-ff__item-content.am-cf-width-100 {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .el-form-item__content {
+  display: block !important;
+  width: 100% !important;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 14px 18px 14px 46px !important;
+  background: #141414 !important;
+  border: 1px solid #2A2A2A !important;
+  border-left: 3px solid #C9B98F !important;
+  border-radius: 0 !important;
+  color: #D6D6D6 !important;
+  font-family: "Titillium Web", sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  text-align: left !important;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner .am-icon-circle-info {
+  position: absolute !important;
+  left: 16px !important;
+  top: 15px !important;
+  margin: 0 !important;
+  color: #C9B98F !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+/* Collapse only when the script has run (if JS fails, full text still shows) */
+.amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner[data-bl] {
+  max-height: 104px !important;
+  overflow: hidden !important;
+  transition: max-height .4s ease !important;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner[data-bl]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 48px;
+  background: linear-gradient(to bottom, rgba(20,20,20,0), #141414);
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner[data-bl].is-expanded {
+  max-height: 3000px !important;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner[data-bl].is-expanded::after {
+  opacity: 0;
+}
+/* Amelia event list – "Show more" description button */
+.am-elf .am-eli__description-btn {
+  display: inline-block !important;
+  margin-top: 14px !important;
+  padding: 8px 20px !important;
+  background: transparent !important;
+  color: #C9B98F !important;
+  border: 1px solid #C9B98F !important;
+  border-radius: 0 !important;
+  font-family: "Titillium Web", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.4px !important;
+  text-transform: uppercase !important;
+  line-height: 1.4 !important;
+  height: auto !important;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.am-elf .am-eli__description-btn:hover,
+.am-elf .am-eli__description-btn:focus-visible {
+  background: linear-gradient(100deg, #8F805C 0, #E7DCBC 50%, #C9B98F 100%) !important;
+  color: #0B0B0B !important;
+  border-color: transparent !important;
+}
+
+.am-elf .am-eli__description-btn:focus-visible {
+  outline: 2px solid #E7DCBC !important;
+  outline-offset: 3px;
+}
+
+/* Show more / Show less button */
+.amelia-v2-booking #amelia-container .am-ff__item-content .bl-toggle {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 16px;
+  background: transparent;
+  color: #C9B98F;
+  border: 1px solid #C9B98F;
+  border-radius: 0;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.amelia-v2-booking #amelia-container .am-ff__item-content .bl-toggle:hover,
+.amelia-v2-booking #amelia-container .am-ff__item-content .bl-toggle:focus-visible {
+  background: linear-gradient(100deg, #8F805C 0, #E7DCBC 50%, #C9B98F 100%);
+  color: #0B0B0B;
+  border-color: transparent;
+}
+
+@media (max-width: 480px) {
+  .amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner {
+    padding: 12px 14px 12px 40px !important;
+    font-size: 13.5px !important;
+  }
+  .amelia-v2-booking #amelia-container .am-ff__item-content .am-ff__item-content__inner .am-icon-circle-info {
+    left: 13px !important;
+    top: 13px !important;
+  }
+}

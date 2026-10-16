@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_filter( 'gform_field_input', 'blacklinesecurityops_render_guardian_tier_cards', 10, 5 );
 add_filter( 'gform_get_form_filter', 'blacklinesecurityops_guardian_other_amount_script', 10, 2 );
+add_filter( 'gform_get_form_filter', 'blacklinesecurityops_guardian_deselect_script', 10, 2 );
 add_filter( 'gform_other_choice_value', 'blacklinesecurityops_guardian_other_choice_label', 10, 2 );
 
 /**
@@ -93,6 +94,47 @@ function blacklinesecurityops_guardian_other_amount_script( $form_string, $form 
 	$script .= '});</script>';
 
 	return $form_string . $script;
+}
+
+/**
+ * Lets a checked radio in the tier-card and one-time-amount fields be clicked again to
+ * clear it. Native radios can't be unchecked, so the checked state is captured on
+ * pointerdown / Space (before the browser toggles it) and undone in the click that follows.
+ * A bubbling `change` is dispatched so Gravity Forms recalculates totals and conditional logic.
+ *
+ * Emitted once per page, only when the rendered form contains one of the two fields.
+ *
+ * @param string $form_string Fully rendered form HTML.
+ * @param array  $form        The form object.
+ * @return string
+ */
+function blacklinesecurityops_guardian_deselect_script( $form_string, $form ) {
+	static $emitted = false;
+
+  if ( $emitted ) {
+      return $form_string;
+  }
+
+  foreach ( (array) rgar( $form, 'fields' ) as $field ) {
+    if ( blacklinesecurityops_guardian_field_has_class( $field, 'gf-tier-cards' ) || blacklinesecurityops_guardian_field_has_class( $field, 'gf-onetime-amounts' ) ) {
+        $emitted = true;
+
+        $script  = '<script>(function () {';
+        $script .= 'var sel = ".gf-tier-cards, .gf-onetime-amounts", radio = null, was = false;';
+        $script .= 'function arm(r) { if (r && r.type === "radio" && r.closest(sel)) { radio = r; was = r.checked; } }';
+        $script .= 'document.addEventListener("pointerdown", function (e) { var l = e.target.closest("label"); arm(e.target.type === "radio" ? e.target : l && l.control); }, true);';
+        $script .= 'document.addEventListener("keydown", function (e) { if (e.key === " ") { arm(e.target); } }, true);';
+        $script .= 'document.addEventListener("click", function (e) {';
+        $script .= 'if (e.target === radio && was) { radio.checked = false; radio.dispatchEvent(new Event("change", { bubbles: true })); }';
+        $script .= 'if (e.target === radio) { radio = null; }';
+        $script .= '}, true);';
+        $script .= '})();</script>';
+
+        return $form_string . $script;
+    }
+  }
+
+	return $form_string;
 }
 
 /**

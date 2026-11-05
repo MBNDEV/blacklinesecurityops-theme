@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_filter( 'gform_field_input', 'blacklinesecurityops_render_guardian_tier_cards', 10, 5 );
 add_filter( 'gform_get_form_filter', 'blacklinesecurityops_guardian_other_amount_script', 10, 2 );
 add_filter( 'gform_get_form_filter', 'blacklinesecurityops_guardian_deselect_script', 10, 2 );
+add_filter( 'gform_get_form_filter', 'blacklinesecurityops_guardian_exclusive_gift_script', 10, 2 );
 add_filter( 'gform_other_choice_value', 'blacklinesecurityops_guardian_other_choice_label', 10, 2 );
 
 /**
@@ -135,6 +136,50 @@ function blacklinesecurityops_guardian_deselect_script( $form_string, $form ) {
   }
 
 	return $form_string;
+}
+
+/**
+ * Keeps the one-time amount and the recurring tier mutually exclusive: checking a radio in
+ * one of the `gf-onetime-amounts` / `gf-tier-cards` fields clears the other field in the
+ * same form, with a bubbling `change` so Gravity Forms recalculates totals and hides the
+ * "Other" amount. The payment add-on refuses a submission carrying both server-side.
+ *
+ * Emitted once per page, only when the rendered form contains both fields.
+ *
+ * @param string $form_string Fully rendered form HTML.
+ * @param array  $form        The form object.
+ * @return string
+ */
+function blacklinesecurityops_guardian_exclusive_gift_script( $form_string, $form ) {
+	static $emitted = false;
+
+	$classes = array();
+
+  foreach ( (array) rgar( $form, 'fields' ) as $field ) {
+    foreach ( array( 'gf-tier-cards', 'gf-onetime-amounts' ) as $class_name ) {
+      if ( blacklinesecurityops_guardian_field_has_class( $field, $class_name ) ) {
+          $classes[ $class_name ] = true;
+      }
+    }
+  }
+
+  if ( $emitted || 2 !== count( $classes ) ) {
+      return $form_string;
+  }
+
+	$emitted = true;
+
+	$script  = '<script>(function () {';
+	$script .= 'var pair = { "gf-tier-cards": ".gf-onetime-amounts", "gf-onetime-amounts": ".gf-tier-cards" };';
+	$script .= 'document.addEventListener("change", function (e) {';
+	$script .= 'var r = e.target, field = r && r.type === "radio" && r.checked && r.form ? r.closest(".gf-tier-cards, .gf-onetime-amounts") : null;';
+	$script .= 'if (!field) { return; }';
+	$script .= 'var other = pair[field.classList.contains("gf-tier-cards") ? "gf-tier-cards" : "gf-onetime-amounts"];';
+	$script .= 'r.form.querySelectorAll(other + " input[type=radio]:checked").forEach(function (o) { o.checked = false; o.dispatchEvent(new Event("change", { bubbles: true })); });';
+	$script .= '});';
+	$script .= '})();</script>';
+
+	return $form_string . $script;
 }
 
 /**

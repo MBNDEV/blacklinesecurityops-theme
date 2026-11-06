@@ -142,7 +142,9 @@ function blacklinesecurityops_guardian_deselect_script( $form_string, $form ) {
  * Keeps the one-time amount and the recurring tier mutually exclusive: checking a radio in
  * one of the `gf-onetime-amounts` / `gf-tier-cards` fields clears the other field in the
  * same form, with a bubbling `change` so Gravity Forms recalculates totals and hides the
- * "Other" amount. The payment add-on refuses a submission carrying both server-side.
+ * "Other" amount. Picking a tier also empties the custom amount (`otg-amount`), so a
+ * stale figure does not come back with "Other". The payment add-on refuses a submission
+ * carrying both server-side.
  *
  * Emitted once per page, only when the rendered form contains both fields.
  *
@@ -176,6 +178,7 @@ function blacklinesecurityops_guardian_exclusive_gift_script( $form_string, $for
 	$script .= 'if (!field) { return; }';
 	$script .= 'var other = pair[field.classList.contains("gf-tier-cards") ? "gf-tier-cards" : "gf-onetime-amounts"];';
 	$script .= 'r.form.querySelectorAll(other + " input[type=radio]:checked").forEach(function (o) { o.checked = false; o.dispatchEvent(new Event("change", { bubbles: true })); });';
+	$script .= 'if (other === ".gf-onetime-amounts") { r.form.querySelectorAll(".otg-amount input[type=text]").forEach(function (o) { o.value = ""; o.dispatchEvent(new Event("change", { bubbles: true })); }); }';
 	$script .= '});';
 	$script .= '})();</script>';
 
